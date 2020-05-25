@@ -21,5 +21,5 @@ app.get("/hello", (req, res) => {
 });
 
 app.listen(APP_PORT, () =>
-    console.log(`🚀 Server is listening on port ${APP_PORT}.`),
+    console.log(`🚀 Server is listening test on port ${APP_PORT}.`),
 );
