@@ -11,8 +11,9 @@
 const webpack = require("webpack");
 const {resolve} = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-module.exports = env => {
+module.exports = (env) => {
     const plugins = [
         new webpack.EnvironmentPlugin({
             NODE_ENV: env === "dev" ? "development" : "production",
@@ -103,9 +104,29 @@ module.exports = env => {
                         },
                     ],
                 },
+                {
+                    test: /\.scss$/,
+                    use: [
+                        MiniCssExtractPlugin.loader,
+                        {
+                            loader: "css-loader",
+                        },
+                        {
+                            loader: "sass-loader",
+                            options: {
+                                sourceMap: true,
+                                // options...
+                            },
+                        },
+                    ],
+                },
             ],
         },
-        plugins,
+        plugins: [
+            new MiniCssExtractPlugin({
+                filename: "css/mystyles.css",
+            }),
+        ],
         optimization,
         performance: {hints: false},
         output: {

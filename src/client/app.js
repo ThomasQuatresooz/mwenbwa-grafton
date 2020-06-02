@@ -9,6 +9,9 @@
 import * as React from "react";
 import ReactDOM from "react-dom";
 
-import HelloWorld from "./components/hello";
+import Global from "./components/global";
 
-ReactDOM.render(<HelloWorld />, document.querySelector("#app"));
+require("./mystyles.scss");
+
+const app = document.querySelector("#app");
+ReactDOM.render(<Global />, app);
