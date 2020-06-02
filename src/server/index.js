@@ -30,7 +30,7 @@ const bodyParser = require("body-parser");
 
 mongoose
     .connect(
-        "mongodb+srv://gogo:V6i6FmVKD9IsIu20@cluster0-cob2w.gcp.mongodb.net/test?retryWrites=true&w=majority",
+        "mongodb+srv://USER1:JV4jvvRMEN5xcGDX@cluster-mwenbwa-nsqdi.gcp.mongodb.net/test?retryWrites=true&w=majority",
         {
             useNewUrlParser: true,
             useUnifiedTopology: true,
