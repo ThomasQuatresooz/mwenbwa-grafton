@@ -7,13 +7,12 @@
  */
 
 // import * as React from "react";
+// import {Map, TileLayer} from "react-leaflet";
+// import "../../../node_modules/leaflet/dist/leaflet.css";
+// import "../mystyles.scss";
 
-// const HelloWorld = () => (
-//     <div className="tile">
-//         <h1>{"Hello, world!"}</h1>
-//         <hr />
-//         <small>{"becode/trouvkach"}</small>
-//     </div>
-// );
+// const HelloWorld = () => {
+//     return <Map></Map>;
+// };
 
 // export default HelloWorld;

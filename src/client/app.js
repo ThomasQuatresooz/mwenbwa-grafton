@@ -9,9 +9,9 @@
 import * as React from "react";
 import ReactDOM from "react-dom";
 
-import Global from "./components/global";
+import Game from "./components/game";
 
 require("./mystyles.scss");
 
 const app = document.querySelector("#app");
-ReactDOM.render(<Global />, app);
+ReactDOM.render(<Game />, app);
