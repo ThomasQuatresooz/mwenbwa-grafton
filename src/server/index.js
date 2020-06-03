@@ -9,9 +9,9 @@
 import express from "express";
 import path from "path";
 
-const mongoose = require("mongoose");
+//const mongoose = require("mongoose");
 
-import treeSchema from "./db/models/tree-schema";
+//import {Tree} from "./db/models/tree-schema";
 
 const {APP_PORT} = process.env;
 
@@ -28,7 +28,7 @@ app.listen(APP_PORT, () =>
     console.log(`🚀 Server is listening test on port ${APP_PORT}.`),
 );
 
-mongoose
+/**mongoose
     .connect(
         "mongodb+srv://dbUser:dbUserPassword@mwenbwa-xsu1h.gcp.mongodb.net/test?retryWrites=true&w=majority",
         {
@@ -38,13 +38,12 @@ mongoose
     )
     .then(() => {
         console.log("Connexion à MongoDB réussie !");
-        const Tree = mongoose.model("Tree", treeSchema);
         const baby = new Tree({
             diameter: 410,
             height: 888,
-            coordinates: {lat: 65.6, lgt: 665.6},
+            coordinates: {lat: 66.6, lgt: 66.6},
         });
 
         baby.save();
     })
-    .catch(() => console.log("Connexion à MongoDB échouée !"));
+    .catch((reason) => console.log("Connexion à MongoDB échouée ! " + reason)); **/

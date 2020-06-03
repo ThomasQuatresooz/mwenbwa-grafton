@@ -14,15 +14,20 @@ const treeSchema = new Schema({
     value: Number,
     owner: {type: Schema.Types.ObjectId, ref: "User"},
     coordinates: {
-        lat: Number,
-        lgt: Number,
+        lat: {type: Number, unique: true},
+        lgt: {type: Number, unique: true},
     },
 
     species: String,
     isLocked: Boolean,
-    buyHistory: [{date: Date, username: String}],
+    buyHistory: [
+        {date: Date, user: {type: Schema.Types.ObjectId, ref: "User"}},
+    ],
     wikiLink: String,
-    comments: [commentSchema],
+    comments: {type: [commentSchema]},
 });
 
-export default treeSchema;
+const tree = mongoose.model("Tree", treeSchema);
+const comment = mongoose.model("Comment", commentSchema);
+
+module.exports = {Tree: tree, Comment: comment};
