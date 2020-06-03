@@ -6,12 +6,27 @@ import "../mystyles.scss";
 const MapLeaflet = () => (
     <Map className={"=mobile"} center={[50.64, 5.57]} zoom={12}>
         <TileLayer
-            url={"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"}
+            url={
+                "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
+            }
+            maxZoom={20}
             attribution={
-                '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+                '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
             }
         />
     </Map>
 );
+// L.TileLayer.provider("Stadia.AlidadeSmooth").addTo(Map);
+
+// Stadia.AlidadeSmooth;
+
+// var Stadia_AlidadeSmooth = L.tileLayer(
+//     "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png",
+//     {
+//         maxZoom: 20,
+//         attribution:
+//             '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+//     },
+// );
 
 export default MapLeaflet;
