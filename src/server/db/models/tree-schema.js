@@ -14,8 +14,8 @@ const treeSchema = new Schema({
     value: Number,
     owner: {type: Schema.Types.ObjectId, ref: "User"},
     coordinates: {
-        lat: {type: Number, unique: true},
-        lgt: {type: Number, unique: true},
+        lat: Number,
+        lgt: Number,
     },
 
     species: String,
