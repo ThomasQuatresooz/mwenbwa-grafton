@@ -9,9 +9,9 @@
 import express from "express";
 import path from "path";
 
-//const mongoose = require("mongoose");
-
+//import dbInstance from "./db/dbmanager";
 //import {Tree} from "./db/models/tree-schema";
+//import Log from "./db/models/log-schema";
 
 const {APP_PORT} = process.env;
 
@@ -27,23 +27,3 @@ app.get("/hello", (req, res) => {
 app.listen(APP_PORT, () =>
     console.log(`🚀 Server is listening test on port ${APP_PORT}.`),
 );
-
-/**mongoose
-    .connect(
-        "mongodb+srv://dbUser:dbUserPassword@mwenbwa-xsu1h.gcp.mongodb.net/test?retryWrites=true&w=majority",
-        {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
-        },
-    )
-    .then(() => {
-        console.log("Connexion à MongoDB réussie !");
-        const baby = new Tree({
-            diameter: 410,
-            height: 888,
-            coordinates: {lat: 66.6, lgt: 66.6},
-        });
-
-        baby.save();
-    })
-    .catch((reason) => console.log("Connexion à MongoDB échouée ! " + reason)); **/
