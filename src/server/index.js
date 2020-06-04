@@ -48,6 +48,7 @@ const mongoose = require("mongoose");
 const express = require("express");
 const bodyParser = require("body-parser");
 import path from "path";
+import {tree} from "./db/models/tree-schema";
 
 mongoose
     .connect(
@@ -62,7 +63,14 @@ mongoose
     .catch(() => console.log("Connexion à MongoDB échouée !"));
 
 const app = express();
+
 app.use(express.static(path.resolve(__dirname, "../../bin/client")));
+
+app.get("/tree", (_, res) => {
+    tree.find()
+        .then(docs => res.status(200).json(docs).end())
+        .catch(err => res.status(500).json(err));
+});
 
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
