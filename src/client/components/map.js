@@ -4,7 +4,7 @@ import "../../../node_modules/leaflet/dist/leaflet.css";
 import "../mystyles.scss";
 
 const MapLeaflet = () => (
-    <Map className={"=mobile"} center={[50.64, 5.57]} zoom={12}>
+    <Map center={[50.64, 5.57]} zoom={12}>
         <TileLayer
             url={
                 "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
