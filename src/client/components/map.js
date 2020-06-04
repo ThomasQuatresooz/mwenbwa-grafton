@@ -5,9 +5,10 @@ import L from "leaflet";
 import "../../../node_modules/leaflet/dist/leaflet.css";
 import "../../../node_modules/react-leaflet-markercluster/dist/styles.min.css";
 import MarkerClusterGroup from "react-leaflet-markercluster";
+import tree from "../images/tree.png";
 
 const treeIcon = L.icon({
-    iconUrl: "../images/tree.png",
+    iconUrl: tree,
     iconAnchor: [10, 0],
     popupAnchor: [0, 0],
 });
