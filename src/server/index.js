@@ -8,10 +8,31 @@
 /*
 import express from "express";
 import path from "path";
+import {tree} from "./db/models/tree-schema";
+
+import mongoose from "mongoose";
 
 const {APP_PORT} = process.env;
 
 const app = express();
+
+const dbURI =
+    "mongodb+srv://USER1:JV4jvvRMEN5xcGDX@cluster-mwenbwa-nsqdi.gcp.mongodb.net/Trees?retryWrites=true&w=majority";
+const options = {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+};
+
+mongoose
+    .connect(dbURI, options)
+    .then(() => {
+        console.log("Connection DB OK");
+    })
+    .catch(e => {
+        console.log(e);
+        process.exit(0);
+    });
 
 app.use(express.static(path.resolve(__dirname, "../../bin/client")));
 
