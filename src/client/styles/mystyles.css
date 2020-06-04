@@ -1,0 +1,8 @@
+@import "../../../node_modules/bulma/css/bulma.css";
+@import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
+.leaflet-container {
+  width: 100%;
+  min-height: 100vh;
+}
+
+/*# sourceMappingURL=mystyles.css.map */

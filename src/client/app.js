@@ -8,7 +8,8 @@
 
 import * as React from "react";
 import ReactDOM from "react-dom";
+import Game from "./components/game";
+require("./styles/mystyles.css");
 
-import HelloWorld from "./components/hello";
-
-ReactDOM.render(<HelloWorld />, document.querySelector("#app"));
+const app = document.querySelector("#app");
+ReactDOM.render(<Game />, app);
