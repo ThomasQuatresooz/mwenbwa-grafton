@@ -24,6 +24,9 @@ module.exports = (env) => {
             template: resolve(__dirname, "./src/index.html"),
             path: "../",
         }),
+        new MiniCssExtractPlugin({
+            filename: "css/mystyles.css",
+        }),
     ];
 
     let optimization = {};
@@ -139,11 +142,7 @@ module.exports = (env) => {
                 },
             ],
         },
-        plugins: [
-            new MiniCssExtractPlugin({
-                filename: "css/mystyles.css",
-            }),
-        ],
+        plugins,
         optimization,
         performance: {hints: false},
         output: {
