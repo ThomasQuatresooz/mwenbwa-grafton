@@ -1,5 +1,5 @@
 /* eslint-disable react/button-has-type */
-import React from "react";
+import React, {useState, useEffect} from "react";
 import {Map, TileLayer, Marker, Popup} from "react-leaflet";
 import L from "leaflet";
 import "../../../node_modules/leaflet/dist/leaflet.css";
@@ -14,6 +14,21 @@ const treeIcon = L.icon({
 });
 
 export default function MapLeaflet() {
+    const [forest, plantTree] = useState([]);
+
+    useEffect(() => {
+        fetch("http://localhost/tree")
+            .then(res => {
+                res.json().then(value => {
+                    console.log("PARSED");
+                    plantTree(value);
+                });
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    }, []);
+
     return (
         <Map center={[50.64, 5.57]} zoom={12}>
             <TileLayer
@@ -26,9 +41,18 @@ export default function MapLeaflet() {
                 }
             />
             <MarkerClusterGroup>
-                <Marker icon={treeIcon} position={[50.6326, 5.5797]} />
-                <Marker icon={treeIcon} position={[50.6326, 5.5797]} />
-                <Marker icon={treeIcon} position={[50.6326, 5.5797]} />
+                {/* eslint-disable-next-line no-extra-parens */}
+                {forest.length > 0 ? (
+                    forest.map(pine => (
+                        <Marker
+                            key={pine._id}
+                            icon={treeIcon}
+                            position={[pine.geoloc.lat, pine.geoloc.lon]}
+                        />
+                    ))
+                ) : (
+                    <></>
+                )}
             </MarkerClusterGroup>
             <Marker icon={treeIcon} position={[50.6411, 5.5888]}>
                 <Popup>
