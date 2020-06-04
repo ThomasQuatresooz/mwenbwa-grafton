@@ -9,3 +9,8 @@
     width: 100%;
     min-height: 100vh;
 }
+//ADDED THIS BECAUSE FIREFOX STOP RENDERING WHEN THERE IS TOO MANY PIXEL TO RENDER
+.leaflet-fade-anim .leaflet-tile,
+.leaflet-zoom-anim .leaflet-zoom-animated {
+    will-change: auto !important;
+}
