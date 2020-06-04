@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 
 // Build the connection string
 const dbURI =
-    "mongodb+srv://dbUser:dbUserPassword@mwenbwa-xsu1h.gcp.mongodb.net/test?retryWrites=true&w=majority";
+    "mongodb+srv://USER1:JV4jvvRMEN5xcGDX@cluster-mwenbwa-nsqdi.gcp.mongodb.net/Test?retryWrites=true&w=majority";
 const options = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -21,7 +21,8 @@ class dbManager {
             // CONNECTION EVENTS
             // When successfully connected
             this.instance.on("connected", () => {
-                console.log(`Mongoose default connection open to ${dbURI}`);
+                //console.log(`Mongoose default connection open to ${dbURI}`);
+                console.log(this.instance.collections);
             });
 
             // If the connection throws an error
@@ -48,4 +49,4 @@ class dbManager {
     }
 }
 
-module.exports = new dbManager();
+module.exports = dbManager;
