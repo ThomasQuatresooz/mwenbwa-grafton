@@ -8,8 +8,8 @@
 
 import * as React from "react";
 import ReactDOM from "react-dom";
+import Game from "./components/game";
+require("./mystyles.scss");
 
-// import HelloWorld from "./components/hello";
-import LeafletMap from "./components/leaflet";
-
-ReactDOM.render(<LeafletMap />, document.querySelector("#app"));
+const app = document.querySelector("#app");
+ReactDOM.render(<Game />, app);
