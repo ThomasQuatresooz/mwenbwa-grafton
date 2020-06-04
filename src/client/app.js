@@ -9,7 +9,7 @@
 import * as React from "react";
 import ReactDOM from "react-dom";
 import Game from "./components/game";
-require("./mystyles.scss");
+require("./styles/mystyles.css");
 
 const app = document.querySelector("#app");
 ReactDOM.render(<Game />, app);

@@ -2,9 +2,8 @@
 import React from "react";
 import {Map, TileLayer, Marker, Popup} from "react-leaflet";
 import L from "leaflet";
-import "../../style.css";
 import "../../../node_modules/leaflet/dist/leaflet.css";
-import "../../../node_modules/leaflet.markercluster/dist/MarkerCluster.Default.css";
+import "../../../node_modules/react-leaflet-markercluster/dist/styles.min.css";
 import MarkerClusterGroup from "react-leaflet-markercluster";
 
 const treeIcon = L.icon({
@@ -26,9 +25,9 @@ export default function MapLeaflet() {
                 }
             />
             <MarkerClusterGroup>
-                <Marker position={[50.6326, 5.5797]} />
-                <Marker position={[50.6326, 5.5797]} />
-                <Marker position={[50.6326, 5.5797]} />
+                <Marker icon={treeIcon} position={[50.6326, 5.5797]} />
+                <Marker icon={treeIcon} position={[50.6326, 5.5797]} />
+                <Marker icon={treeIcon} position={[50.6326, 5.5797]} />
             </MarkerClusterGroup>
             <Marker icon={treeIcon} position={[50.6411, 5.5888]}>
                 <Popup>
