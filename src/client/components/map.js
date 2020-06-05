@@ -20,7 +20,6 @@ export default function MapLeaflet() {
         fetch("http://localhost/tree")
             .then(res => {
                 res.json().then(value => {
-                    console.log("PARSED");
                     plantTree(value);
                 });
             })
@@ -30,7 +29,7 @@ export default function MapLeaflet() {
     }, []);
 
     return (
-        <Map center={[50.64, 5.57]} zoom={12}>
+        <Map center={[50.64, 5.57]} zoom={12} maxZoom={19}>
             <TileLayer
                 url={
                     "https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png"
@@ -40,14 +39,20 @@ export default function MapLeaflet() {
                     '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
                 }
             />
-            <MarkerClusterGroup>
+            <MarkerClusterGroup
+                maxClusterRadius={120}
+                disableClusteringAtZoom={17}
+                removeOutsideVisibleBounds={true}>
                 {/* eslint-disable-next-line no-extra-parens */}
                 {forest.length > 0 ? (
                     forest.map(pine => (
                         <Marker
                             key={pine._id}
                             icon={treeIcon}
-                            position={[pine.geoloc.lat, pine.geoloc.lon]}
+                            position={[
+                                pine.position.coordinates[1],
+                                pine.position.coordinates[0],
+                            ]}
                         />
                     ))
                 ) : (
