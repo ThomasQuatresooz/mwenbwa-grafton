@@ -1,13 +1,15 @@
 import * as React from "react";
 import MapLeaflet from "./map";
-// import Menu from "./menu";
 // import LoginPage from "./login";
 // import RegisterPage from "./register";
 // import ProfilePage from "./profile";
 // import LeaderboardPage from "./leaderboard";
+import Menu from "./menu";
+require("../styles/mystyles.css");
 
 const Game = () => (
-    <div>
+    <div className={"content"}>
+        <Menu />
         <MapLeaflet />
         {/* <LoginPage />
         <RegisterPage />

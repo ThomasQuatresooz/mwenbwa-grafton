@@ -1,11 +1,24 @@
 @charset "utf-8";
 
-@import "../../../node_modules/bulma/css/bulma.css";
-
 // Import a Google Font
 @import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
 
 .leaflet-container {
     width: 100%;
     min-height: 100vh;
+    z-index: 0;
 }
+
+.navbar-menu.is-active {
+    position: absolute;
+    width: 100%;
+}
+
+.leaflet-popup-content {
+    margin: 0;
+}
+
+.leaflet-popup-content-wrapper {
+    padding: 0;
+}
+@import "../../../node_modules/bulma/css/bulma.css";
