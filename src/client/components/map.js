@@ -74,23 +74,3 @@ export default function MapLeaflet() {
         </Map>
     );
 }
-
-// <div>
-//     <h1>{"name of the tree"}</h1>
-//     <h4>
-//         {"free/belongs to "}
-//         <a href={"#"}>{"starfire"}</a>
-//     </h4>
-//     <p>
-//         <a href={"#"}>{"tree's species"}</a>
-//     </p>
-//     <p>{"tree's height"}</p>
-//     <p>{"tree's diameter"}</p>
-//     <p>{"price : 78 leaves"}</p>
-//     <button className="button is-success" type={"button"}>
-//         {"buy the tree"}
-//     </button>
-//     <button className="button is-primary" type={"button"}>
-//         {"lock/unlock the tree"}
-//     </button>
-// </div>;

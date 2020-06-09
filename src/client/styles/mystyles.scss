@@ -6,19 +6,19 @@
 .leaflet-container {
     width: 100%;
     min-height: 100vh;
+    z-index: 0;
 }
 
-// .navbar-menu.navbar-item {
-//     overflow-x: visible;
-//     overflow-y: visible;
-// }
-
-#nav-toggle-state {
-    display: none;
+.navbar-menu.is-active {
+    position: absolute;
+    width: 100%;
 }
 
-#nav-toggle-state:checked ~ .narvbar-menu {
-    display: block;
+.leaflet-popup-content {
+    margin: 0;
 }
 
+.leaflet-popup-content-wrapper {
+    padding: 0;
+}
 @import "../../../node_modules/bulma/css/bulma.css";

@@ -1,9 +1,9 @@
 import * as React from "react";
-// require("../styles/mystyles.css")import leaf from "../images/tree.png";
+// require("../styles/mystyles.css");
 
 const Menu = () => (
     <nav
-        className={"navbar is-success absolute"}
+        className={"navbar is-success"}
         role={"navigation"}
         aria-label={"main navigation"}>
         <div className={"navbar-brand"}>
