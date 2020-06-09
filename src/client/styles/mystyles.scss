@@ -1,7 +1,5 @@
 @charset "utf-8";
 
-@import "../../../node_modules/bulma/css/bulma.css";
-
 // Import a Google Font
 @import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
 
@@ -9,3 +7,18 @@
     width: 100%;
     min-height: 100vh;
 }
+
+// .navbar-menu.navbar-item {
+//     overflow-x: visible;
+//     overflow-y: visible;
+// }
+
+#nav-toggle-state {
+    display: none;
+}
+
+#nav-toggle-state:checked ~ .narvbar-menu {
+    display: block;
+}
+
+@import "../../../node_modules/bulma/css/bulma.css";
