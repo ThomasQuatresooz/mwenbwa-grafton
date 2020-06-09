@@ -59,15 +59,15 @@ export default function MapLeaflet() {
                                     {"Price: 78 leaves"}
                                 </p>
                             </div>
+                            <div className={"content is-flex"}>
+                                <a href={"#"} className={"button is-success"}>
+                                    {"Buy the tree"}
+                                </a>
+                                <a href={"#"} className={"button is-primary"}>
+                                    {"Lock/unlock"}
+                                </a>
+                            </div>
                         </div>
-                        <footer className={"card-footer"}>
-                            <a href={"#"} className={"button card-footer-item"}>
-                                {"Buy the tree"}
-                            </a>
-                            <a href={"#"} className={"button card-footer-item"}>
-                                {"Lock/unlock"}
-                            </a>
-                        </footer>
                     </div>
                 </Popup>
             </Marker>

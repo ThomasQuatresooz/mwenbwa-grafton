@@ -3,6 +3,9 @@
 // Import a Google Font
 @import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
 
+$nicegreen: #fff000;
+$is-success: $nicegreen;
+
 .leaflet-container {
     width: 100%;
     min-height: 100vh;
@@ -21,4 +24,15 @@
 .leaflet-popup-content-wrapper {
     padding: 0;
 }
+
+.card {
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.image {
+    margin: 0;
+    border-radius: 20px;
+}
+
 @import "../../../node_modules/bulma/css/bulma.css";
