@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-max-depth */
 /* eslint-disable react/button-has-type */
 import React from "react";
-import "../../../node_modules/jscolor-2.1.0/jscolor";
+import "../../lib/jscolor-2.1.0/jscolor";
 
 export default function RegisterPage(props) {
     return (
