@@ -5,6 +5,7 @@ import ProfilePage from "./profile";
 import LoginPage from "./login";
 import RegisterPage from "./register";
 import LeaderboardPage from "./leaderboard";
+import GamelogPage from "./gamelog";
 
 class Menu extends React.Component {
     constructor() {
@@ -15,16 +16,19 @@ class Menu extends React.Component {
             isShowingLogin: false,
             isShowingRegister: false,
             isShowingLeaderboard: false,
+            isShowingGamelog: false,
         };
 
         this.handleOpenProfile = this.handleOpenProfile.bind(this);
         this.handleOpenLogin = this.handleOpenLogin.bind(this);
         this.handleOpenRegister = this.handleOpenRegister.bind(this);
         this.handleOpenLeaderboard = this.handleOpenLeaderboard.bind(this);
+        this.handleOpenGamelog = this.handleOpenGamelog.bind(this);
         this.closeModalProfile = this.closeModalProfile.bind(this);
         this.closeModalLogin = this.closeModalLogin.bind(this);
         this.closeModalRegister = this.closeModalRegister.bind(this);
         this.closeModalLeaderboard = this.closeModalLeaderboard.bind(this);
+        this.closeModalGamelog = this.closeModalGamelog.bind(this);
     }
 
     handleOpenProfile() {
@@ -51,6 +55,12 @@ class Menu extends React.Component {
         });
     }
 
+    handleOpenGamelog() {
+        this.setState({
+            isShowingGamelog: true,
+        });
+    }
+
     closeModalProfile() {
         this.setState({
             isShowingProfile: false,
@@ -72,6 +82,12 @@ class Menu extends React.Component {
     closeModalLeaderboard() {
         this.setState({
             isShowingLeaderboard: false,
+        });
+    }
+
+    closeModalGamelog() {
+        this.setState({
+            isShowingGamelog: false,
         });
     }
 
@@ -137,13 +153,14 @@ class Menu extends React.Component {
                                 {"Leaderboard"}
                             </a>
                             <hr className={"navbar-divider"} />
-
-                            <div className={"navbar-item"}>
+                            <a
+                                className={"navbar-item"}
+                                onClick={this.handleOpenGamelog}>
                                 <span className={"icon is-large"}>
                                     <i className={"far fa-file-alt"} />
                                 </span>
                                 {"Gamelogs"}
-                            </div>
+                            </a>
                             <hr className={"navbar-divider"} />
                             <a
                                 className={"navbar-item"}
@@ -189,6 +206,10 @@ class Menu extends React.Component {
                 <LeaderboardPage
                     showLeaderboard={this.state.isShowingLeaderboard}
                     handleCloseLeaderboard={this.closeModalLeaderboard}
+                />
+                <GamelogPage
+                    showGamelog={this.state.isShowingGamelog}
+                    handleCloseGamelog={this.closeModalGamelog}
                 />
             </div>
         );

@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-max-depth */
 /* eslint-disable react/button-has-type */
 import React from "react";
 import {Map, TileLayer, Marker, Popup} from "react-leaflet";
