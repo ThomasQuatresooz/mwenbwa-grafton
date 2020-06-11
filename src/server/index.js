@@ -46,9 +46,10 @@ mongoose
 
 const mongoose = require("mongoose");
 const express = require("express");
-const bodyParser = require("body-parser");
+import compression from "compression";
 import path from "path";
-import {tree} from "./db/models/tree-schema";
+
+import routeTree from "./routes/route-tree";
 
 mongoose
     .connect(
@@ -63,14 +64,9 @@ mongoose
     .catch(() => console.log("Connexion à MongoDB échouée !"));
 
 const app = express();
+app.use(compression());
 
 app.use(express.static(path.resolve(__dirname, "../../bin/client")));
-
-app.get("/tree", (_, res) => {
-    tree.find()
-        .then(docs => res.status(200).json(docs).end())
-        .catch(err => res.status(500).json(err));
-});
 
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -85,6 +81,8 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(bodyParser.json());
+app.use(express.json());
+
+app.use("/trees", routeTree);
 
 module.exports = app;
