@@ -2,28 +2,76 @@
 import * as React from "react";
 // require("../styles/mystyles.css");
 import ProfilePage from "./profile";
+import LoginPage from "./login";
+import RegisterPage from "./register";
+import LeaderboardPage from "./leaderboard";
 
 class Menu extends React.Component {
     constructor() {
         super();
 
         this.state = {
-            isShowing: false,
+            isShowingProfile: false,
+            isShowingLogin: false,
+            isShowingRegister: false,
+            isShowingLeaderboard: false,
         };
 
-        this.handleOpenModal = this.handleOpenModal.bind(this);
-        this.closeModalHandler = this.closeModalHandler.bind(this);
+        this.handleOpenProfile = this.handleOpenProfile.bind(this);
+        this.handleOpenLogin = this.handleOpenLogin.bind(this);
+        this.handleOpenRegister = this.handleOpenRegister.bind(this);
+        this.handleOpenLeaderboard = this.handleOpenLeaderboard.bind(this);
+        this.closeModalProfile = this.closeModalProfile.bind(this);
+        this.closeModalLogin = this.closeModalLogin.bind(this);
+        this.closeModalRegister = this.closeModalRegister.bind(this);
+        this.closeModalLeaderboard = this.closeModalLeaderboard.bind(this);
     }
 
-    handleOpenModal() {
+    handleOpenProfile() {
         this.setState({
-            isShowing: true,
+            isShowingProfile: true,
         });
     }
 
-    closeModalHandler() {
+    handleOpenLogin() {
         this.setState({
-            isShowing: false,
+            isShowingLogin: true,
+        });
+    }
+
+    handleOpenRegister() {
+        this.setState({
+            isShowingRegister: true,
+        });
+    }
+
+    handleOpenLeaderboard() {
+        this.setState({
+            isShowingLeaderboard: true,
+        });
+    }
+
+    closeModalProfile() {
+        this.setState({
+            isShowingProfile: false,
+        });
+    }
+
+    closeModalLogin() {
+        this.setState({
+            isShowingLogin: false,
+        });
+    }
+
+    closeModalRegister() {
+        this.setState({
+            isShowingRegister: false,
+        });
+    }
+
+    closeModalLeaderboard() {
+        this.setState({
+            isShowingLeaderboard: false,
         });
     }
 
@@ -80,12 +128,14 @@ class Menu extends React.Component {
                         <div className={"navbar-start"} />
 
                         <div className={"navbar-end"}>
-                            <div className={"navbar-item"}>
+                            <a
+                                className={"navbar-item"}
+                                onClick={this.handleOpenLeaderboard}>
                                 <span className={"icon is-large"}>
                                     <i className={"fas fa-list-ol"} />
                                 </span>
-                                {"Ranking"}
-                            </div>
+                                {"Leaderboard"}
+                            </a>
                             <hr className={"navbar-divider"} />
 
                             <div className={"navbar-item"}>
@@ -97,18 +147,48 @@ class Menu extends React.Component {
                             <hr className={"navbar-divider"} />
                             <a
                                 className={"navbar-item"}
-                                onClick={this.handleOpenModal}>
+                                onClick={this.handleOpenProfile}>
                                 <span className={"icon is-large"}>
                                     <i className={"far fa-user"} />
                                 </span>
                                 {"My Profile"}
                             </a>
+                            <hr className={"navbar-divider"} />
+                            <a
+                                className={"navbar-item"}
+                                onClick={this.handleOpenRegister}>
+                                <span className={"icon is-large"}>
+                                    <i className={"fas fa-user-plus"} />
+                                </span>
+                                {"Register"}
+                            </a>
+                            <hr className={"navbar-divider"} />
+                            <a
+                                className={"navbar-item"}
+                                onClick={this.handleOpenLogin}>
+                                <span className={"icon is-large"}>
+                                    <i className={"fas fa-sign-in-alt"} />
+                                </span>
+                                {"Login"}
+                            </a>
                         </div>
                     </div>
                 </nav>
                 <ProfilePage
-                    show={this.state.isShowing}
-                    handleClose={this.closeModalHandler}
+                    showProfile={this.state.isShowingProfile}
+                    handleCloseProfile={this.closeModalProfile}
+                />
+                <LoginPage
+                    showLogin={this.state.isShowingLogin}
+                    handleCloseLogin={this.closeModalLogin}
+                />
+                <RegisterPage
+                    showRegister={this.state.isShowingRegister}
+                    handleCloseRegister={this.closeModalRegister}
+                />
+                <LeaderboardPage
+                    showLeaderboard={this.state.isShowingLeaderboard}
+                    handleCloseLeaderboard={this.closeModalLeaderboard}
                 />
             </div>
         );

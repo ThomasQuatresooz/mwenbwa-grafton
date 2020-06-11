@@ -29,15 +29,18 @@ function CloseProfile() {
 
 export default function ProfilePage(props) {
     return (
-        <div className={props.show ? "modal is-active" : "modal"}>
-            <div className={"modal-background"} onClick={props.handleClose} />
+        <div className={props.showProfile ? "modal is-active" : "modal"}>
+            <div
+                className={"modal-background"}
+                onClick={props.handleCloseProfile}
+            />
             <div className={"modal-card"}>
                 <header className={"modal-card-head"}>
                     <p className={"modal-card-title"}>{"Profile"}</p>
                     <button
                         className={"delete"}
                         aria-label={"close"}
-                        onClick={props.handleClose}
+                        onClick={props.handleCloseProfile}
                     />
                 </header>
                 <section className={"modal-card-body has-text-centered"}>
@@ -51,7 +54,7 @@ export default function ProfilePage(props) {
                                 }
                             />
                             <div
-                                className={"file is-info"}
+                                className={"file is-info is-centered"}
                                 id={"changeImage"}
                                 style={{display: "none"}}>
                                 <label className={"file-label"}>
