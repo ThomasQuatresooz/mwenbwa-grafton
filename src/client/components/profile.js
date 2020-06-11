@@ -27,95 +27,108 @@ function CloseProfile() {
         .setAttribute("style", "display: none");
 }
 
-export default function ProfilePage() {
+export default function ProfilePage(props) {
     return (
-        <div className={"container has-text-centered"}>
-            <h2 className={"title is-2"}>{"Profile"}</h2>
-            <div className={"columns is-centered is-1"}>
-                <div className={"column is-3"}>
-                    <br />
-                    <figure className={"image container is-128x128"}>
-                        <img
-                            className={"is-square"}
-                            id={"profileImage"}
-                            src={
-                                "https://bulma.io/images/placeholders/128x128.png"
-                            }
-                        />
-                    </figure>
-                    <br />
-                    <div
-                        className={"file is-centered is-info"}
-                        id={"changeImage"}
-                        style={{display: "none"}}>
-                        <label className={"file-label"}>
-                            <input className={"file-input"} type={"file"} />
-                            <span className={"file-cta"}>
-                                <span className={"file-icon"}>
-                                    <i className={"fas fa-upload"} />
-                                </span>
-                                <span className={"file-label"}>
-                                    {"Choose an image…"}
-                                </span>
-                            </span>
-                        </label>
-                    </div>
-                </div>
-                <div className={"column is-3"}>
-                    <br />
-                    <h5 id={"profileNickname"} className={"title is-5"}>
-                        {"Starfire"}
-                    </h5>
-                    <p id={"profileEmail"}>{"Starfire@titans.com"}</p>
-                    <p>{"My color : "}</p>
-                    <p>{"My ranking : #1"}</p>
-                    <br />
+        <div className={props.show ? "modal is-active" : "modal"}>
+            <div className={"modal-background"} onClick={props.handleClose} />
+            <div className={"modal-card"}>
+                <header className={"modal-card-head"}>
+                    <p className={"modal-card-title"}>{"Profile"}</p>
+                    <button
+                        className={"delete"}
+                        aria-label={"close"}
+                        onClick={props.handleClose}
+                    />
+                </header>
+                <section className={"modal-card-body has-text-centered"}>
                     <div className={"columns is-centered"}>
-                        <div className={"column is-3"}>
+                        <div className={"column is-5"}>
+                            <img
+                                className={"is-square"}
+                                id={"profileImage"}
+                                src={
+                                    "https://bulma.io/images/placeholders/128x128.png"
+                                }
+                            />
+                            <div
+                                className={"file is-info"}
+                                id={"changeImage"}
+                                style={{display: "none"}}>
+                                <label className={"file-label"}>
+                                    <input
+                                        className={"file-input"}
+                                        type={"file"}
+                                    />
+                                    <span className={"file-cta"}>
+                                        <span className={"file-icon"}>
+                                            <i className={"fas fa-upload"} />
+                                        </span>
+                                        <span className={"file-label"}>
+                                            {"Click to change"}
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                        <div className={"column is-5"}>
+                            <h5 id={"profileNickname"} className={"title is-5"}>
+                                {"Starfire"}
+                            </h5>
+                            <p id={"profileEmail"}>{"Starfire@titans.com"}</p>
+                            <p>{"My color : "}</p>
+                            <p>{"My ranking : #1"}</p>
+                        </div>
+                    </div>
+                    <div className={"columns is-centered"}>
+                        <div className={"column is-2"}>
                             <span className={"icon"}>
                                 <i className={"fas fa-lg fa-tree"} />
                             </span>
                             <p>{"6"}</p>
                         </div>
-                        <div className={"column is-3"}>
+                        <div className={"column is-2"}>
                             <span className={"icon"}>
                                 <i className={"fab fa-lg fa-envira"} />
                             </span>
                             <p>{"234"}</p>
                         </div>
                     </div>
-                </div>
+                </section>
+                <footer
+                    className={"modal-card-foot"}
+                    style={{justifyContent: "center"}}>
+                    <p id={"profileButtons"} className={"buttons"}>
+                        <button
+                            className={"button is-success is-outlined"}
+                            id={"editProfile"}
+                            onClick={EditProfile}>
+                            <span className={"icon"}>
+                                <i className={"far fa-edit"} />
+                            </span>
+                            <span>{"Edit my profile"}</span>
+                        </button>
+                        <button
+                            className={"button is-success is-outlined"}
+                            id={"saveProfile"}
+                            style={{display: "none"}}>
+                            <span className={"icon is-small"}>
+                                <i className={"fas fa-check"} />
+                            </span>
+                            <span>{"Save changes"}</span>
+                        </button>
+                        <button
+                            className={"button is-danger is-outlined"}
+                            id={"cancelProfile"}
+                            style={{display: "none"}}
+                            onClick={CloseProfile}>
+                            <span>{"Cancel changes"}</span>
+                            <span className={"icon is-small"}>
+                                <i className={"fas fa-times"} />
+                            </span>
+                        </button>
+                    </p>
+                </footer>
             </div>
-            <p id={"profileButtons"} className={"buttons is-centered"}>
-                <button
-                    className={"button is-success is-outlined"}
-                    id={"editProfile"}
-                    onClick={EditProfile}>
-                    <span className={"icon"}>
-                        <i className={"far fa-edit"} />
-                    </span>
-                    <span>{"Edit my profile"}</span>
-                </button>
-                <button
-                    className={"button is-success is-outlined"}
-                    id={"saveProfile"}
-                    style={{display: "none"}}>
-                    <span className={"icon is-small"}>
-                        <i className={"fas fa-check"} />
-                    </span>
-                    <span>{"Save changes"}</span>
-                </button>
-                <button
-                    className={"button is-danger is-outlined"}
-                    id={"cancelProfile"}
-                    style={{display: "none"}}
-                    onClick={CloseProfile}>
-                    <span>{"Cancel changes"}</span>
-                    <span className={"icon is-small"}>
-                        <i className={"fas fa-times"} />
-                    </span>
-                </button>
-            </p>
         </div>
     );
 }
