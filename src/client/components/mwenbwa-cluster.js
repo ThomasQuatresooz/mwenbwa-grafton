@@ -1,35 +1,47 @@
-import React, {useState, useEffect} from "react";
+/* eslint-disable react/button-has-type */
+
+import React, {useState, useEffect, useContext, useCallback} from "react";
 import {useLeaflet} from "react-leaflet";
+import UserContext from "./mwenbwa-context";
 
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import "../../../node_modules/react-leaflet-markercluster/dist/styles.min.css";
 
 import MBMarker from "./mwenbwa-marker";
 
-const MBCluster = () => {
-    const lContext = useLeaflet();
-    console.log(
-        lContext.map.on("load", () => {
-            console.log("LOADED !!!!");
-        }),
-    );
-
+const MBCluster = props => {
+    const leafContext = useLeaflet();
+    const UserCont = useContext(UserContext);
     const [forest, plantTree] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost/tree", {
-            body: JSON.stringify(),
-        })
-            .then(res => {
-                res.json().then(value => {
-                    plantTree(value);
-                    console.table(value[1]);
-                });
+        UserCont.on("MapUpdated", () => {
+            fetch("http://localhost/trees", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(leafContext.map.getBounds()),
             })
-            .catch(err => {
-                console.error(err);
-            });
+                .then(res => {
+                    res.json().then(value => {
+                        plantTree(value);
+                    });
+                })
+                .catch(err => {
+                    console.error(err);
+                });
+        });
+        props.whenReady();
+        return () => {
+            UserCont.off("MapUpdated");
+        };
     }, []);
+
+    /*eslint-disable no-use-before-define */
+    const testUpdate = useCallback(() => {
+        UserCont.emit("5ed763c0da18fc1c40ac9bb1");
+    }, [testUpdate]);
 
     return (
         <React.Fragment>
@@ -44,6 +56,18 @@ const MBCluster = () => {
                     <></>
                 )}
             </MarkerClusterGroup>
+            {/*eslint-disable-next-line*/}
+            <button
+                style={{
+                    position: "fixed",
+                    width: "300px",
+                    height: "50px",
+                    zIndex: "999999",
+                }}
+                type={"button"}
+                onClick={testUpdate}>
+                {"Test Event"}
+            </button>
         </React.Fragment>
     );
 };
