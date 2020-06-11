@@ -15,8 +15,8 @@ const Menu = () => (
             </div>
 
             <div className={"navbar-item is-expanded"}>
-                <span>
-                    <img src={"../images/tree.png"} />
+                <span className={"icon is-medium has-text-dark"}>
+                    <i className={"fas fa-lg fa-tree"} />
                 </span>
                 <p>{"64"}</p>
             </div>
@@ -48,27 +48,27 @@ const Menu = () => (
             <div className={"navbar-start"} />
 
             <div className={"navbar-end"}>
-                <div className={"navbar-item"}>
+                <a className={"navbar-item"}>
                     <span className={"icon is-large has-text-dark"}>
                         <i className={"fas fa-list-ol"} />
                     </span>
                     {"Ranking"}
-                </div>
+                </a>
                 <hr className={"navbar-divider"} />
 
-                <div className={"navbar-item"}>
+                <a href={""} className={"navbar-item"}>
                     <span className={"icon is-large has-text-dark"}>
                         <i className={"far fa-file-alt"} />
                     </span>
                     {"Gamelogs"}
-                </div>
+                </a>
                 <hr className={"navbar-divider"} />
-                <div className={"navbar-item"}>
+                <a href={""} className={"navbar-item"}>
                     <span className={"icon is-large has-text-dark"}>
                         <i className={"far fa-user"} />
                     </span>
                     {"My Profile"}
-                </div>
+                </a>
             </div>
         </div>
     </nav>
