@@ -7,7 +7,7 @@ export default function LoginPage(props) {
         <div className={props.showLogin ? "modal is-active" : "modal"}>
             <div
                 className={"modal-background"}
-                onClick={props.handleCLoseLogin}
+                onClick={props.handleCloseLogin}
             />
             <div className={"modal-card"}>
                 <header className={"modal-card-head"}>
