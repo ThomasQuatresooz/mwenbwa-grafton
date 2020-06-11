@@ -105,21 +105,18 @@ class Menu extends React.Component {
                             </span>
                             <p>{"12:35"}</p>
                         </div>
-
                         <div className={"navbar-item is-expanded"}>
                             <span className={"icon is-medium"}>
                                 <i className={"fas fa-lg fa-tree"} />
                             </span>
                             <p>{"64"}</p>
                         </div>
-
                         <div className={"navbar-item is-expanded"}>
                             <span className={"icon is-medium"}>
                                 <i className={"fab fa-lg fa-envira"} />
                             </span>
                             <p>{"1087"}</p>
                         </div>
-
                         <a
                             role={"button"}
                             className={"navbar-burger burger"}
@@ -142,7 +139,6 @@ class Menu extends React.Component {
                     </div>
                     <div className={"navbar-menu"}>
                         <div className={"navbar-start"} />
-
                         <div className={"navbar-end"}>
                             <a
                                 className={"navbar-item"}
