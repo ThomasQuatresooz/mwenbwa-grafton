@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars, consistent-return */
 
-const User = require("../models/user");
+const User = require("../models/user-schema");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 

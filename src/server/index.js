@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* becodeorg/mwenbwa
  *
  * /src/server/index.js - Server entry point
@@ -49,6 +50,9 @@ const express = require("express");
 const bodyParser = require("body-parser");
 import path from "path";
 
+const userRoutes = require("./db/router/user");
+const statusRoutes = require("./db/router/status");
+
 mongoose
     .connect(
         "mongodb+srv://USER1:JV4jvvRMEN5xcGDX@cluster-mwenbwa-nsqdi.gcp.mongodb.net/Trees?retryWrites=true&w=majority",
@@ -79,4 +83,6 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.json());
 
+app.use("/api/auth", userRoutes); // point d'entrée pour les routes de signup et login
+app.use("api/status", statusRoutes); //permet de vérifier si bien connecté au serveur
 module.exports = app;
