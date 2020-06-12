@@ -46,8 +46,10 @@ mongoose
 
 const mongoose = require("mongoose");
 const express = require("express");
-const bodyParser = require("body-parser");
+import compression from "compression";
 import path from "path";
+
+import routeTree from "./routes/route-tree";
 
 mongoose
     .connect(
@@ -62,6 +64,8 @@ mongoose
     .catch(() => console.log("Connexion à MongoDB échouée !"));
 
 const app = express();
+app.use(compression());
+
 app.use(express.static(path.resolve(__dirname, "../../bin/client")));
 
 app.use((req, res, next) => {
@@ -77,6 +81,8 @@ app.use((req, res, next) => {
     next();
 });
 
-app.use(bodyParser.json());
+app.use(express.json());
+
+app.use("/trees", routeTree);
 
 module.exports = app;
