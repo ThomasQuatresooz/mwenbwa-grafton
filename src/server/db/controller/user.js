@@ -1,7 +1,7 @@
 /* eslint-disable no-unused-vars, consistent-return */
 
 const {User} = require("../models/user-schema");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 exports.signup = (req, res, next) => {
