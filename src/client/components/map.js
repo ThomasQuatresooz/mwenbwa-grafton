@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-max-depth */
 /* eslint-disable react/button-has-type */
 import React, {useCallback, useState} from "react";
 import {Map, TileLayer, ScaleControl} from "react-leaflet";
