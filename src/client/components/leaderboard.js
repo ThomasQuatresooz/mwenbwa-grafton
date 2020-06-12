@@ -25,7 +25,7 @@ export default function LeaderboardPage(props) {
         <div className={props.showLeaderboard ? "modal is-active" : "modal"}>
             <div
                 className={"modal-background"}
-                onClick={props.handleCLoseLeaderboard}
+                onClick={props.handleCloseLeaderboard}
             />
             <div className={"modal-card"}>
                 <header className={"modal-card-head"}>

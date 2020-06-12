@@ -8,7 +8,7 @@ export default function RegisterPage(props) {
         <div className={props.showRegister ? "modal is-active" : "modal"}>
             <div
                 className={"modal-background"}
-                onClick={props.handleCLoseRegister}
+                onClick={props.handleCloseRegister}
             />
             <div className={"modal-card"}>
                 <header className={"modal-card-head"}>

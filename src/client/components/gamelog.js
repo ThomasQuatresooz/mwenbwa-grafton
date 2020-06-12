@@ -6,7 +6,7 @@ export default function GamelogPage(props) {
         <div className={props.showGamelog ? "modal is-active" : "modal"}>
             <div
                 className={"modal-background"}
-                onClick={props.handleCLoseGamelog}
+                onClick={props.handleCloseGamelog}
             />
             <div className={"modal-card"}>
                 <header className={"modal-card-head"}>
