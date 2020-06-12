@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* becodeorg/mwenbwa
  *
  * /src/server/index.js - Server entry point
@@ -50,6 +51,8 @@ import compression from "compression";
 import path from "path";
 
 import routeTree from "./routes/route-tree";
+const userRoutes = require("./db/router/user");
+const statusRoutes = require("./db/router/status");
 
 mongoose
     .connect(
@@ -85,4 +88,6 @@ app.use(express.json());
 
 app.use("/trees", routeTree);
 
+app.use("/api/auth", userRoutes); // point d'entrée pour les routes de signup et login
+app.use("api/status", statusRoutes); //permet de vérifier si bien connecté au serveur
 module.exports = app;
