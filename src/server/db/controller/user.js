@@ -4,13 +4,14 @@ const {User} = require("../models/user-schema");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
-exports.signup = (req, res, next) => {
+exports.signup = (req, res) => {
     bcrypt
         .hash(req.body.password, 10)
         .then(hash => {
             const user = new User({
                 email: req.body.email,
                 password: hash,
+                username: req.body.username,
             });
             user.save()
                 .then(() =>
@@ -18,10 +19,10 @@ exports.signup = (req, res, next) => {
                 )
                 .catch(error => res.status(400).json({error}));
         })
-        .catch(error => res.status(500).json({error}));
+        .catch(error => res.status(500).json({error: req.body}));
 };
 
-exports.login = (req, res, next) => {
+exports.login = (req, res) => {
     User.findOne({email: req.body.email})
         .then(user => {
             if (!user) {
