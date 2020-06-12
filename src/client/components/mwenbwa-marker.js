@@ -31,31 +31,42 @@ const MBMarker = props => {
                     props.tree.position.coordinates[0],
                 ]}>
                 <Popup>
-                    <div>
-                        <h1>{props.tree.specie}</h1>
-                        <h4>
-                            {"free/belongs to "}
-                            <a href={"#"}>{"starfire"}</a>
-                        </h4>
-                        <p>
-                            <a href={"#"}>{"tree's species"}</a>
-                        </p>
-                        <p>{`Tree's height : ${props.tree.hauteur_totale}`}</p>
-                        <p>
-                            {`Tree's diameter : ${
-                                props.tree.circonf / Math.PI
-                            }`}
-                        </p>
-                        <p>
-                            {`Value : ${Math.ceil(
-                                props.tree.hauteur_totale *
-                                    (props.tree.circonf / Math.PI),
-                            )} leaves`}
-                        </p>
-                        {/*eslint-disable-next-line*/}
-                        <button type="button">{"buy the tree"}</button>
-                        {/*eslint-disable-next-line*/}
-                        <button type="button">{"lock/unlock the tree"}</button>
+                    <div className={"card"}>
+                        <div className={"card-image"}>
+                            <figure className={"image is-2by1"}>
+                                <img src={"https://i.imgur.com/3zhuFWl.png"} />
+                            </figure>
+                        </div>
+                        <div className={"card-content"}>
+                            <div className={"media"}>
+                                <div className={"media-content"}>
+                                    <p className={"title is-4"}>
+                                        {"Name of the tree"}
+                                    </p>
+                                    <p className={"subtitle is-6"}>
+                                        {"Free/belongs to"}
+                                    </p>
+                                </div>
+                            </div>
+                            <div className={"content"}>
+                                <p>
+                                    <a href={"#"}>{"Tree's specie"}</a>
+                                </p>
+                                <p>{"Tree's height"}</p>
+                                <p>{"Tree's diameter"}</p>
+                                <p className={"title is-6"}>
+                                    {"Price: 78 leaves"}
+                                </p>
+                            </div>
+                            <div className={"content is-flex"}>
+                                <a href={"#"} className={"button is-success"}>
+                                    {"Buy the tree"}
+                                </a>
+                                <a href={"#"} className={"button is-primary"}>
+                                    {"Lock/unlock"}
+                                </a>
+                            </div>
+                        </div>
                     </div>
                 </Popup>
             </Marker>
