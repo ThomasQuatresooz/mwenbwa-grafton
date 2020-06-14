@@ -44,8 +44,11 @@ const MBMarker = props => {
                                         {"Name of the tree"}
                                     </p>
                                     <p className={"subtitle is-6"}>
-                                        {"Free/belongs to"}
+                                        {props.tree.owner
+                                            ? `Owned by ${props.tree.owner}`
+                                            : "Free"}
                                     </p>
+                                    <p>{props.tree._id}</p>
                                 </div>
                             </div>
                             <div className={"content"}>

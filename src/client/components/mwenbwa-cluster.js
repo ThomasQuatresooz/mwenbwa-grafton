@@ -16,7 +16,7 @@ const MBCluster = props => {
 
     useEffect(() => {
         UserCont.on("MapUpdated", () => {
-            fetch("http://localhost/trees", {
+            fetch("http://localhost/tree", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
