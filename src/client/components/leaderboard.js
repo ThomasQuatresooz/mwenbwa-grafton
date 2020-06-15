@@ -29,7 +29,7 @@ export default function LeaderboardPage(props) {
             />
             <div className={"modal-card"}>
                 <header className={"modal-card-head"}>
-                    <p className={"modal-card-title"}>{"Login"}</p>
+                    <p className={"modal-card-title"}>{"Leaderboard"}</p>
                     <button
                         className={"delete"}
                         aria-label={"close"}

@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable react/jsx-max-depth */
 /* eslint-disable react/button-has-type */
 import React, {useContext, useEffect} from "react";
 import L from "leaflet";
