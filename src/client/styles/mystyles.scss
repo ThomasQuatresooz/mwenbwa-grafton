@@ -23,6 +23,11 @@ $is-success: $green;
 .leaflet-popup-content {
     margin: 0;
 }
+//ADDED THIS BECAUSE FIREFOX STOP RENDERING WHEN THERE IS TOO MANY PIXEL TO RENDER
+.leaflet-fade-anim .leaflet-tile,
+.leaflet-zoom-anim .leaflet-zoom-animated {
+    will-change: auto !important;
+}
 
 .leaflet-popup-content-wrapper {
     padding: 0;
