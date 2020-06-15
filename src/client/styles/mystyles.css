@@ -1,5 +1,10 @@
 @import url("https://fonts.googleapis.com/css?family=Nunito:400,700");
 @import "../../../node_modules/bulma/css/bulma.css";
+html,
+body {
+  min-height: 96.5vh;
+}
+
 .leaflet-container {
   width: 100%;
   min-height: 100vh;
@@ -13,6 +18,11 @@
 
 .leaflet-popup-content {
   margin: 0;
+}
+
+.leaflet-fade-anim .leaflet-tile,
+.leaflet-zoom-anim .leaflet-zoom-animated {
+  will-change: auto !important;
 }
 
 .leaflet-popup-content-wrapper {
