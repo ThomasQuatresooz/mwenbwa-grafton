@@ -89,5 +89,5 @@ app.use(express.json());
 app.use("/trees", routeTree);
 
 app.use("/api/auth", userRoutes); // point d'entrée pour les routes de signup et login
-app.use("api/status", statusRoutes); //permet de vérifier si bien connecté au serveur
+app.use("/api/status", statusRoutes); //permet de vérifier si bien connecté au serveur
 module.exports = app;
