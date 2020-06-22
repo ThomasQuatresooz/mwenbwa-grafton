@@ -53,6 +53,7 @@ import path from "path";
 import routeTree from "./routes/route-tree";
 const userRoutes = require("./db/router/user");
 const statusRoutes = require("./db/router/status");
+import routeLeaderboard from "./routes/leaderboard";
 
 mongoose
     .connect(
@@ -89,8 +90,9 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
-app.use("/tree", routeTree);
-
+app.use("/trees", routeTree);
+app.use("/leaderboard", routeLeaderboard);
 app.use("/api/auth", userRoutes); // point d'entrée pour les routes de signup et login
 app.use("/api/status", statusRoutes); //permet de vérifier si bien connecté au serveur
+
 module.exports = app;
