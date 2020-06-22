@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
+const uniqueValidator = require("mongoose-unique-validator");
 
 const commentSchema = new Schema({
     date: {type: Date, default: Date.now()},
@@ -26,7 +27,7 @@ const treeSchema = new Schema({
     nom_complet: {type: String, alias: "specie"},
     value: Number,
     owner: {type: Schema.Types.ObjectId, ref: "User"},
-    name: String,
+    name: {type: String, unique: true},
     isLocked: Boolean,
     buyHistory: [
         {date: Date, user: {type: Schema.Types.ObjectId, ref: "User"}},
@@ -34,6 +35,8 @@ const treeSchema = new Schema({
     comments: {type: [commentSchema]},
     wikiLink: String,
 });
+
+treeSchema.plugin(uniqueValidator);
 
 const tree = mongoose.model("Tree", treeSchema, "arbustum");
 const comment = mongoose.model("Comment", commentSchema);
