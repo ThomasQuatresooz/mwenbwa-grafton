@@ -14,6 +14,7 @@ class RegisterPage extends React.Component {
             username: "",
             email: "",
             password: "",
+            color: "",
         };
     }
 
@@ -21,6 +22,7 @@ class RegisterPage extends React.Component {
         this.setState({
             [e.target.name]: e.target.value,
         });
+        console.log(e.target.value);
     }
 
     handleSubmit(e) {
@@ -63,6 +65,7 @@ class RegisterPage extends React.Component {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify(data),
+            withCredentials: true,
         };
 
         console.log(JSON.stringify(data));
@@ -225,7 +228,7 @@ class RegisterPage extends React.Component {
                                                     className={
                                                         "input is-danger"
                                                     }
-                                                    type={"paswword"}
+                                                    type={"password"}
                                                     name={"password"}
                                                     value={this.state.password}
                                                     onChange={this.handleChange}
@@ -258,74 +261,86 @@ class RegisterPage extends React.Component {
                                         </div>
                                     </div>
                                 </div>
-                                {/* <div className={"field is-horizontal"}>
-                                <div className={"field-label is-normal"}>
-                                    <label className={"label"}>
-                                        {"Confirm password"}
-                                    </label>
-                                </div>
-                                <div className={"field-body"}>
-                                    <div className={"field"}>
-                                        <p
-                                            className={
-                                                "control has-icons-left has-icons-right"
-                                            }>
-                                            <input
-                                                className={"input is-danger"}
-                                                type={"password"}
-                                                placeholder={"Password"}
-                                            />
-                                            <span
-                                                className={
-                                                    "icon is-small is-left"
-                                                }>
-                                                <i className={"fas fa-lock"} />
-                                            </span>
-                                            <span
-                                                className={
-                                                    "icon is-small is-right"
-                                                }>
-                                                <i
-                                                    className={
-                                                        "fas fa-exclamation-triangle"
-                                                    }
-                                                />
-                                            </span>
-                                        </p>
-                                        <p className={"help is-danger"}>
-                                            {"This field is required"}
-                                        </p>
+                                <div className={"field is-horizontal"}>
+                                    <div className={"field-label is-normal"}>
+                                        <label className={"label"}>
+                                            {"Confirm password"}
+                                        </label>
                                     </div>
-                                </div>
-                            </div>
-                            <div className={"field is-horizontal"}>
-                                <div className={"field-label is-normal"}>
-                                    <label className={"label"}>
-                                        {"Pick a color"}
-                                    </label>
-                                </div>
-                                <div className={"field-body"}>
-                                    <div className={"field"}>
-                                        <div
-                                            className={
-                                                "control has-icons-left has-icons-right"
-                                            }>
-                                            <input
-                                                className={"input jscolor"}
-                                                placeholder={"Color picker"}
-                                            />
-                                            <span
+                                    <div className={"field-body"}>
+                                        <div className={"field"}>
+                                            <p
                                                 className={
-                                                    "icon is-small is-left"
+                                                    "control has-icons-left has-icons-right"
                                                 }>
-                                                <i
-                                                    className={"fas fa-palette"}
+                                                <input
+                                                    className={
+                                                        "input is-danger"
+                                                    }
+                                                    type={"password"}
+                                                    placeholder={"Password"}
                                                 />
-                                            </span>
+                                                <span
+                                                    className={
+                                                        "icon is-small is-left"
+                                                    }>
+                                                    <i
+                                                        className={
+                                                            "fas fa-lock"
+                                                        }
+                                                    />
+                                                </span>
+                                                <span
+                                                    className={
+                                                        "icon is-small is-right"
+                                                    }>
+                                                    <i
+                                                        className={
+                                                            "fas fa-exclamation-triangle"
+                                                        }
+                                                    />
+                                                </span>
+                                            </p>
+                                            <p className={"help is-danger"}>
+                                                {"This field is required"}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
-                            </div> */}
+                                <div className={"field is-horizontal"}>
+                                    <div className={"field-label is-normal"}>
+                                        <label className={"label"}>
+                                            {"Pick a color"}
+                                        </label>
+                                    </div>
+                                    <div className={"field-body"}>
+                                        <div className={"field"}>
+                                            <div
+                                                className={
+                                                    "control has-icons-left has-icons-right"
+                                                }>
+                                                <input
+                                                    type={"text"}
+                                                    className={"input jscolor"}
+                                                    placeholder={"Color picker"}
+                                                    name={"color"}
+                                                    value={this.state.color}
+                                                    onChange={this.handleChange}
+                                                />
+                                                <span
+                                                    className={
+                                                        "icon is-small is-left"
+                                                    }>
+                                                    <i
+                                                        className={
+                                                            "fas fa-palette"
+                                                        }
+                                                    />
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </section>
                             <footer
                                 className={"modal-card-foot"}

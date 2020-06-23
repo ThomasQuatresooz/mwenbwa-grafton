@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-max-depth */
 /* eslint-disable react/button-has-type */
 import React from "react";
-import axios from "axios";
+// import axios from "axios";
 
 class LoginPage extends React.Component {
     constructor() {
@@ -24,23 +24,51 @@ class LoginPage extends React.Component {
 
     handleSubmit(e) {
         e.preventDefault();
-        console.log("login submitted");
 
-        axios
-            .post(
-                "http:localhost/api/auth/login",
-                {
-                    user: {
-                        email: this.state.email,
-                        password: this.state.password,
-                    },
-                },
-                {
-                    withCredentials: true,
-                },
-            )
-            .then(response => console.log(response.data))
-            .catch(error => console.log("Login error", error));
+        const data = this.state;
+
+        const url = "api/auth/login";
+        const options = {
+            method: "POST",
+            headers: {
+                // accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+            // withCredentials: true,
+        };
+
+        console.log(JSON.stringify(data));
+
+        fetch(url, options)
+            .then(response => {
+                if (response.ok) {
+                    console.log(response.data);
+                } else {
+                    console.log(
+                        `Request rejected with status ${response.status}`,
+                    );
+                }
+            })
+            .catch(error => {
+                console.log(`Problem with fetch : ${error}`);
+            });
+
+        // axios
+        //     .post(
+        //         "http:localhost/api/auth/login",
+        //         {
+        //             user: {
+        //                 email: this.state.email,
+        //                 password: this.state.password,
+        //             },
+        //         },
+        //         {
+        //             withCredentials: true,
+        //         },
+        //     )
+        //     .then(response => console.log(response.data))
+        //     .catch(error => console.log("Login error", error));
 
         event.preventDefault();
     }
