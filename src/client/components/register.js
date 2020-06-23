@@ -320,13 +320,23 @@ class RegisterPage extends React.Component {
                                                     "control has-icons-left has-icons-right"
                                                 }>
                                                 <input
-                                                    type={"text"}
-                                                    className={"input jscolor"}
-                                                    placeholder={"Color picker"}
                                                     name={"color"}
+                                                    type={"hidden"}
+                                                    id={"val"}
                                                     value={this.state.color}
                                                     onChange={this.handleChange}
                                                 />
+                                                <input
+                                                    type={"text"}
+                                                    className={"input"}
+                                                    placeholder={"Color picker"}
+                                                    // value={this.state.color}
+                                                    // onChange={this.handleChange}
+                                                    data-jscolor={
+                                                        "{valueElement:'val'}"
+                                                    }
+                                                />
+
                                                 <span
                                                     className={
                                                         "icon is-small is-left"

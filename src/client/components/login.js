@@ -44,6 +44,7 @@ class LoginPage extends React.Component {
             .then(response => {
                 if (response.ok) {
                     console.log(response.data);
+                    console.log("Connexion réussie. Bienvenue !");
                 } else {
                     console.log(
                         `Request rejected with status ${response.status}`,
