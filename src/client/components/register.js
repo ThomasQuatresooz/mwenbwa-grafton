@@ -3,183 +3,347 @@
 import React from "react";
 import "../../lib/jscolor-2.1.0/jscolor";
 
-export default function RegisterPage(props) {
-    return (
-        <div className={props.showRegister ? "modal is-active" : "modal"}>
+class RegisterPage extends React.Component {
+    constructor() {
+        super();
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+
+        this.state = {
+            username: "",
+            email: "",
+            password: "",
+        };
+    }
+
+    handleChange(e) {
+        this.setState({
+            [e.target.name]: e.target.value,
+        });
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        console.log(this.state);
+
+        const data = this.state;
+
+        // const user = {
+        //     username: this.state.username,
+        //     email: this.state.email,
+        //     password: this.state.password,
+        // };
+
+        // axios
+        //     .post(
+        //         "api/auth/signup",
+        //         data,
+        //         // {
+        //         //     username: this.state.username,
+        //         //     email: this.state.email,
+        //         //     password: this.state.password,
+        //         // },
+        //         // {
+        //         //     withCredentials: true,
+        //         // },
+        //     )
+        //     .then((response) => console.log(response.data))
+        //     .catch((error) => console.log("Login error", error));
+
+        // const myHeaders = new Header();
+        // myHeaders.append("Content-Type", "application/json;charset=UTF-8");
+        // myHeaders.append("accept", "application/json");
+
+        const url = "api/auth/signup";
+        const options = {
+            method: "POST",
+            headers: {
+                // accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(data),
+        };
+
+        console.log(JSON.stringify(data));
+
+        fetch(url, options)
+            .then(response => {
+                if (response.ok) {
+                    console.log(response.data);
+                } else {
+                    console.log(
+                        `Request rejected with status ${response.status}`,
+                    );
+                }
+            })
+            .catch(error => {
+                console.log(`Problem with fetch : ${error}`);
+            });
+
+        e.preventDefault();
+    }
+
+    render() {
+        return (
             <div
-                className={"modal-background"}
-                onClick={props.handleCloseRegister}
-            />
-            <div className={"modal-card"}>
-                <header className={"modal-card-head"}>
-                    <p className={"modal-card-title"}>{"Register"}</p>
-                    <button
-                        className={"delete"}
-                        aria-label={"close"}
-                        onClick={props.handleCloseRegister}
-                    />
-                </header>
-                <section className={"modal-card-body has-text-centered"}>
-                    <div className={"field is-horizontal"}>
-                        <div className={"field-label is-normal"}>
-                            <label className={"label"}>{"Username"}</label>
-                        </div>
-                        <div className={"field-body"}>
-                            <div className={"field"}>
-                                <div
-                                    className={
-                                        "control has-icons-left has-icons-right"
-                                    }>
-                                    <input
-                                        className={"input is-success"}
-                                        type={"text"}
-                                        placeholder={"Text input"}
-                                    />
-                                    <span className={"icon is-small is-left"}>
-                                        <i className={"fas fa-user"} />
-                                    </span>
-                                    <span className={"icon is-small is-right"}>
-                                        <i className={"fas fa-check"} />
-                                    </span>
+                className={
+                    this.props.showRegister ? "modal is-active" : "modal"
+                }>
+                <div
+                    className={"modal-background"}
+                    onClick={this.props.handleCloseRegister}
+                />
+                <div className={"modal-card"}>
+                    <header className={"modal-card-head"}>
+                        <p className={"modal-card-title"}>{"Register"}</p>
+                        <button
+                            className={"delete"}
+                            aria-label={"close"}
+                            onClick={this.props.handleCloseRegister}
+                        />
+                    </header>
+                    <form onSubmit={this.handleSubmit}>
+                        <div>
+                            <section
+                                className={"modal-card-body has-text-centered"}>
+                                <div className={"field is-horizontal"}>
+                                    <div className={"field-label is-normal"}>
+                                        <label className={"label"}>
+                                            {"Username"}
+                                        </label>
+                                    </div>
+                                    <div className={"field-body"}>
+                                        <div className={"field"}>
+                                            <div
+                                                className={
+                                                    "control has-icons-left has-icons-right"
+                                                }>
+                                                <input
+                                                    className={
+                                                        "input is-success"
+                                                    }
+                                                    type={"text"}
+                                                    name={"username"}
+                                                    value={this.state.username}
+                                                    onChange={this.handleChange}
+                                                    placeholder={
+                                                        "Your username here"
+                                                    }
+                                                />
+                                                <span
+                                                    className={
+                                                        "icon is-small is-left"
+                                                    }>
+                                                    <i
+                                                        className={
+                                                            "fas fa-user"
+                                                        }
+                                                    />
+                                                </span>
+                                                <span
+                                                    className={
+                                                        "icon is-small is-right"
+                                                    }>
+                                                    <i
+                                                        className={
+                                                            "fas fa-check"
+                                                        }
+                                                    />
+                                                </span>
+                                            </div>
+                                            <p className={"help is-success"}>
+                                                {"This username is available"}
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <p className={"help is-success"}>
-                                    {"This username is available"}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className={"field is-horizontal"}>
-                        <div className={"field-label is-normal"}>
-                            <label className={"label"}>{"Email"}</label>
-                        </div>
-                        <div className={"field-body"}>
-                            <div className={"field"}>
-                                <div
-                                    className={
-                                        "control has-icons-left has-icons-right"
-                                    }>
-                                    <input
-                                        className={"input is-danger"}
-                                        type={"email"}
-                                        placeholder={"Email input"}
-                                    />
-                                    <span className={"icon is-small is-left"}>
-                                        <i className={"fas fa-envelope"} />
-                                    </span>
-                                    <span className={"icon is-small is-right"}>
-                                        <i
-                                            className={
-                                                "fas fa-exclamation-triangle"
-                                            }
-                                        />
-                                    </span>
+                                <div className={"field is-horizontal"}>
+                                    <div className={"field-label is-normal"}>
+                                        <label className={"label"}>
+                                            {"Email"}
+                                        </label>
+                                    </div>
+                                    <div className={"field-body"}>
+                                        <div className={"field"}>
+                                            <div
+                                                className={
+                                                    "control has-icons-left has-icons-right"
+                                                }>
+                                                <input
+                                                    className={
+                                                        "input is-danger"
+                                                    }
+                                                    type={"email"}
+                                                    name={"email"}
+                                                    value={this.state.email}
+                                                    onChange={this.handleChange}
+                                                    placeholder={
+                                                        "Your email here"
+                                                    }
+                                                />
+                                                <span
+                                                    className={
+                                                        "icon is-small is-left"
+                                                    }>
+                                                    <i
+                                                        className={
+                                                            "fas fa-envelope"
+                                                        }
+                                                    />
+                                                </span>
+                                                <span
+                                                    className={
+                                                        "icon is-small is-right"
+                                                    }>
+                                                    <i
+                                                        className={
+                                                            "fas fa-exclamation-triangle"
+                                                        }
+                                                    />
+                                                </span>
+                                            </div>
+                                            <p className={"help is-danger"}>
+                                                {"This email is invalid"}
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <p className={"help is-danger"}>
-                                    {"This email is invalid"}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className={"field is-horizontal"}>
-                        <div className={"field-label is-normal"}>
-                            <label className={"label"}>{"Password"}</label>
-                        </div>
-                        <div className={"field-body"}>
-                            <div className={"field"}>
-                                <p
-                                    className={
-                                        "control has-icons-left has-icons-right"
-                                    }>
-                                    <input
-                                        className={"input is-danger"}
-                                        type={"password"}
-                                        placeholder={"Password"}
-                                    />
-                                    <span className={"icon is-small is-left"}>
-                                        <i className={"fas fa-lock"} />
-                                    </span>
-                                    <span className={"icon is-small is-right"}>
-                                        <i
+                                <div className={"field is-horizontal"}>
+                                    <div className={"field-label is-normal"}>
+                                        <label className={"label"}>
+                                            {"Password"}
+                                        </label>
+                                    </div>
+                                    <div className={"field-body"}>
+                                        <div className={"field"}>
+                                            <p
+                                                className={
+                                                    "control has-icons-left has-icons-right"
+                                                }>
+                                                <input
+                                                    className={
+                                                        "input is-danger"
+                                                    }
+                                                    type={"paswword"}
+                                                    name={"password"}
+                                                    value={this.state.password}
+                                                    onChange={this.handleChange}
+                                                    placeholder={"Password"}
+                                                />
+                                                <span
+                                                    className={
+                                                        "icon is-small is-left"
+                                                    }>
+                                                    <i
+                                                        className={
+                                                            "fas fa-lock"
+                                                        }
+                                                    />
+                                                </span>
+                                                <span
+                                                    className={
+                                                        "icon is-small is-right"
+                                                    }>
+                                                    <i
+                                                        className={
+                                                            "fas fa-exclamation-triangle"
+                                                        }
+                                                    />
+                                                </span>
+                                            </p>
+                                            <p className={"help is-danger"}>
+                                                {"This field is required"}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                {/* <div className={"field is-horizontal"}>
+                                <div className={"field-label is-normal"}>
+                                    <label className={"label"}>
+                                        {"Confirm password"}
+                                    </label>
+                                </div>
+                                <div className={"field-body"}>
+                                    <div className={"field"}>
+                                        <p
                                             className={
-                                                "fas fa-exclamation-triangle"
-                                            }
-                                        />
-                                    </span>
-                                </p>
-                                <p className={"help is-danger"}>
-                                    {"This field is required"}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className={"field is-horizontal"}>
-                        <div className={"field-label is-normal"}>
-                            <label className={"label"}>
-                                {"Confirm password"}
-                            </label>
-                        </div>
-                        <div className={"field-body"}>
-                            <div className={"field"}>
-                                <p
-                                    className={
-                                        "control has-icons-left has-icons-right"
-                                    }>
-                                    <input
-                                        className={"input is-danger"}
-                                        type={"password"}
-                                        placeholder={"Password"}
-                                    />
-                                    <span className={"icon is-small is-left"}>
-                                        <i className={"fas fa-lock"} />
-                                    </span>
-                                    <span className={"icon is-small is-right"}>
-                                        <i
-                                            className={
-                                                "fas fa-exclamation-triangle"
-                                            }
-                                        />
-                                    </span>
-                                </p>
-                                <p className={"help is-danger"}>
-                                    {"This field is required"}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className={"field is-horizontal"}>
-                        <div className={"field-label is-normal"}>
-                            <label className={"label"}>{"Pick a color"}</label>
-                        </div>
-                        <div className={"field-body"}>
-                            <div className={"field"}>
-                                <div
-                                    className={
-                                        "control has-icons-left has-icons-right"
-                                    }>
-                                    <input
-                                        className={"input jscolor"}
-                                        placeholder={"Color picker"}
-                                    />
-                                    <span className={"icon is-small is-left"}>
-                                        <i className={"fas fa-palette"} />
-                                    </span>
+                                                "control has-icons-left has-icons-right"
+                                            }>
+                                            <input
+                                                className={"input is-danger"}
+                                                type={"password"}
+                                                placeholder={"Password"}
+                                            />
+                                            <span
+                                                className={
+                                                    "icon is-small is-left"
+                                                }>
+                                                <i className={"fas fa-lock"} />
+                                            </span>
+                                            <span
+                                                className={
+                                                    "icon is-small is-right"
+                                                }>
+                                                <i
+                                                    className={
+                                                        "fas fa-exclamation-triangle"
+                                                    }
+                                                />
+                                            </span>
+                                        </p>
+                                        <p className={"help is-danger"}>
+                                            {"This field is required"}
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
+                            <div className={"field is-horizontal"}>
+                                <div className={"field-label is-normal"}>
+                                    <label className={"label"}>
+                                        {"Pick a color"}
+                                    </label>
+                                </div>
+                                <div className={"field-body"}>
+                                    <div className={"field"}>
+                                        <div
+                                            className={
+                                                "control has-icons-left has-icons-right"
+                                            }>
+                                            <input
+                                                className={"input jscolor"}
+                                                placeholder={"Color picker"}
+                                            />
+                                            <span
+                                                className={
+                                                    "icon is-small is-left"
+                                                }>
+                                                <i
+                                                    className={"fas fa-palette"}
+                                                />
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div> */}
+                            </section>
+                            <footer
+                                className={"modal-card-foot"}
+                                style={{justifyContent: "center"}}>
+                                <button
+                                    type={"submit"}
+                                    className={
+                                        "button is-success is-outlined is-fullwidth"
+                                    }>
+                                    {"Register"}
+                                </button>
+                            </footer>
                         </div>
-                    </div>
-                </section>
-                <footer
-                    className={"modal-card-foot"}
-                    style={{justifyContent: "center"}}>
-                    <button
-                        type={"button"}
-                        className={
-                            "button is-success is-outlined is-fullwidth"
-                        }>
-                        {"Register"}
-                    </button>
-                </footer>
+                    </form>
+                </div>
             </div>
-        </div>
-    );
+        );
+    }
 }
+
+export default RegisterPage;
