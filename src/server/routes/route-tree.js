@@ -1,6 +1,6 @@
 import {Router} from "express";
 import treeController from "../controllers/tree-controller";
-import auth from "../db/middleware/authentification";
+import auth from "../middlewares/authentification";
 const router = Router();
 
 router.post("/", treeController.allTreesByViewport);
