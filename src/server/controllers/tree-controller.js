@@ -1,6 +1,6 @@
-import {tree, comment} from "../db/models/tree-schema";
-import {User} from "../db/models/user-schema";
-import {Log} from "../db/models/log-schema";
+import {tree, comment} from "../models/tree-schema";
+import {User} from "../models/user-schema";
+import {Log} from "../models/log-schema";
 import {nameByRace} from "fantasy-name-generator";
 
 const getTreesAround100m = async coordinates => {
@@ -258,22 +258,21 @@ exports.lockPrice = async (req, res) => {
 //#endregion
 
 //#region Buying Trees
-const getUniqueName = (retry = 15) => {
+const getUniqueName = async (retry = 15) => {
     if (retry === 0) {
         throw new Error("NAME GENERATOR FAIL");
     }
     const name = nameByRace("highelf", {
         gender: Math.round(Math.random()) ? "male" : "female",
     });
-    try {
-        const notUnique = tree.findOne({name});
 
-        const nbrRetry = retry - 1;
-        console.log({notUnique, nbrRetry});
-        getUniqueName(nbrRetry);
-    } catch (e) {
+    const notUnique = await tree.findOne({name}).exec();
+    if (notUnique === null) {
         return name;
     }
+    const nbrRetry = retry - 1;
+    await getUniqueName(nbrRetry);
+
     return false;
 };
 
@@ -321,7 +320,7 @@ const calculateBuyPrice = async (treeToBuy, buyer) => {
     return value;
 };
 
-const closeTheDeal = (amount, buyer, treeToBuy) => {
+const closeTheDeal = async (amount, buyer, treeToBuy) => {
     if (buyer.totalLeaves >= amount) {
         treeToBuy.owner = buyer._id;
         treeToBuy.buyHistory.push({
@@ -330,8 +329,8 @@ const closeTheDeal = (amount, buyer, treeToBuy) => {
         });
         if (treeToBuy.name === null) {
             try {
-                const name = getUniqueName();
-                console.log({name});
+                const name = await getUniqueName();
+                //eslint-disable-next-line
                 treeToBuy.name = name;
                 return treeToBuy.save();
             } catch (e) {

@@ -51,8 +51,8 @@ import compression from "compression";
 import path from "path";
 
 import routeTree from "./routes/route-tree";
-const userRoutes = require("./db/router/user");
-const statusRoutes = require("./db/router/status");
+import userRoutes from "./routes/user";
+import statusRoutes from "./routes/status";
 import routeLeaderboard from "./routes/leaderboard";
 
 // const corsOptions = {
