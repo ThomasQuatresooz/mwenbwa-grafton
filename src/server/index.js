@@ -51,8 +51,6 @@ import compression from "compression";
 import path from "path";
 
 import routeTree from "./routes/route-tree";
-// const bodyParser = require("body-parser");
-// import cors from "cors";
 const userRoutes = require("./db/router/user");
 const statusRoutes = require("./db/router/status");
 
@@ -73,14 +71,9 @@ mongoose
     .catch(() => console.log("Connexion à MongoDB échouée !"));
 
 const app = express();
-// app.use(cors());
 app.use(compression());
 
 app.use(express.static(path.resolve(__dirname, "../../bin/client")));
-// // parse requests of content-type - application/json
-// app.use(bodyParser.json());
-// // parse requests of content-type - application/x-www-form-urlencoded
-// app.use(bodyParser.urlencoded({extended: true}));
 
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
