@@ -61,6 +61,7 @@
     "eventemitter3": "^4.0.4",
     "express": "^4.17.1",
     "express-router": "0.0.1",
+    "fantasy-name-generator": "^2.0.0",
     "jsonwebtoken": "^8.5.1",
     "leaflet": "^1.6.0",
     "leaflet-providers": "^1.10.1",

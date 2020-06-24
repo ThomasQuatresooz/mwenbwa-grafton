@@ -1,38 +1,15 @@
 import {Router} from "express";
-import {tree} from "../db/models/tree-schema";
+import treeController from "../controllers/tree-controller";
+import auth from "../db/middleware/authentification";
 const router = Router();
 
-router.get("/", (req, res) => {
-    if (req.query.treeId) {
-        tree.find({_id: req.query.treeId})
-            .then(result => {
-                res.status(200).json(result);
-            })
-            .catch(err => {
-                res.status(404).send(err);
-            });
-    } else {
-        res.status(400).send("NEED a tree ID ");
-    }
-});
-
-router.post("/", (req, res) => {
-    tree.find({
-        position: {
-            $geoWithin: {
-                $box: [
-                    [req.body._southWest.lng, req.body._southWest.lat],
-                    [req.body._northEast.lng, req.body._northEast.lat],
-                ],
-            },
-        },
-    })
-        .then(result => {
-            res.status(200).json(result).end();
-        })
-        .catch(err => {
-            res.status(500).json(err).end();
-        });
-});
-
+router.post("/", treeController.allTreesByViewport);
+router.get("/:treeId", treeController.getTreeData);
+router.post("/:treeId/buy", auth, treeController.buyTree);
+router.post("/:treeId/buyprice", auth, treeController.buyPrice);
+router.post("/:treeId/lock", auth, treeController.lockTree);
+router.post("/:treeId/lockprice", auth, treeController.lockPrice);
+router.get("/:treeId/comments/", treeController.getComments);
+router.post("/:treeId/comments/", auth, treeController.writeComment);
+router.post("/reset", treeController.resetTrees);
 module.exports = router;
