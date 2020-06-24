@@ -100,3 +100,15 @@ app.use("/api/auth", userRoutes); // point d'entrée pour les routes de signup e
 app.use("/api/status", statusRoutes); //permet de vérifier si bien connecté au serveur
 
 module.exports = app;
+
+//Timer part
+//function earnleaves() {
+// const treeOwned = tree.find({owner: {$ne: null}}).forEach();
+
+//Trees.arbustum.value.value + Trees.users.totalLeaves.value where treeOwned._id = Trees.users._id
+//treeOwned.forEach(tree.owner => {user.updateMany({_id })
+// });
+//}
+// for each user search tree where owner = user._id
+//reduce sum of value of all trees having the same owner
+//add that sum to totalLeaves of the user
