@@ -70,55 +70,58 @@ const MBMarker = props => {
 
     const fetchPrice = useCallback(
         forBuying => {
-            fetch(
-                `${document.baseURI}trees/${tree._id}/${
-                    forBuying ? "buyprice" : "lockprice"
-                }`,
-                {
-                    method: "POST",
-                    headers: {
-                        Authorization:
-                            "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZWUzODViYjZmNzc4MDAxZDliODJiYWQiLCJpYXQiOjE1OTI5MTk1NjgsImV4cCI6MTU5MzAwNTk2OH0.1J53tr_LgeF_RVFQxX7EyexousaI9lgWNSkkiN0YTto",
+            console.log(UserCont);
+
+            if (UserCont.user !== null) {
+                fetch(
+                    `${document.baseURI}trees/${tree._id}/${
+                        forBuying ? "buyprice" : "lockprice"
+                    }`,
+                    {
+                        method: "POST",
+                        headers: {
+                            Authorization: `bearer ${UserCont.user?.token}`,
+                        },
                     },
-                },
-            )
-                .then(result => {
-                    if (result.ok) {
-                        result.json().then(res => {
-                            //eslint-disable-next-line
-                            forBuying
-                                ? setBuyprice(res.price)
-                                : setLockprice(res.price);
-                        });
-                    } else {
-                        console.log(result.statusText);
-                    }
-                })
-                .catch(err => {
-                    console.log(err);
-                });
+                )
+                    .then(result => {
+                        if (result.ok) {
+                            result.json().then(res => {
+                                //eslint-disable-next-line
+                                forBuying
+                                    ? setBuyprice(res.price)
+                                    : setLockprice(res.price);
+                            });
+                        } else {
+                            console.log(result.statusText);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+            }
         },
-        [fetchPrice],
+        [fetchPrice, UserCont.user],
     );
     const getPrices = useCallback(() => {
-        if (tree.owner && tree.owner._id === UserCont.user._id) {
+        if (tree.owner && tree.owner._id === UserCont.user?.userId) {
             if (lockprice === 0) {
                 fetchPrice(false);
             }
         }
-        if (!tree.isLocked && tree.owner?._id !== UserCont.user._id) {
+        if (!tree.isLocked && tree.owner?._id !== UserCont.user?.userId) {
             if (buyprice === 0) {
                 fetchPrice(true);
             }
         }
-    }, [getPrices]);
+    }, [getPrices, UserCont.user]);
 
     const lockTheTree = useCallback(() => {
         fetch(`${document.baseURI}trees/${tree._id}/lock`, {
             method: "POST",
             headers: {
                 /**${UserCont.user.token} */
-                Authorization: `bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZWUzODViYjZmNzc4MDAxZDliODJiYWQiLCJpYXQiOjE1OTI5MTk1NjgsImV4cCI6MTU5MzAwNTk2OH0.1J53tr_LgeF_RVFQxX7EyexousaI9lgWNSkkiN0YTto`,
+                Authorization: `bearer ${UserCont.user.token}`,
             },
         })
             .then(result => {
@@ -136,7 +139,7 @@ const MBMarker = props => {
         fetch(`${document.baseURI}trees/${tree._id}/buy`, {
             method: "POST",
             headers: {
-                Authorization: `bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZWUzODViYjZmNzc4MDAxZDliODJiYWQiLCJpYXQiOjE1OTI5MTk1NjgsImV4cCI6MTU5MzAwNTk2OH0.1J53tr_LgeF_RVFQxX7EyexousaI9lgWNSkkiN0YTto`,
+                Authorization: `bearer ${UserCont.user.token}`,
             },
         })
             .then(result => {
@@ -189,11 +192,12 @@ const MBMarker = props => {
                                     {`Base value: ${tree.value} leaves`}
                                 </p>
                             </div>
-                            {tree.isLocked || UserCont.user._id === null ? (
+                            {tree.isLocked || UserCont.user === null ? (
                                 <></>
                             ) : (
                                 <div className={"content is-flex"}>
-                                    {tree.owner?._id !== UserCont.user._id ? (
+                                    {tree.owner?._id !==
+                                    UserCont.user?.userId ? (
                                         <button
                                             href={"#"}
                                             type={"button"}

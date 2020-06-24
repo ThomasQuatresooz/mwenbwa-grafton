@@ -9,12 +9,7 @@ require("../styles/mystyles.css");
 
 const Game = () => {
     const [EventEmitter] = useState(new EE());
-    const [user, setUser] = useState({
-        _id: "5ee385bb6f778001d9b82bad",
-        token: "",
-        color: "",
-        totalLeaves: "",
-    });
+    const [user, setUser] = useState(null);
     return (
         <div className={"content"}>
             <UserProvider value={{EventEmitter, user, setUser}}>
