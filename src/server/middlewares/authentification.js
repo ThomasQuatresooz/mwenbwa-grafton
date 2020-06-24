@@ -8,12 +8,8 @@ module.exports = (req, res, next) => {
             "8hQ79YXx4ySOF2toKkRrScxrqY6zeORlkBWzxRYPjcyBVVlTeuVI9x2OyTrVx45",
         );
         const userId = decodedToken.userId;
-
-        if (req.body.userId && req.body.userId !== userId) {
-            throw new Error("Invalid user ID!");
-        } else {
-            next();
-        }
+        req.userId = userId;
+        next();
     } catch {
         res.status(401).json({
             error: new Error("Invalid request!"),

@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars, consistent-return */
 
-const {User} = require("../models/user-schema");
+import User from "../models/user-schema";
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
@@ -12,6 +12,7 @@ exports.signup = (req, res) => {
                 email: req.body.email,
                 password: hash,
                 username: req.body.username,
+                color: req.body.color,
             });
             user.save()
                 .then(() =>
@@ -19,7 +20,7 @@ exports.signup = (req, res) => {
                 )
                 .catch(error => res.status(400).json({error}));
         })
-        .catch(error => res.status(500).json({error: req.body}));
+        .catch(error => res.status(500).json({error}));
 };
 
 exports.login = (req, res) => {

@@ -9,6 +9,11 @@ $newgreen: hsla(262, 100%, 50%, 1);
 $green: $newgreen;
 $is-success: $green;
 
+html,
+body {
+    min-height: 100vh - 3.5vh;
+}
+
 .leaflet-container {
     width: 100%;
     min-height: 100vh;

@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
-import auth from "../middleware/authentification";
-const userCtrl = require("../controller/user");
+
+const userCtrl = require("../controllers/user");
 
 router.post("/signup", userCtrl.signup);
 router.post("/login", userCtrl.login);
 router.post("/", userCtrl);
-router.post("/profile/:userId", auth, userCtrl);
+router.post("/profile/:userId", userCtrl);
 
 module.exports = router;
