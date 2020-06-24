@@ -64,30 +64,33 @@ exports.getPackOfRandomTrees = (callback, retry = 10, packSize = 3) => {
     }
 };
 
-exports.allTreesByViewport = (req, res) => {
-    tree.find({
-        position: {
-            $geoWithin: {
-                $box: [
-                    [req.body._southWest.lng, req.body._southWest.lat],
-                    [req.body._northEast.lng, req.body._northEast.lat],
-                ],
-            },
-        },
-    })
-        .then(result => {
-            res.status(200).json(result).end();
-        })
-        .catch(err => {
-            res.status(500).json(err).end();
-        });
+exports.allTreesByViewport = async (req, res) => {
+    try {
+        const trees = await tree
+            .find({
+                position: {
+                    $geoWithin: {
+                        $box: [
+                            [req.body._southWest.lng, req.body._southWest.lat],
+                            [req.body._northEast.lng, req.body._northEast.lat],
+                        ],
+                    },
+                },
+            })
+            .populate("buyHistory.user", "username")
+            .populate("owner", "username color");
+
+        res.status(200).json(trees).end();
+    } catch (e) {
+        res.status(500).json(e).end();
+    }
 };
 
 exports.getTreeData = (req, res) => {
     if (req.params.treeId) {
         tree.findById(req.params.treeId, {comments: 0})
             .populate("buyHistory.user", "username")
-            .populate("owner", "username")
+            .populate("owner", "username color")
             .then(result => {
                 res.status(200).json(result);
             })
@@ -245,8 +248,8 @@ exports.lockPrice = async (req, res) => {
     try {
         const player = await User.findById(req.userId).exec();
         const treeToLock = await tree.findById(req.params.treeId).exec();
-        const amount = await getLockPrice(treeToLock, player);
-        res.status(200).json({lockingPrice: amount});
+        const price = await getLockPrice(treeToLock, player);
+        res.status(200).json({price});
     } catch (e) {
         res.status(400).json({error: e.toString()});
     }
@@ -255,25 +258,23 @@ exports.lockPrice = async (req, res) => {
 //#endregion
 
 //#region Buying Trees
-const getUniqueName = (callback, retry = 15) => {
+const getUniqueName = (retry = 15) => {
     if (retry === 0) {
         throw new Error("NAME GENERATOR FAIL");
     }
     const name = nameByRace("highelf", {
         gender: Math.round(Math.random()) ? "male" : "female",
     });
-    tree.findOne({name})
-        .then(result => {
-            if (!result) {
-                callback(name);
-            } else {
-                const nbrRetry = retry - 1;
-                getUniqueName(callback, nbrRetry);
-            }
-        })
-        .catch(err => {
-            console.log(err);
-        });
+    try {
+        const notUnique = tree.findOne({name});
+
+        const nbrRetry = retry - 1;
+        console.log({notUnique, nbrRetry});
+        getUniqueName(nbrRetry);
+    } catch (e) {
+        return name;
+    }
+    return false;
 };
 
 const calculateBuyPrice = async (treeToBuy, buyer) => {
@@ -320,28 +321,28 @@ const calculateBuyPrice = async (treeToBuy, buyer) => {
     return value;
 };
 
-const closeTheDeal = async (amount, buyer, treeToBuy) => {
-    const cash = buyer.totalLeaves;
-    if (cash >= amount) {
-        treeToBuy.owner._id = buyer._id;
+const closeTheDeal = (amount, buyer, treeToBuy) => {
+    if (buyer.totalLeaves >= amount) {
+        treeToBuy.owner = buyer._id;
         treeToBuy.buyHistory.push({
             date: new Date(),
             user: buyer._id,
         });
-        if (!treeToBuy.name) {
-            return getUniqueName(async name => {
+        if (treeToBuy.name === null) {
+            try {
+                const name = getUniqueName();
+                console.log({name});
                 treeToBuy.name = name;
-                await treeToBuy.save();
-                buyer.totalLeaves = cash - amount;
-                return buyer.save();
-            });
+                return treeToBuy.save();
+            } catch (e) {
+                throw new Error(e.toString());
+            }
+        } else {
+            return treeToBuy.save();
         }
-        await treeToBuy.save();
-        //eslint-disable-next-line
-            buyer.totalLeaves = cash - amount;
-        return buyer.save();
+    } else {
+        throw new Error("Not enougth leaves");
     }
-    throw new Error("Not enougth leaves");
 };
 
 const getBuyingPrice = async (treeToBuy, buyer) => {
@@ -387,7 +388,10 @@ exports.buyTree = async (req, res) => {
                 ? `Buy back the tree from ${treeToBuy.owner.username}`
                 : "Buy a tree";
             const amount = await getBuyingPrice(treeToBuy, buyer);
-            const buyerUpdated = await closeTheDeal(amount, buyer, treeToBuy);
+            await closeTheDeal(amount, buyer, treeToBuy);
+            buyer.totalLeaves = buyer.totalLeaves - amount;
+            const buyerUpdated = buyer.save();
+
             const log = new Log();
             log.message = message;
             log.author = buyer._id;
@@ -403,15 +407,15 @@ exports.buyTree = async (req, res) => {
 
 //#endregion
 
-tree.watch().on("change", treeUpdated => {
-    console.log({
-        updatedTree: treeUpdated.documentKey,
-        change: treeUpdated.operationType,
-    });
-});
+// tree.watch().on("change", (treeUpdated) => {
+//     console.log({
+//         updatedTree: treeUpdated.documentKey,
+//         change: treeUpdated.operationType,
+//     });
+// });
 
-Log.watch().on("change", data => {
-    console.log({
-        Log: data.fullDocument.msg,
-    });
-});
+// Log.watch().on("change", (data) => {
+//     console.log({
+//         Log: data.fullDocument.msg,
+//     });
+// });
