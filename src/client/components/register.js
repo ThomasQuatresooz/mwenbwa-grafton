@@ -24,38 +24,11 @@ class RegisterPage extends React.Component {
         });
         console.log(e.target.value);
     }
-
     handleSubmit(e) {
         e.preventDefault();
         console.log(this.state);
 
         const data = this.state;
-
-        // const user = {
-        //     username: this.state.username,
-        //     email: this.state.email,
-        //     password: this.state.password,
-        // };
-
-        // axios
-        //     .post(
-        //         "api/auth/signup",
-        //         data,
-        //         // {
-        //         //     username: this.state.username,
-        //         //     email: this.state.email,
-        //         //     password: this.state.password,
-        //         // },
-        //         // {
-        //         //     withCredentials: true,
-        //         // },
-        //     )
-        //     .then((response) => console.log(response.data))
-        //     .catch((error) => console.log("Login error", error));
-
-        // const myHeaders = new Header();
-        // myHeaders.append("Content-Type", "application/json;charset=UTF-8");
-        // myHeaders.append("accept", "application/json");
 
         const url = "api/auth/signup";
         const options = {
@@ -68,6 +41,7 @@ class RegisterPage extends React.Component {
             withCredentials: true,
         };
 
+        // console.log pour être sûr qu'on a les données bien formatées en JSON
         console.log(JSON.stringify(data));
 
         fetch(url, options)
@@ -310,7 +284,7 @@ class RegisterPage extends React.Component {
                                 <div className={"field is-horizontal"}>
                                     <div className={"field-label is-normal"}>
                                         <label className={"label"}>
-                                            {"Pick a color"}
+                                            {"Color"}
                                         </label>
                                     </div>
                                     <div className={"field-body"}>
@@ -321,20 +295,12 @@ class RegisterPage extends React.Component {
                                                 }>
                                                 <input
                                                     name={"color"}
-                                                    type={"hidden"}
-                                                    id={"val"}
+                                                    type={"text"}
+                                                    className={"input jscolor"}
+                                                    placeholder={"Pick a color"}
                                                     value={this.state.color}
                                                     onChange={this.handleChange}
-                                                />
-                                                <input
-                                                    type={"text"}
-                                                    className={"input"}
-                                                    placeholder={"Color picker"}
-                                                    // value={this.state.color}
-                                                    // onChange={this.handleChange}
-                                                    data-jscolor={
-                                                        "{valueElement:'val'}"
-                                                    }
+                                                    data-jscolor={""}
                                                 />
 
                                                 <span
