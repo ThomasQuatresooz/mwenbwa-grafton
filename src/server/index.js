@@ -51,10 +51,11 @@ import compression from "compression";
 import path from "path";
 
 import routeTree from "./routes/route-tree";
-const userRoutes = require("./db/router/user");
-const statusRoutes = require("./db/router/status");
+import userRoutes from "./routes/user";
+import statusRoutes from "./routes/status";
 import routeLeaderboard from "./routes/leaderboard";
-
+import {tree} from "./models/tree-schema";
+import User from "./models/user-schema";
 // const corsOptions = {
 //     origin: "http://localhost:8080",
 // };
@@ -102,13 +103,32 @@ app.use("/api/status", statusRoutes); //permet de vérifier si bien connecté au
 module.exports = app;
 
 //Timer part
-//function earnleaves() {
-// const treeOwned = tree.find({owner: {$ne: null}}).forEach();
+async function earnleaves() {
+    const treeOwned = await tree
+        .aggregate([
+            {$match: {owner: {$ne: null}}},
+            {$group: {_id: "$owner", valeur: {$sum: "$value"}}},
+        ])
+        .exec();
+    treeOwned.forEach(async element => {
+        const user = await User.findById(element._id).exec();
+        user.totalLeaves = user.totalLeaves + element.valeur;
+        user.save();
+    });
+}
+
+setTimeout(earnleaves(), 900000);
+//
+/*treeByOwner = tree
+    .find({owner: {$ne: null}})
+    .agregate([{$group: {_id: "$owner"}, totalleaves: {$sum: "$value"}}]);*/
 
 //Trees.arbustum.value.value + Trees.users.totalLeaves.value where treeOwned._id = Trees.users._id
 //treeOwned.forEach(tree.owner => {user.updateMany({_id })
-// });
+//});
 //}
+//async
 // for each user search tree where owner = user._id
 //reduce sum of value of all trees having the same owner
 //add that sum to totalLeaves of the user
+//findbyID

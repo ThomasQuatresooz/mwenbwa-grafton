@@ -1,5 +1,5 @@
-import {tree} from "../db/models/tree-schema";
-import {User} from "../db/models/user-schema";
+import {tree} from "../models/tree-schema";
+import {User} from "../models/user-schema";
 
 exports.getLeaderboardByTrees = async (_, res) => {
     try {
