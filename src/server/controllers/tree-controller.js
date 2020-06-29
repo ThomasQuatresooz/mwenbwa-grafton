@@ -1,5 +1,5 @@
 import {tree, comment} from "../models/tree-schema";
-import {User} from "../models/user-schema";
+import User from "../models/user-schema";
 import {Log} from "../models/log-schema";
 import {nameByRace} from "fantasy-name-generator";
 
@@ -11,58 +11,128 @@ const getTreesAround100m = async coordinates => {
                     type: "Point",
                     coordinates,
                 },
-                $minDistance: 0.1,
+                $minDistance: 0.01,
                 $maxDistance: 100,
             },
         },
     });
     return forest;
 };
+//#region NameGeneration
+const getName = () =>
+    nameByRace("highelf", {
+        gender: Math.round(Math.random()) ? "male" : "female",
+    });
+const getBatchOfUniqueNames = batch =>
+    new Promise((resolve, reject) => {
+        const names = [];
+        const promises = [];
+        do {
+            const name = getName();
+            if (!names.includes(name)) {
+                names.push(name);
+            }
+        } while (names.length < batch);
 
-exports.getPackOfRandomTrees = (callback, retry = 10, packSize = 3) => {
-    if (retry === 0) {
-        callback("Not find a good starting point", null);
-    } else {
+        names.forEach(name => {
+            promises.push(tree.findOne({name}));
+        });
+
+        Promise.all(promises)
+            .then(results => {
+                if (results.every(value => value === null)) {
+                    resolve(names);
+                } else {
+                    reject(new Error("One of the names already picked"));
+                }
+            })
+            .catch(err => {
+                reject(err);
+            });
+    });
+const tryGetNames = (batch = 3, retry = 15) =>
+    new Promise((resolve, reject) =>
+        getBatchOfUniqueNames(batch)
+            .then(resolve)
+            .catch(err => {
+                if (retry - 1 > 0) {
+                    return tryGetNames(batch, retry - 1)
+                        .then(resolve)
+                        .catch(reject);
+                }
+                return reject(err);
+            }),
+    );
+
+//#endregion
+
+//#region starterPack
+
+const getPackOfTrees = batch =>
+    new Promise((resolve, reject) => {
         const starterPack = [];
         tree.aggregate([{$match: {owner: null}}, {$sample: {size: 1}}])
             .then(result => {
-                starterPack.push(result[0]);
-                tree.find({
-                    position: {
-                        $near: {
-                            $geometry: {
-                                type: "Point",
-                                coordinates:
-                                    starterPack[0].position.coordinates,
+                //need to do this because aggregate return a json !... Not a model...
+                tree.findById(result[0]._id)
+                    .then(starter => {
+                        starterPack.push(starter);
+                        tree.find({
+                            position: {
+                                $near: {
+                                    $geometry: {
+                                        type: "Point",
+                                        coordinates:
+                                            starterPack[0].position.coordinates,
+                                    },
+                                    $minDistance: 0.1,
+                                    $maxDistance: 100,
+                                },
                             },
-                            $minDistance: 0.1,
-                            $maxDistance: 100,
-                        },
-                    },
-                    owner: null,
-                })
-                    .limit(2)
-                    .then(trees => {
-                        starterPack.push(...trees);
-                        if (starterPack.length < packSize) {
-                            const nbrRetry = retry - 1;
-                            //eslint-disable-next-line
-                            getPackOfRandomTrees(callback, nbrRetry);
-                        } else {
-                            callback(null, starterPack);
-                        }
+                            owner: null,
+                        })
+                            .limit(batch - 1)
+                            .then(trees => {
+                                starterPack.push(...trees);
+                                if (starterPack.length === batch) {
+                                    resolve(starterPack);
+                                } else {
+                                    reject(new Error("Bad Starter location"));
+                                }
+                            })
+                            .catch(err => {
+                                reject(err);
+                            });
                     })
-                    .catch(err => {
-                        console.log(err);
-                        callback(err, null);
-                    });
+                    .catch(err => reject(err));
             })
+            .catch(err => reject(err));
+    });
+
+const tryGetPackOfTrees = (packSize = 3, retry = 10) =>
+    new Promise((resolve, reject) =>
+        getPackOfTrees(packSize)
+            .then(resolve)
             .catch(err => {
-                console.log(err);
-                callback(err, null);
-            });
-    }
+                if (retry - 1 > 0) {
+                    return tryGetPackOfTrees(packSize, retry - 1)
+                        .then(resolve)
+                        .catch(reject);
+                }
+                return reject(err);
+            }),
+    );
+
+exports.getStarterPack = async () => {
+    const trees = await tryGetPackOfTrees();
+    const names = await tryGetNames(trees.length);
+    trees.forEach((treeInPack, index) => {
+        treeInPack.name = names[index];
+    });
+    return trees;
 };
+
+//#endregion
 
 exports.allTreesByViewport = async (req, res) => {
     try {
@@ -171,14 +241,10 @@ const calculateLockPrice = async (treeToLock, player) => {
     const vArbres = treesAround.reduce((acc, {value}) => acc + value, 0);
     const nbrPlayer = treesAround.reduce((acc, {owner}) => {
         if (owner) {
-            if (acc.has(owner)) {
-                acc.set(owner, acc.get(owner) + 1);
-            } else {
-                acc.set(owner, 1);
-            }
+            acc.add(owner._id.toString());
         }
         return acc;
-    }, new Map()).size;
+    }, new Set()).size;
 
     const vArbresPlayer = treesAround
         .filter(t => {
@@ -191,8 +257,8 @@ const calculateLockPrice = async (treeToLock, player) => {
 
     const lockValue = Math.ceil(
         treeToLock.value * 10 +
-            vArbres * nbrPlayer -
-            (nbrPlayer > 0 ? vArbresPlayer / nbrPlayer : 0),
+            vArbres * (nbrPlayer === 0 ? 1 : nbrPlayer) -
+            vArbresPlayer / (nbrPlayer === 0 ? 1 : nbrPlayer),
     );
     return lockValue;
 };
@@ -258,23 +324,6 @@ exports.lockPrice = async (req, res) => {
 //#endregion
 
 //#region Buying Trees
-const getUniqueName = async (retry = 15) => {
-    if (retry === 0) {
-        throw new Error("NAME GENERATOR FAIL");
-    }
-    const name = nameByRace("highelf", {
-        gender: Math.round(Math.random()) ? "male" : "female",
-    });
-
-    const notUnique = await tree.findOne({name}).exec();
-    if (notUnique === null) {
-        return name;
-    }
-    const nbrRetry = retry - 1;
-    await getUniqueName(nbrRetry);
-
-    return false;
-};
 
 const calculateBuyPrice = async (treeToBuy, buyer) => {
     const treesAround = await getTreesAround100m(
@@ -311,9 +360,8 @@ const calculateBuyPrice = async (treeToBuy, buyer) => {
     const value = Math.ceil(
         treeToBuy.value +
             enemyTreesValue *
-                (amountEnemyTree > 0
-                    ? treesAround.length / amountEnemyTree
-                    : 0) +
+                (treesAround.length /
+                    (amountEnemyTree === 0 ? 1 : amountEnemyTree)) +
             vOtherPlayerTrees -
             vBuyerTrees,
     );
@@ -329,9 +377,9 @@ const closeTheDeal = async (amount, buyer, treeToBuy) => {
         });
         if (treeToBuy.name === null) {
             try {
-                const name = await getUniqueName();
+                const name = await tryGetNames(1);
                 //eslint-disable-next-line
-                treeToBuy.name = name;
+                treeToBuy.name = name[0];
                 return treeToBuy.save();
             } catch (e) {
                 throw new Error(e.toString());
@@ -389,7 +437,7 @@ exports.buyTree = async (req, res) => {
             const amount = await getBuyingPrice(treeToBuy, buyer);
             await closeTheDeal(amount, buyer, treeToBuy);
             buyer.totalLeaves = buyer.totalLeaves - amount;
-            const buyerUpdated = buyer.save();
+            const buyerUpdated = await buyer.save();
 
             const log = new Log();
             log.message = message;
@@ -405,16 +453,3 @@ exports.buyTree = async (req, res) => {
 };
 
 //#endregion
-
-// tree.watch().on("change", (treeUpdated) => {
-//     console.log({
-//         updatedTree: treeUpdated.documentKey,
-//         change: treeUpdated.operationType,
-//     });
-// });
-
-// Log.watch().on("change", (data) => {
-//     console.log({
-//         Log: data.fullDocument.msg,
-//     });
-// });
