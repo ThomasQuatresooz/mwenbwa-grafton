@@ -51,8 +51,9 @@ import compression from "compression";
 import path from "path";
 
 import routeTree from "./routes/route-tree";
-const userRoutes = require("./db/router/user");
-const statusRoutes = require("./db/router/status");
+import userRoutes from "./routes/user";
+import statusRoutes from "./routes/status";
+import routeLeaderboard from "./routes/leaderboard";
 
 // const corsOptions = {
 //     origin: "http://localhost:8080",
@@ -68,7 +69,10 @@ mongoose
         },
     )
     .then(() => console.log("Connexion à MongoDB réussie !"))
-    .catch(() => console.log("Connexion à MongoDB échouée !"));
+    .catch(e => {
+        console.log(`Connexion à MongoDB échouée !${e}`);
+        process.exit();
+    });
 
 const app = express();
 app.use(compression());
@@ -91,7 +95,8 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 app.use("/trees", routeTree);
-
+app.use("/leaderboard", routeLeaderboard);
 app.use("/api/auth", userRoutes); // point d'entrée pour les routes de signup et login
 app.use("/api/status", statusRoutes); //permet de vérifier si bien connecté au serveur
+
 module.exports = app;

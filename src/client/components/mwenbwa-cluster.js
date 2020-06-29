@@ -1,6 +1,6 @@
 /* eslint-disable react/button-has-type */
 
-import React, {useState, useEffect, useContext, useCallback} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import {useLeaflet} from "react-leaflet";
 import UserContext from "./mwenbwa-context";
 
@@ -9,39 +9,45 @@ import "../../../node_modules/react-leaflet-markercluster/dist/styles.min.css";
 
 import MBMarker from "./mwenbwa-marker";
 
-const MBCluster = props => {
+const MBCluster = () => {
     const leafContext = useLeaflet();
     const UserCont = useContext(UserContext);
     const [forest, plantTree] = useState([]);
 
-    useEffect(() => {
-        UserCont.on("MapUpdated", () => {
-            fetch("http://localhost/trees", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(leafContext.map.getBounds()),
-            })
-                .then(res => {
-                    res.json().then(value => {
-                        plantTree(value);
-                    });
-                })
-                .catch(err => {
-                    console.error(err);
+    const fetchTree = bounds => {
+        fetch("http://localhost/trees", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(bounds),
+        })
+            .then(res => {
+                res.json().then(value => {
+                    plantTree(value);
                 });
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    };
+
+    useEffect(() => {
+        fetchTree(leafContext.map.getBounds());
+        leafContext.map.addEventListener("movestart", () => {
+            console.log("MOVE START");
         });
-        props.whenReady();
+
+        leafContext.map.addEventListener("moveend", () => {
+            fetchTree(leafContext.map.getBounds());
+        });
+
         return () => {
-            UserCont.off("MapUpdated");
+            leafContext.map.removeEventListener("movestart");
+            leafContext.map.removeEventListener("moveend");
+            UserCont.EventEmitter.removeListener("user.connected");
         };
     }, []);
-
-    /*eslint-disable no-use-before-define */
-    const testUpdate = useCallback(() => {
-        UserCont.emit("5ed763c0da18fc1c40ac9bb1");
-    }, [testUpdate]);
 
     return (
         <React.Fragment>
@@ -56,18 +62,6 @@ const MBCluster = props => {
                     <></>
                 )}
             </MarkerClusterGroup>
-            {/*eslint-disable-next-line*/}
-            <button
-                style={{
-                    position: "fixed",
-                    width: "300px",
-                    height: "50px",
-                    zIndex: "999999",
-                }}
-                type={"button"}
-                onClick={testUpdate}>
-                {"Test Event"}
-            </button>
         </React.Fragment>
     );
 };

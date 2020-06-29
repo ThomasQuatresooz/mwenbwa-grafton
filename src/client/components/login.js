@@ -1,9 +1,12 @@
 /* eslint-disable react/jsx-max-depth */
 /* eslint-disable react/button-has-type */
 import React from "react";
+import UserContext from "../components/mwenbwa-context";
 // import axios from "axios";
 
 class LoginPage extends React.Component {
+    static contextType = UserContext;
+
     constructor() {
         super();
 
@@ -43,8 +46,11 @@ class LoginPage extends React.Component {
         fetch(url, options)
             .then(response => {
                 if (response.ok) {
-                    console.log(response.data);
-                    console.log("Connexion réussie. Bienvenue !");
+                    response.json().then(json => {
+                        this.context.setUser(json);
+                        console.log(json);
+                        console.log("Connexion réussie. Bienvenue !");
+                    });
                 } else {
                     console.log(
                         `Request rejected with status ${response.status}`,
