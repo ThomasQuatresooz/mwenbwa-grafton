@@ -1,6 +1,6 @@
-import {tree, comment} from "../db/models/tree-schema";
-import {User} from "../db/models/user-schema";
-import {Log} from "../db/models/log-schema";
+import {tree, comment} from "../models/tree-schema";
+import {User} from "../models/user-schema";
+import {Log} from "../models/log-schema";
 import {nameByRace} from "fantasy-name-generator";
 
 const getTreesAround100m = async coordinates => {
