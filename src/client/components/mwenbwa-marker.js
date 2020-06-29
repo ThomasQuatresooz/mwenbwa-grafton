@@ -6,7 +6,7 @@ import L from "leaflet";
 import {Marker, Popup} from "react-leaflet";
 import UserContext from "./mwenbwa-context";
 
-const MBMarker = props => {
+const MBMarker = (props) => {
     const [tree, setTree] = useState(props.tree);
     const [buyprice, setBuyprice] = useState(0);
     const [lockprice, setLockprice] = useState(0);
@@ -54,11 +54,11 @@ const MBMarker = props => {
             console.log(`RECEIVED EVENT TO UPDATE TREE N:${tree._id}`);
             //On event -> fetch new data
             fetch(`${document.URL}trees/${tree._id}`)
-                .then(result => {
+                .then((result) => {
                     //parse date -> set state -> re-render
-                    result.json().then(res => setTree(res));
+                    result.json().then((res) => setTree(res));
                 })
-                .catch(err => {
+                .catch((err) => {
                     console.log(err);
                 });
         });
@@ -69,7 +69,7 @@ const MBMarker = props => {
     }, []);
 
     const fetchPrice = useCallback(
-        forBuying => {
+        (forBuying) => {
             console.log(UserCont);
 
             if (UserCont.user !== null) {
@@ -84,9 +84,9 @@ const MBMarker = props => {
                         },
                     },
                 )
-                    .then(result => {
+                    .then((result) => {
                         if (result.ok) {
-                            result.json().then(res => {
+                            result.json().then((res) => {
                                 //eslint-disable-next-line
                                 forBuying
                                     ? setBuyprice(res.price)
@@ -96,7 +96,7 @@ const MBMarker = props => {
                             console.log(result.statusText);
                         }
                     })
-                    .catch(err => {
+                    .catch((err) => {
                         console.log(err);
                     });
             }
@@ -124,17 +124,18 @@ const MBMarker = props => {
                 Authorization: `bearer ${UserCont.user.token}`,
             },
         })
-            .then(result => {
+            .then((result) => {
                 if (result.ok) {
-                    result.json().then(json => {
+                    result.json().then((json) => {
                         UserCont.user.totalLeaves = json;
                     });
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(err);
             });
-    }, [lockTheTree]);
+    }, [lockTheTree, UserCont.user]);
+
     const buyTheTree = useCallback(() => {
         fetch(`${document.baseURI}trees/${tree._id}/buy`, {
             method: "POST",
@@ -142,17 +143,17 @@ const MBMarker = props => {
                 Authorization: `bearer ${UserCont.user.token}`,
             },
         })
-            .then(result => {
+            .then((result) => {
                 if (result.ok) {
-                    result.json().then(json => {
+                    result.json().then((json) => {
                         UserCont.user.totalLeaves = json;
                     });
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 console.log(err);
             });
-    }, [buyTheTree]);
+    }, [buyTheTree, UserCont.user]);
 
     return (
         <React.Fragment>

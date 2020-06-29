@@ -1,7 +1,7 @@
 const http = require("http");
 const app = require("./index");
-
-const normalizePort = val => {
+import socket from "./utils/socket";
+const normalizePort = (val) => {
     const port = parseInt(val);
 
     if (isNaN(port)) {
@@ -19,7 +19,7 @@ const server = http.createServer(app);
 
 const address = server.address();
 
-const errorHandler = error => {
+const errorHandler = (error) => {
     if (error.syscall !== "listen") {
         throw error;
     }
@@ -48,3 +48,5 @@ server.on("listening", () => {
 server.on("error", errorHandler);
 
 server.listen(port);
+
+socket.listen(server);
