@@ -102,23 +102,24 @@ app.use("/api/status", statusRoutes); //permet de vérifier si bien connecté au
 
 module.exports = app;
 
-//Timer part
+//Timer 15min part
 async function earnleaves() {
     const treeOwned = await tree
         .aggregate([
             {$match: {owner: {$ne: null}}},
-            {$group: {_id: "$owner", valeur: {$sum: "$value"}}},
+            {$group: {_id: "$owner", value: {$sum: "$value"}}},
         ])
         .exec();
     treeOwned.forEach(async element => {
         const user = await User.findById(element._id).exec();
-        user.totalLeaves = user.totalLeaves + element.valeur;
+        user.totalLeaves = user.totalLeaves + element.value;
         user.save();
     });
 }
 
 setTimeout(earnleaves(), 900000);
-//
+
+//async function loseLeaves() {};
 /*treeByOwner = tree
     .find({owner: {$ne: null}})
     .agregate([{$group: {_id: "$owner"}, totalleaves: {$sum: "$value"}}]);*/
@@ -131,4 +132,3 @@ setTimeout(earnleaves(), 900000);
 // for each user search tree where owner = user._id
 //reduce sum of value of all trees having the same owner
 //add that sum to totalLeaves of the user
-//findbyID
