@@ -117,18 +117,15 @@ async function earnleaves() {
     });
 }
 
-setTimeout(earnleaves(), 900000);
+setTimeout(earnleaves, 900000);
 
-//async function loseLeaves() {};
-/*treeByOwner = tree
-    .find({owner: {$ne: null}})
-    .agregate([{$group: {_id: "$owner"}, totalleaves: {$sum: "$value"}}]);*/
-
-//Trees.arbustum.value.value + Trees.users.totalLeaves.value where treeOwned._id = Trees.users._id
-//treeOwned.forEach(tree.owner => {user.updateMany({_id })
-//});
-//}
-//async
-// for each user search tree where owner = user._id
-//reduce sum of value of all trees having the same owner
-//add that sum to totalLeaves of the user
+//Timer 1hour part
+async function loseLeaves() {
+    const user = await User.find();
+    user.forEach(element => {
+        element.totalLeaves = Math.ceil(element.totalLeaves / 2);
+        element.save();
+        console.log(element.totalLeaves);
+    });
+}
+setTimeout(loseLeaves, 3600000);
