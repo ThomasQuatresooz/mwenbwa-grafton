@@ -7,7 +7,11 @@ import RegisterPage from "./register";
 import LeaderboardPage from "./leaderboard";
 import GamelogPage from "./gamelog";
 
+import UserContext from "../components/mwenbwa-context";
+
 class Menu extends React.Component {
+    static contextType = UserContext;
+
     constructor() {
         super();
 
@@ -92,6 +96,102 @@ class Menu extends React.Component {
     }
 
     render() {
+        if (this.context.user) {
+            return (
+                <div>
+                    <nav
+                        className={"navbar is-success"}
+                        role={"navigation"}
+                        aria-label={"main navigation"}>
+                        <div className={"navbar-brand"}>
+                            <div className={"navbar-item is-expanded"}>
+                                <span className={"icon is-medium"}>
+                                    <i className={"far fa-lg fa-clock"} />
+                                </span>
+                                <p>{"12:35"}</p>
+                            </div>
+
+                            <div className={"navbar-item is-expanded"}>
+                                <span className={"icon is-medium"}>
+                                    <i className={"fas fa-lg fa-tree"} />
+                                </span>
+                                <p>{"???"}</p>
+                            </div>
+                            <div className={"navbar-item is-expanded"}>
+                                <span className={"icon is-medium"}>
+                                    <i className={"fab fa-lg fa-envira"} />
+                                </span>
+                                <p>{this.context.user.totalLeaves}</p>
+                            </div>
+
+                            <a
+                                role={"button"}
+                                className={"navbar-burger burger"}
+                                aria-label={"menu"}
+                                aria-expanded={"false"}
+                                onClick={() => {
+                                    const toggle = document.querySelector(
+                                        ".navbar-burger",
+                                    );
+                                    const menu = document.querySelector(
+                                        ".navbar-menu",
+                                    );
+                                    toggle.classList.toggle("is-active");
+                                    menu.classList.toggle("is-active");
+                                }}>
+                                <span aria-hidden={"true"} />
+                                <span aria-hidden={"true"} />
+                                <span aria-hidden={"true"} />
+                            </a>
+                        </div>
+                        <div className={"navbar-menu"}>
+                            <div className={"navbar-start"} />
+                            <div className={"navbar-end"}>
+                                <a
+                                    className={"navbar-item"}
+                                    onClick={this.handleOpenLeaderboard}>
+                                    <span className={"icon is-large"}>
+                                        <i className={"fas fa-list-ol"} />
+                                    </span>
+                                    {"Leaderboard"}
+                                </a>
+                                <hr className={"navbar-divider"} />
+                                <a
+                                    className={"navbar-item"}
+                                    onClick={this.handleOpenGamelog}>
+                                    <span className={"icon is-large"}>
+                                        <i className={"far fa-file-alt"} />
+                                    </span>
+                                    {"Gamelogs"}
+                                </a>
+                                <hr className={"navbar-divider"} />
+                                <a
+                                    className={"navbar-item"}
+                                    onClick={this.handleOpenProfile}>
+                                    <span className={"icon is-large"}>
+                                        <i className={"far fa-user"} />
+                                    </span>
+                                    {"My Profile"}
+                                </a>
+                                <hr className={"navbar-divider"} />
+                            </div>
+                        </div>
+                    </nav>
+                    <ProfilePage
+                        showProfile={this.state.isShowingProfile}
+                        handleCloseProfile={this.closeModalProfile}
+                    />
+                    <LeaderboardPage
+                        showLeaderboard={this.state.isShowingLeaderboard}
+                        handleCloseLeaderboard={this.closeModalLeaderboard}
+                    />
+                    <GamelogPage
+                        showGamelog={this.state.isShowingGamelog}
+                        handleCloseGamelog={this.closeModalGamelog}
+                    />
+                </div>
+            );
+        }
         return (
             <div>
                 <nav
@@ -105,18 +205,7 @@ class Menu extends React.Component {
                             </span>
                             <p>{"12:35"}</p>
                         </div>
-                        <div className={"navbar-item is-expanded"}>
-                            <span className={"icon is-medium"}>
-                                <i className={"fas fa-lg fa-tree"} />
-                            </span>
-                            <p>{"64"}</p>
-                        </div>
-                        <div className={"navbar-item is-expanded"}>
-                            <span className={"icon is-medium"}>
-                                <i className={"fab fa-lg fa-envira"} />
-                            </span>
-                            <p>{"1087"}</p>
-                        </div>
+
                         <a
                             role={"button"}
                             className={"navbar-burger burger"}
@@ -160,15 +249,6 @@ class Menu extends React.Component {
                             <hr className={"navbar-divider"} />
                             <a
                                 className={"navbar-item"}
-                                onClick={this.handleOpenProfile}>
-                                <span className={"icon is-large"}>
-                                    <i className={"far fa-user"} />
-                                </span>
-                                {"My Profile"}
-                            </a>
-                            <hr className={"navbar-divider"} />
-                            <a
-                                className={"navbar-item"}
                                 onClick={this.handleOpenRegister}>
                                 <span className={"icon is-large"}>
                                     <i className={"fas fa-user-plus"} />
@@ -187,10 +267,6 @@ class Menu extends React.Component {
                         </div>
                     </div>
                 </nav>
-                <ProfilePage
-                    showProfile={this.state.isShowingProfile}
-                    handleCloseProfile={this.closeModalProfile}
-                />
                 <LoginPage
                     showLogin={this.state.isShowingLogin}
                     handleCloseLogin={this.closeModalLogin}

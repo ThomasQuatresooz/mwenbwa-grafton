@@ -1,6 +1,6 @@
 /* eslint-disable react/button-has-type */
 
-import React, {useState, useEffect, useContext, useCallback} from "react";
+import React, {useState, useEffect, useContext} from "react";
 import {useLeaflet} from "react-leaflet";
 import UserContext from "./mwenbwa-context";
 
@@ -45,13 +45,9 @@ const MBCluster = () => {
         return () => {
             leafContext.map.removeEventListener("movestart");
             leafContext.map.removeEventListener("moveend");
+            UserCont.EventEmitter.removeListener("user.connected");
         };
     }, []);
-
-    /*eslint-disable no-use-before-define */
-    const testUpdate = useCallback(() => {
-        UserCont.EventEmitter.emit("5ed763c1da18fc1c40aca0a3");
-    }, [testUpdate]);
 
     return (
         <React.Fragment>
@@ -66,18 +62,6 @@ const MBCluster = () => {
                     <></>
                 )}
             </MarkerClusterGroup>
-            {/*eslint-disable-next-line*/}
-            <button
-                style={{
-                    position: "fixed",
-                    width: "300px",
-                    height: "50px",
-                    zIndex: "999999",
-                }}
-                type={"button"}
-                onClick={testUpdate}>
-                {"Test Event"}
-            </button>
         </React.Fragment>
     );
 };

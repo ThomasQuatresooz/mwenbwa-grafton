@@ -3,15 +3,15 @@
 /* eslint-disable react/button-has-type */
 /*eslint-disable no-use-before-define */
 
-import React, {useContext, useEffect, useState, useCallback} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import L from "leaflet";
 import {Marker, Popup} from "react-leaflet";
 import UserContext from "./mwenbwa-context";
 
 const MBMarker = props => {
     const [tree, setTree] = useState(props.tree);
-    const [buyprice, setBuyprice] = useState(0);
-    const [lockprice, setLockprice] = useState(0);
+    const [buyprice, setBuyprice] = useState(null);
+    const [lockprice, setLockprice] = useState(null);
 
     const svgPath = `<?xml version="1.0" encoding="iso-8859-1"?>
     <!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
@@ -58,7 +58,11 @@ const MBMarker = props => {
             fetch(`${document.URL}trees/${tree._id}`)
                 .then(result => {
                     //parse date -> set state -> re-render
-                    result.json().then(res => setTree(res));
+                    result.json().then(res => {
+                        console.log(res);
+
+                        setTree(res);
+                    });
                 })
                 .catch(err => {
                     console.log(err);
@@ -70,8 +74,8 @@ const MBMarker = props => {
         };
     }, []);
 
-    const fetchPrice = useCallback(
-        forBuying => {
+    const fetchPrice = forBuying => {
+        if (UserCont.user !== null) {
             fetch(
                 `${document.baseURI}trees/${tree._id}/${
                     forBuying ? "buyprice" : "lockprice"
@@ -79,8 +83,7 @@ const MBMarker = props => {
                 {
                     method: "POST",
                     headers: {
-                        Authorization:
-                            "bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZWUzODViYjZmNzc4MDAxZDliODJiYWQiLCJpYXQiOjE1OTI5MTk1NjgsImV4cCI6MTU5MzAwNTk2OH0.1J53tr_LgeF_RVFQxX7EyexousaI9lgWNSkkiN0YTto",
+                        Authorization: `bearer ${UserCont.user?.token}`,
                     },
                 },
             )
@@ -99,28 +102,29 @@ const MBMarker = props => {
                 .catch(err => {
                     console.log(err);
                 });
-        },
-        [fetchPrice],
-    );
-    const getPrices = useCallback(() => {
-        if (tree.owner && tree.owner._id === UserCont.user._id) {
-            if (lockprice === 0) {
-                fetchPrice(false);
-            }
         }
-        if (!tree.isLocked && tree.owner?._id !== UserCont.user._id) {
-            if (buyprice === 0) {
-                fetchPrice(true);
-            }
-        }
-    }, [getPrices]);
+    };
 
-    const lockTheTree = useCallback(() => {
+    const getPrices = () => {
+        if (UserCont.user) {
+            if (tree.owner && tree.owner._id === UserCont.user.userId) {
+                if (lockprice === null) {
+                    fetchPrice(false);
+                }
+            }
+            if (!tree.isLocked && tree.owner?._id !== UserCont.user.userId) {
+                if (buyprice === null) {
+                    fetchPrice(true);
+                }
+            }
+        }
+    };
+
+    const lockTheTree = () => {
         fetch(`${document.baseURI}trees/${tree._id}/lock`, {
             method: "POST",
             headers: {
-                /**${UserCont.user.token} */
-                Authorization: `bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZWUzODViYjZmNzc4MDAxZDliODJiYWQiLCJpYXQiOjE1OTI5MTk1NjgsImV4cCI6MTU5MzAwNTk2OH0.1J53tr_LgeF_RVFQxX7EyexousaI9lgWNSkkiN0YTto`,
+                Authorization: `bearer ${UserCont.user.token}`,
             },
         })
             .then(result => {
@@ -133,25 +137,30 @@ const MBMarker = props => {
             .catch(err => {
                 console.log(err);
             });
-    }, [lockTheTree]);
-    const buyTheTree = useCallback(() => {
+    };
+
+    const buyTheTree = () => {
         fetch(`${document.baseURI}trees/${tree._id}/buy`, {
             method: "POST",
             headers: {
-                Authorization: `bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1ZWUzODViYjZmNzc4MDAxZDliODJiYWQiLCJpYXQiOjE1OTI5MTk1NjgsImV4cCI6MTU5MzAwNTk2OH0.1J53tr_LgeF_RVFQxX7EyexousaI9lgWNSkkiN0YTto`,
+                Authorization: `bearer ${UserCont.user.token}`,
             },
         })
             .then(result => {
                 if (result.ok) {
                     result.json().then(json => {
-                        UserCont.user.totalLeaves = json;
+                        tree.owner = UserCont.user.userId;
+                        UserCont.setUser({
+                            ...UserCont.user,
+                            totalLeaves: json.remainingLeaves,
+                        });
                     });
                 }
             })
             .catch(err => {
                 console.log(err);
             });
-    }, [buyTheTree]);
+    };
 
     return (
         <React.Fragment>
@@ -191,16 +200,21 @@ const MBMarker = props => {
                                     {`Base value: ${tree.value} leaves`}
                                 </p>
                             </div>
-                            {tree.isLocked || UserCont.user._id === null ? (
+                            {tree.isLocked || UserCont.user === null ? (
                                 <></>
                             ) : (
                                 <div className={"content is-flex"}>
-                                    {tree.owner?._id !== UserCont.user._id ? (
+                                    {tree.owner?._id !==
+                                    UserCont.user?.userId ? (
                                         <button
                                             href={"#"}
                                             type={"button"}
-                                            className={`button is-success ${
+                                            disabled={
+                                                buyprice === null ||
                                                 buyprice === 0
+                                            }
+                                            className={`button is-success ${
+                                                buyprice === null
                                                     ? "is-loading"
                                                     : ""
                                             }`}
@@ -210,10 +224,13 @@ const MBMarker = props => {
                                     ) : (
                                         <button
                                             style={{width: "100%"}}
-                                            href={"#"}
                                             type={"button"}
-                                            className={`button is-secondary ${
+                                            disabled={
+                                                lockprice === null ||
                                                 lockprice === 0
+                                            }
+                                            className={`button is-success ${
+                                                lockprice === null
                                                     ? "is-loading"
                                                     : ""
                                             }`}

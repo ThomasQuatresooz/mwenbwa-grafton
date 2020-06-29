@@ -5,9 +5,9 @@ import {Map, TileLayer, ScaleControl} from "react-leaflet";
 import MBCluster from "./mwenbwa-cluster";
 import "../../../node_modules/leaflet/dist/leaflet.css";
 
-export default function MapLeaflet() {
+export default function MapLeaflet({center}) {
     return (
-        <Map center={[50.64, 5.57]} zoom={17} maxZoom={19}>
+        <Map center={center ? center : [50.64, 5.57]} zoom={17} maxZoom={19}>
             <ScaleControl position={"bottomleft"} imperial={false} />
 
             <TileLayer

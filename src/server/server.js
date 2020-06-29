@@ -1,6 +1,6 @@
 const http = require("http");
 const app = require("./index");
-
+import socket from "./utils/socket";
 const normalizePort = val => {
     const port = parseInt(val);
 
@@ -48,3 +48,5 @@ server.on("listening", () => {
 server.on("error", errorHandler);
 
 server.listen(port);
+
+socket.listen(server);
