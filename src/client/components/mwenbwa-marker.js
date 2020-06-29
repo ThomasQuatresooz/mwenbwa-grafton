@@ -1,15 +1,15 @@
 /* eslint-disable react/button-has-type */
 /*eslint-disable no-use-before-define */
 
-import React, {useContext, useEffect, useState, useCallback} from "react";
+import React, {useContext, useEffect, useState} from "react";
 import L from "leaflet";
 import {Marker, Popup} from "react-leaflet";
 import UserContext from "./mwenbwa-context";
 
-const MBMarker = (props) => {
+const MBMarker = props => {
     const [tree, setTree] = useState(props.tree);
-    const [buyprice, setBuyprice] = useState(0);
-    const [lockprice, setLockprice] = useState(0);
+    const [buyprice, setBuyprice] = useState(null);
+    const [lockprice, setLockprice] = useState(null);
 
     const svgPath = `<?xml version="1.0" encoding="iso-8859-1"?>
     <!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
@@ -54,11 +54,15 @@ const MBMarker = (props) => {
             console.log(`RECEIVED EVENT TO UPDATE TREE N:${tree._id}`);
             //On event -> fetch new data
             fetch(`${document.URL}trees/${tree._id}`)
-                .then((result) => {
+                .then(result => {
                     //parse date -> set state -> re-render
-                    result.json().then((res) => setTree(res));
+                    result.json().then(res => {
+                        console.log(res);
+
+                        setTree(res);
+                    });
                 })
-                .catch((err) => {
+                .catch(err => {
                     console.log(err);
                 });
         });
@@ -68,92 +72,93 @@ const MBMarker = (props) => {
         };
     }, []);
 
-    const fetchPrice = useCallback(
-        (forBuying) => {
-            console.log(UserCont);
-
-            if (UserCont.user !== null) {
-                fetch(
-                    `${document.baseURI}trees/${tree._id}/${
-                        forBuying ? "buyprice" : "lockprice"
-                    }`,
-                    {
-                        method: "POST",
-                        headers: {
-                            Authorization: `bearer ${UserCont.user?.token}`,
-                        },
+    const fetchPrice = forBuying => {
+        if (UserCont.user !== null) {
+            fetch(
+                `${document.baseURI}trees/${tree._id}/${
+                    forBuying ? "buyprice" : "lockprice"
+                }`,
+                {
+                    method: "POST",
+                    headers: {
+                        Authorization: `bearer ${UserCont.user?.token}`,
                     },
-                )
-                    .then((result) => {
-                        if (result.ok) {
-                            result.json().then((res) => {
-                                //eslint-disable-next-line
-                                forBuying
-                                    ? setBuyprice(res.price)
-                                    : setLockprice(res.price);
-                            });
-                        } else {
-                            console.log(result.statusText);
-                        }
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
-            }
-        },
-        [fetchPrice, UserCont.user],
-    );
-    const getPrices = useCallback(() => {
-        if (tree.owner && tree.owner._id === UserCont.user?.userId) {
-            if (lockprice === 0) {
-                fetchPrice(false);
-            }
+                },
+            )
+                .then(result => {
+                    if (result.ok) {
+                        result.json().then(res => {
+                            //eslint-disable-next-line
+                            forBuying
+                                ? setBuyprice(res.price)
+                                : setLockprice(res.price);
+                        });
+                    } else {
+                        console.log(result.statusText);
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         }
-        if (!tree.isLocked && tree.owner?._id !== UserCont.user?.userId) {
-            if (buyprice === 0) {
-                fetchPrice(true);
-            }
-        }
-    }, [getPrices, UserCont.user]);
+    };
 
-    const lockTheTree = useCallback(() => {
+    const getPrices = () => {
+        if (UserCont.user) {
+            if (tree.owner && tree.owner._id === UserCont.user.userId) {
+                if (lockprice === null) {
+                    fetchPrice(false);
+                }
+            }
+            if (!tree.isLocked && tree.owner?._id !== UserCont.user.userId) {
+                if (buyprice === null) {
+                    fetchPrice(true);
+                }
+            }
+        }
+    };
+
+    const lockTheTree = () => {
         fetch(`${document.baseURI}trees/${tree._id}/lock`, {
             method: "POST",
             headers: {
-                /**${UserCont.user.token} */
                 Authorization: `bearer ${UserCont.user.token}`,
             },
         })
-            .then((result) => {
+            .then(result => {
                 if (result.ok) {
-                    result.json().then((json) => {
+                    result.json().then(json => {
                         UserCont.user.totalLeaves = json;
                     });
                 }
             })
-            .catch((err) => {
+            .catch(err => {
                 console.log(err);
             });
-    }, [lockTheTree, UserCont.user]);
+    };
 
-    const buyTheTree = useCallback(() => {
+    const buyTheTree = () => {
         fetch(`${document.baseURI}trees/${tree._id}/buy`, {
             method: "POST",
             headers: {
                 Authorization: `bearer ${UserCont.user.token}`,
             },
         })
-            .then((result) => {
+            .then(result => {
                 if (result.ok) {
-                    result.json().then((json) => {
-                        UserCont.user.totalLeaves = json;
+                    result.json().then(json => {
+                        tree.owner = UserCont.user.userId;
+                        UserCont.setUser({
+                            ...UserCont.user,
+                            totalLeaves: json.remainingLeaves,
+                        });
                     });
                 }
             })
-            .catch((err) => {
+            .catch(err => {
                 console.log(err);
             });
-    }, [buyTheTree, UserCont.user]);
+    };
 
     return (
         <React.Fragment>
@@ -202,8 +207,12 @@ const MBMarker = (props) => {
                                         <button
                                             href={"#"}
                                             type={"button"}
-                                            className={`button is-success ${
+                                            disabled={
+                                                buyprice === null ||
                                                 buyprice === 0
+                                            }
+                                            className={`button is-success ${
+                                                buyprice === null
                                                     ? "is-loading"
                                                     : ""
                                             }`}
@@ -213,10 +222,13 @@ const MBMarker = (props) => {
                                     ) : (
                                         <button
                                             style={{width: "100%"}}
-                                            href={"#"}
                                             type={"button"}
-                                            className={`button is-secondary ${
+                                            disabled={
+                                                lockprice === null ||
                                                 lockprice === 0
+                                            }
+                                            className={`button is-success ${
+                                                lockprice === null
                                                     ? "is-loading"
                                                     : ""
                                             }`}
