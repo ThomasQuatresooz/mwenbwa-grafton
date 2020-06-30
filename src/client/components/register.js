@@ -2,6 +2,7 @@
 /* eslint-disable react/button-has-type */
 import React from "react";
 import "../../lib/jscolor-2.1.0/jscolor";
+import {ChromePicker} from "react-color";
 
 class RegisterPage extends React.Component {
     constructor() {
@@ -18,14 +19,20 @@ class RegisterPage extends React.Component {
         };
     }
 
+    handleChangeComplete = (color) => {
+        this.setState({color: color.hex});
+    };
+
     handleChange(e) {
         this.setState({
             [e.target.name]: e.target.value,
         });
         console.log(e.target.value);
     }
+
     handleSubmit(e) {
         e.preventDefault();
+
         console.log(this.state);
 
         const data = this.state;
@@ -45,7 +52,7 @@ class RegisterPage extends React.Component {
         console.log(JSON.stringify(data));
 
         fetch(url, options)
-            .then(response => {
+            .then((response) => {
                 if (response.ok) {
                     console.log(response.data);
                 } else {
@@ -54,7 +61,7 @@ class RegisterPage extends React.Component {
                     );
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 console.log(`Problem with fetch : ${error}`);
             });
 
@@ -252,7 +259,9 @@ class RegisterPage extends React.Component {
                                                         "input is-danger"
                                                     }
                                                     type={"password"}
-                                                    placeholder={"Password"}
+                                                    placeholder={
+                                                        "Confirm your password"
+                                                    }
                                                 />
                                                 <span
                                                     className={
@@ -293,17 +302,16 @@ class RegisterPage extends React.Component {
                                                 className={
                                                     "control has-icons-left has-icons-right"
                                                 }>
-                                                <input
-                                                    name={"color"}
-                                                    type={"text"}
-                                                    className={"input jscolor"}
-                                                    placeholder={"Pick a color"}
-                                                    value={this.state.color}
-                                                    onChange={this.handleChange}
-                                                    data-jscolor={""}
+                                                <ChromePicker
+                                                    disableAlpha={true}
+                                                    color={this.state.color}
+                                                    onChangeComplete={
+                                                        this
+                                                            .handleChangeComplete
+                                                    }
                                                 />
 
-                                                <span
+                                                {/* <span
                                                     className={
                                                         "icon is-small is-left"
                                                     }>
@@ -312,7 +320,7 @@ class RegisterPage extends React.Component {
                                                             "fas fa-palette"
                                                         }
                                                     />
-                                                </span>
+                                                </span> */}
                                             </div>
                                         </div>
                                     </div>
