@@ -54,6 +54,10 @@ import routeTree from "./routes/route-tree";
 import userRoutes from "./routes/user";
 import statusRoutes from "./routes/status";
 import routeLeaderboard from "./routes/leaderboard";
+import logRoute from "./routes/log";
+
+import {tree} from "./models/tree-schema";
+import User from "./models/user-schema";
 
 // const corsOptions = {
 //     origin: "http://localhost:8080",
@@ -66,6 +70,7 @@ mongoose
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true,
+            useFindAndModify: false,
         },
     )
     .then(() => console.log("Connexion à MongoDB réussie !"))
@@ -95,8 +100,37 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 app.use("/trees", routeTree);
+app.use("/logs", logRoute);
 app.use("/leaderboard", routeLeaderboard);
-app.use("/api/auth", userRoutes); // point d'entrée pour les routes de signup et login
+app.use("/api/", userRoutes); // point d'entrée pour les routes de signup et login
 app.use("/api/status", statusRoutes); //permet de vérifier si bien connecté au serveur
 
 module.exports = app;
+
+//Timer 15min part
+async function earnleaves() {
+    const treeOwned = await tree
+        .aggregate([
+            {$match: {owner: {$ne: null}}},
+            {$group: {_id: "$owner", value: {$sum: "$value"}}},
+        ])
+        .exec();
+    treeOwned.forEach(async element => {
+        const user = await User.findById(element._id).exec();
+        user.totalLeaves = user.totalLeaves + element.value;
+        user.save();
+    });
+}
+
+setTimeout(earnleaves, 900000);
+
+//Timer 1hour part
+async function loseLeaves() {
+    const user = await User.find();
+    user.forEach(element => {
+        element.totalLeaves = Math.ceil(element.totalLeaves / 2);
+        element.save();
+        console.log(element.totalLeaves);
+    });
+}
+setTimeout(loseLeaves, 3600000);
