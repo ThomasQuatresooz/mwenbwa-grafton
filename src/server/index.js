@@ -54,6 +54,7 @@ import routeTree from "./routes/route-tree";
 import userRoutes from "./routes/user";
 import statusRoutes from "./routes/status";
 import routeLeaderboard from "./routes/leaderboard";
+import logRoute from "./routes/log";
 
 // const corsOptions = {
 //     origin: "http://localhost:8080",
@@ -96,6 +97,7 @@ app.use((req, res, next) => {
 app.use(express.json());
 
 app.use("/trees", routeTree);
+app.use("/logs", logRoute);
 app.use("/leaderboard", routeLeaderboard);
 app.use("/api/", userRoutes); // point d'entrée pour les routes de signup et login
 app.use("/api/status", statusRoutes); //permet de vérifier si bien connecté au serveur

@@ -255,8 +255,6 @@ const calculateLockPrice = async (treeToLock, player) => {
         })
         .reduce((acc, {value}) => acc + value, 0);
 
-    console.log(nbrPlayer);
-
     const lockValue = Math.ceil(
         treeToLock.value * 10 +
             vArbres * (nbrPlayer === 0 ? 1 : nbrPlayer) -
@@ -419,8 +417,6 @@ const isTreeNearEnoughAnother = async (coor, buyer) => {
         return t.owner.toString() === buyer._id.toString();
     });
 
-    console.log(buyerTrees.length);
-
     return buyerTrees.length !== 0;
 };
 
@@ -452,20 +448,24 @@ exports.buyTree = async (req, res) => {
     if (req.params.treeId) {
         try {
             const buyer = await User.findById(req.userId).exec();
+            console.log(buyer);
+
             const treeToBuy = await tree
                 .findById(req.params.treeId)
                 .populate("owner", "username")
                 .exec();
-            const message = treeToBuy.owner
-                ? `Buy back the tree from ${treeToBuy.owner.username}`
-                : "Buy a tree";
+            const message = `${buyer.username}${
+                treeToBuy.owner
+                    ? ` buy back the tree from ${treeToBuy.owner.username}`
+                    : " buy a tree"
+            }`;
             const amount = await getBuyingPrice(treeToBuy, buyer);
             await closeTheDeal(amount, buyer, treeToBuy);
             buyer.totalLeaves = buyer.totalLeaves - amount;
             const buyerUpdated = await buyer.save();
 
             const log = new Log();
-            log.message = message;
+            log.msg = message;
             log.author = buyer._id;
             await log.save();
             res.status(202).json({remainingLeaves: buyerUpdated.totalLeaves});
