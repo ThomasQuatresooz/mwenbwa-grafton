@@ -39,4 +39,8 @@ body {
   border-radius: 20px;
 }
 
+.modal-card {
+  overflow-y: scroll;
+}
+
 /*# sourceMappingURL=mystyles.css.map */

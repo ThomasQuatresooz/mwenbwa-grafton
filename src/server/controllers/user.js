@@ -67,6 +67,25 @@ exports.login = (req, res) => {
         .catch(error => res.status(500).json({error}));
 };
 
+exports.checkUsername = (req, res) => {
+    User.findOne({username: req.body.username}).then(user => {
+        if (user) {
+            res.status(401).json({error: "Ce pseudo est déjà utilisé."});
+        } else {
+            res.status(201);
+        }
+    });
+};
+
+exports.checkEmail = (req, res) => {
+    User.findOne({email: req.body.username}).then(user => {
+        if (user) {
+            return res.status(401).json({error: "Cet email est déjà utilisé."});
+        }
+        res.status(201);
+    });
+};
+
 exports.getUserData = async (req, res) => {
     if (req.userId) {
         try {

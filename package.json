@@ -70,6 +70,7 @@
     "mongoose-unique-validator": "^2.0.3",
     "nodemon": "^2.0.4",
     "react": "^16.13.1",
+    "react-color": "^2.18.1",
     "react-dom": "^16.13.1",
     "react-leaflet": "^2.7.0",
     "react-leaflet-markercluster": "^2.0.0",
