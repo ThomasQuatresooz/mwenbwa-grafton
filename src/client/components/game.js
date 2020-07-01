@@ -29,7 +29,7 @@ const Game = () => {
         }
 
         return () => {
-            if (!socket) {
+            if (socket) {
                 socket.trees.disconnect();
                 socket.logs.disconnect();
             }
