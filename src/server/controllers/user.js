@@ -13,6 +13,7 @@ exports.signup = (req, res) => {
                 password: hash,
                 username: req.body.username,
                 color: req.body.color,
+                totalLeaves: 0,
             });
             user.save()
                 .then(() =>
