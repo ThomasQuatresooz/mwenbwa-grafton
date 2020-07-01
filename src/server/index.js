@@ -80,9 +80,6 @@ mongoose
     });
 
 const app = express();
-app.use(compression());
-
-app.use(express.static(path.resolve(__dirname, "../../bin/client")));
 
 app.use((req, res, next) => {
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -97,6 +94,8 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use(compression());
+app.use(express.static(path.resolve(__dirname, "../../bin/client")));
 app.use(express.json());
 
 app.use("/trees", routeTree);
