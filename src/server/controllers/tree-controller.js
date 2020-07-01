@@ -255,6 +255,8 @@ const calculateLockPrice = async (treeToLock, player) => {
         })
         .reduce((acc, {value}) => acc + value, 0);
 
+    console.log(nbrPlayer);
+
     const lockValue = Math.ceil(
         treeToLock.value * 10 +
             vArbres * (nbrPlayer === 0 ? 1 : nbrPlayer) -
@@ -408,13 +410,36 @@ const getBuyingPrice = async (treeToBuy, buyer) => {
     }
 };
 
+const isTreeNearEnoughAnother = async (coor, buyer) => {
+    const trees = await getTreesAround100m(coor);
+    const buyerTrees = trees.filter(t => {
+        if (!t.owner) {
+            return false;
+        }
+        return t.owner.toString() === buyer._id.toString();
+    });
+
+    console.log(buyerTrees.length);
+
+    return buyerTrees.length !== 0;
+};
+
 exports.buyPrice = async (req, res) => {
     if (req.params.treeId) {
         try {
             const buyer = await User.findById(req.userId).exec();
             const treeToBuy = await tree.findById(req.params.treeId).exec();
-            const price = await getBuyingPrice(treeToBuy, buyer);
-            res.status(200).json({price});
+            if (
+                await isTreeNearEnoughAnother(
+                    treeToBuy.position.coordinates,
+                    buyer._id,
+                )
+            ) {
+                const price = await getBuyingPrice(treeToBuy, buyer);
+                res.status(200).json({price});
+            } else {
+                res.status(406).json({error: "Cannot buy outside 100m"});
+            }
         } catch (e) {
             res.status(400).json(e.toString());
         }
