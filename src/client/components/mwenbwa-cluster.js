@@ -15,7 +15,7 @@ const MBCluster = () => {
     const [forest, plantTree] = useState([]);
 
     const fetchTree = bounds => {
-        fetch("http://localhost/trees", {
+        fetch(`trees`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
