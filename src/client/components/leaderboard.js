@@ -1,26 +1,44 @@
+/* eslint-disable no-extra-parens */
 /* eslint-disable react/jsx-max-depth */
 /* eslint-disable react/button-has-type */
-import React from "react";
-
-function RankByTrees() {
-    document.querySelector("#clickedTree").setAttribute("class", "is-active");
-    document.querySelector("#treeRanking").removeAttribute("style");
-    document.querySelector("#clickedLeaf").removeAttribute("class");
-    document
-        .querySelector("#leafRanking")
-        .setAttribute("style", "display: none");
-}
-
-function RankByLeaves() {
-    document.querySelector("#clickedLeaf").setAttribute("class", "is-active");
-    document.querySelector("#leafRanking").removeAttribute("style");
-    document.querySelector("#clickedTree").removeAttribute("class");
-    document
-        .querySelector("#treeRanking")
-        .setAttribute("style", "display: none");
-}
+import React, {useState} from "react";
 
 export default function LeaderboardPage(props) {
+    const [viewLeaf, setViewLeaf] = useState([]);
+    const [viewTree, setViewTree] = useState([]);
+
+    function handleRankByTrees() {
+        document
+            .querySelector("#clickedTree")
+            .setAttribute("class", "is-active");
+        document.querySelector("#treeRanking").removeAttribute("style");
+        document.querySelector("#clickedLeaf").removeAttribute("class");
+        document
+            .querySelector("#leafRanking")
+            .setAttribute("style", "display: none");
+        fetch("leaderboard/trees")
+            .then(res => res.json())
+            .then(elem => {
+                setViewTree(elem);
+            });
+    }
+
+    function handleRankByLeaves() {
+        document
+            .querySelector("#clickedLeaf")
+            .setAttribute("class", "is-active");
+        document.querySelector("#leafRanking").removeAttribute("style");
+        document.querySelector("#clickedTree").removeAttribute("class");
+        document
+            .querySelector("#treeRanking")
+            .setAttribute("style", "display: none");
+        fetch("leaderboard/leaves")
+            .then(res => res.json())
+            .then(elem => {
+                setViewLeaf(elem);
+            });
+    }
+
     return (
         <div className={props.showLeaderboard ? "modal is-active" : "modal"}>
             <div
@@ -39,10 +57,10 @@ export default function LeaderboardPage(props) {
                 <section className={"modal-card-body has-text-centered"}>
                     <div className={"tabs is-centered"}>
                         <ul>
-                            <li id={"clickedTree"} onClick={RankByTrees}>
+                            <li id={"clickedTree"} onClick={handleRankByTrees}>
                                 <a>{"Rank by trees"}</a>
                             </li>
-                            <li id={"clickedLeaf"} onClick={RankByLeaves}>
+                            <li id={"clickedLeaf"} onClick={handleRankByLeaves}>
                                 <a>{"Rank by leaves"}</a>
                             </li>
                         </ul>
@@ -54,26 +72,22 @@ export default function LeaderboardPage(props) {
                         <thead>
                             <tr>
                                 <th title={"rank"}>{"Rank"}</th>
-                                <th title={"nickname"}>{"Nickname"}</th>
+                                <th title={"username"}>{"Username"}</th>
                                 <th title={"trees"}>{"Trees"}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th>{"1"}</th>
-                                <td>{"Starfire"}</td>
-                                <td>{"6"}</td>
-                            </tr>
-                            <tr>
-                                <th>{"2"}</th>
-                                <td>{"Raven"}</td>
-                                <td>{"4"}</td>
-                            </tr>
-                            <tr>
-                                <th>{"3"}</th>
-                                <td>{"Robin"}</td>
-                                <td>{"3"}</td>
-                            </tr>
+                            {viewTree.length === 0 ? (
+                                <></>
+                            ) : (
+                                viewTree.map((result, index) => (
+                                    <tr key={`lb_${result._id._id}`}>
+                                        <th>{index + 1}</th>
+                                        <td>{result._id.username}</td>
+                                        <td>{result.count}</td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                     <table
@@ -83,40 +97,26 @@ export default function LeaderboardPage(props) {
                         <thead>
                             <tr>
                                 <th title={"rank"}>{"Rank"}</th>
-                                <th title={"nickname"}>{"Nickname"}</th>
+                                <th title={"username"}>{"Username"}</th>
                                 <th title={"leaves"}>{"Leaves"}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th>{"1"}</th>
-                                <td>{"Starfire"}</td>
-                                <td>{"234"}</td>
-                            </tr>
-                            <tr>
-                                <th>{"2"}</th>
-                                <td>{"Raven"}</td>
-                                <td>{"200"}</td>
-                            </tr>
-                            <tr>
-                                <th>{"3"}</th>
-                                <td>{"Robin"}</td>
-                                <td>{"199"}</td>
-                            </tr>
+                            {viewLeaf.length === 0 ? (
+                                <></>
+                            ) : (
+                                viewLeaf.map((result, index) => (
+                                    <tr key={result._id}>
+                                        <th>{index + 1}</th>
+                                        <td>{result.username}</td>
+                                        <td>{result.totalLeaves}</td>
+                                    </tr>
+                                ))
+                            )}
                         </tbody>
                     </table>
                 </section>
-                <footer
-                    className={"modal-card-foot"}
-                    style={{justifyContent: "center"}}>
-                    <button
-                        type={"button"}
-                        className={
-                            "button is-success is-outlined is-fullwidth"
-                        }>
-                        {"Find me"}
-                    </button>
-                </footer>
+                <footer className={"modal-card-foot"} />
             </div>
         </div>
     );

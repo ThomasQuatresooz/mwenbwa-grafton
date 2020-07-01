@@ -223,10 +223,8 @@ const ProfilePage = props => {
                                 <div
                                     id={"normalMode"}
                                     className={"column is-5"}>
-                                    <h5
-                                        id={"profileNickname"}
-                                        className={"title is-5"}>
-                                        {""}
+                                    <h5 className={"title is-5"}>
+                                        {UserCont.username}
                                     </h5>
                                     <p id={"profileEmail"}>{""}</p>
                                     <p>{"My color : "}</p>

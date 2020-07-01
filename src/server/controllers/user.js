@@ -65,3 +65,12 @@ exports.login = (req, res) => {
         })
         .catch(error => res.status(500).json({error}));
 };
+
+exports.profile = (req, res, next) => {
+    User.findById(req.body.userId).exec((error, user) => {
+        if (error) {
+            return next(error);
+        }
+        return res.render("profile");
+    });
+};
