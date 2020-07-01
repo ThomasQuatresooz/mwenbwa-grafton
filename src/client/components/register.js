@@ -83,8 +83,8 @@ class RegisterPage extends React.Component {
         );
         const verify1 = document.querySelector("#passwordLength");
         const verify2 = document.querySelector("#passwordMatch");
-        const iconPass1 = document.querySelector("#iconPass1");
-        const iconPass2 = document.querySelector("#iconPass2");
+        // const iconPass1 = document.querySelector("#iconPass1");
+        // const iconPass2 = document.querySelector("#iconPass2");
 
         // valeur mise à 4 pour les tests
 
@@ -96,7 +96,7 @@ class RegisterPage extends React.Component {
             passwordInput.classList.remove("is-success");
             passwordInput.classList.add("is-danger");
             // iconPass1.classList.remove("fas fa-check");
-            // iconPass1.classList.add("fas fa-exclamation-triangle");s
+            // iconPass1.classList.add("fas fa-exclamation-triangle");
             console.log(this.state.iconPass1);
         } else {
             // this.state.iconPass1 = "fas fa-check";
