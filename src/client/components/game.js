@@ -16,12 +16,12 @@ const Game = () => {
     useEffect(() => {
         if (user) {
             const trees = io.connect(`${document.baseURI}trees`);
-            trees.on("tree.updated", (data) => {
+            trees.on("tree.updated", data => {
                 EventEmitter.emit(data.updatedTree._id);
             });
 
             const logs = io.connect(`${document.baseURI}logs`);
-            logs.on("log.created", (data) => {
+            logs.on("log.created", data => {
                 console.log(data);
             });
 

@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+/* eslint-disable react/jsx-max-depth */
 /* eslint-disable react/button-has-type */
 /*eslint-disable no-use-before-define */
 
@@ -10,6 +12,8 @@ const MBMarker = props => {
     const [tree, setTree] = useState(props.tree);
     const [buyprice, setBuyprice] = useState(null);
     const [lockprice, setLockprice] = useState(null);
+
+    //((col & 0x7E7E7E) >> 1) | (col & 0x808080)
 
     const svgPath = `<?xml version="1.0" encoding="iso-8859-1"?>
     <!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
@@ -24,7 +28,12 @@ const MBMarker = props => {
         c16.099,8.725,34.537,13.685,54.134,13.685c62.838,0,113.778-50.94,113.778-113.778
         C434.795,232.839,425.207,207.869,409.259,188.286z"/>
     <path style="fill:${
-        tree.owner ? tree.owner.color : "#96BE4B"
+        tree.owner
+            ? `#${(
+                  ((parseInt(tree.owner.color.substr(1), 16) & 0x7e7e7e) >> 1) |
+                  (parseInt(tree.owner.color.substr(1), 16) & 0x808080)
+              ).toString(16)}`
+            : "#96BE4B"
     };" d="M264.128,347.329c-13.04,3.364-27.479,3.251-42.911-4.038c-20.9-9.871-36.045-29.934-38.096-52.956
         c-0.806-9.043,0.268-17.732,2.845-25.748c1.013-3.152-0.291-6.5-2.851-8.6c-19.979-16.387-32.765-41.211-32.765-69.067
         c0-36.149,21.496-67.201,52.372-81.278c3.222-1.469,5.3-4.672,4.943-8.195c-0.268-2.649-0.426-5.33-0.426-8.051
@@ -94,7 +103,9 @@ const MBMarker = props => {
                                 : setLockprice(res.price);
                         });
                     } else {
-                        console.log(result.statusText);
+                        if (result.status === 406) {
+                            setBuyprice(0);
+                        }
                     }
                 })
                 .catch(err => {
@@ -106,12 +117,12 @@ const MBMarker = props => {
     const getPrices = () => {
         if (UserCont.user) {
             if (tree.owner && tree.owner._id === UserCont.user.userId) {
-                if (lockprice === null) {
+                if (lockprice !== 0) {
                     fetchPrice(false);
                 }
             }
             if (!tree.isLocked && tree.owner?._id !== UserCont.user.userId) {
-                if (buyprice === null) {
+                if (buyprice !== 0) {
                     fetchPrice(true);
                 }
             }
@@ -217,7 +228,11 @@ const MBMarker = props => {
                                                     : ""
                                             }`}
                                             onClick={buyTheTree}>
-                                            {`Buy : ${buyprice}`}
+                                            {`Buy : ${
+                                                buyprice !== 0
+                                                    ? buyprice
+                                                    : "Out zoned"
+                                            }`}
                                         </button>
                                     ) : (
                                         <button

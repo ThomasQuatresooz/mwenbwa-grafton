@@ -8,18 +8,19 @@ const jwt = require("jsonwebtoken");
 exports.signup = (req, res) => {
     bcrypt
         .hash(req.body.password, 10)
-        .then((hash) => {
+        .then(hash => {
             const user = new User({
                 email: req.body.email,
                 password: hash,
                 username: req.body.username,
                 color: req.body.color,
+                totalLeaves: 0,
             });
             user.save()
-                .then(async (userCreated) => {
+                .then(async userCreated => {
                     const trees = await getStarterPack();
                     const promises = [];
-                    trees.forEach((tree) => {
+                    trees.forEach(tree => {
                         tree.owner = userCreated._id;
                         promises.push(tree.save());
                     });
@@ -28,14 +29,14 @@ exports.signup = (req, res) => {
                     await userCreated.save();
                     res.status(201).json({message: "Utilisateur créé !"});
                 })
-                .catch((error) => res.status(400).json(error.toString()));
+                .catch(error => res.status(400).json(error.toString()));
         })
-        .catch((error) => res.status(500).json({error}));
+        .catch(error => res.status(500).json({error}));
 };
 
 exports.login = (req, res) => {
     User.findOne({email: req.body.email})
-        .then((user) => {
+        .then(user => {
             if (!user) {
                 return res
                     .status(401)
@@ -43,7 +44,7 @@ exports.login = (req, res) => {
             }
             bcrypt
                 .compare(req.body.password, user.password)
-                .then((valid) => {
+                .then(valid => {
                     if (!valid) {
                         return res
                             .status(401)
@@ -61,13 +62,13 @@ exports.login = (req, res) => {
                         ),
                     });
                 })
-                .catch((error) => res.status(500).json({error}));
+                .catch(error => res.status(500).json({error}));
         })
-        .catch((error) => res.status(500).json({error}));
+        .catch(error => res.status(500).json({error}));
 };
 
 exports.checkUsername = (req, res) => {
-    User.findOne({username: req.body.username}).then((user) => {
+    User.findOne({username: req.body.username}).then(user => {
         if (user) {
             res.status(401).json({error: "Ce pseudo est déjà utilisé."});
         } else {
@@ -77,11 +78,43 @@ exports.checkUsername = (req, res) => {
 };
 
 exports.checkEmail = (req, res) => {
-    User.findOne({email: req.body.username}).then((user) => {
+    User.findOne({email: req.body.username}).then(user => {
         if (user) {
             return res.status(401).json({error: "Cet email est déjà utilisé."});
-        } else {
-            res.status(201);
         }
+        res.status(201);
     });
+};
+
+exports.getUserData = async (req, res) => {
+    if (req.userId) {
+        try {
+            const data = await User.findById(
+                req.userId,
+                "-password -_id -startPosition -__v",
+            ).exec();
+            res.status(200).json(data);
+        } catch (e) {
+            res.status(500).json({error: e.toString()});
+        }
+    } else {
+        res.status(500).json({error: "Something happens"});
+    }
+};
+exports.saveUser = async (req, res) => {
+    if (req.userId) {
+        try {
+            const userModif = req.body.user;
+            await User.findByIdAndUpdate(
+                req.userId,
+                {
+                    ...userModif,
+                },
+                {new: true},
+            );
+            res.status(202).end();
+        } catch (e) {
+            res.status(500).json({error: e.toString()});
+        }
+    }
 };
