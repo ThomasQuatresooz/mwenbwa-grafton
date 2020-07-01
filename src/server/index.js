@@ -66,6 +66,7 @@ mongoose
             useNewUrlParser: true,
             useUnifiedTopology: true,
             useCreateIndex: true,
+            useFindAndModify: false,
         },
     )
     .then(() => console.log("Connexion à MongoDB réussie !"))
@@ -96,7 +97,7 @@ app.use(express.json());
 
 app.use("/trees", routeTree);
 app.use("/leaderboard", routeLeaderboard);
-app.use("/api/auth", userRoutes); // point d'entrée pour les routes de signup et login
+app.use("/api/", userRoutes); // point d'entrée pour les routes de signup et login
 app.use("/api/status", statusRoutes); //permet de vérifier si bien connecté au serveur
 
 module.exports = app;

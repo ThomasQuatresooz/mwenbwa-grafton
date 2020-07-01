@@ -3,8 +3,11 @@ const router = express.Router();
 
 const userCtrl = require("../controllers/user");
 
-router.post("/signup", userCtrl.signup);
-router.post("/login", userCtrl.login);
-router.get("/profile", userCtrl.profile);
+import auth from "../middlewares/authentification";
+
+router.post("/auth/signup", userCtrl.signup);
+router.post("/auth/login", userCtrl.login);
+router.post("/user/:userId", auth, userCtrl.saveUser);
+router.get("/user/:userId", auth, userCtrl.getUserData);
 
 module.exports = router;

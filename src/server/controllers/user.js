@@ -66,11 +66,35 @@ exports.login = (req, res) => {
         .catch(error => res.status(500).json({error}));
 };
 
-exports.profile = (req, res, next) => {
-    User.findById(req.body.userId).exec((error, user) => {
-        if (error) {
-            return next(error);
+exports.getUserData = async (req, res) => {
+    if (req.userId) {
+        try {
+            const data = await User.findById(
+                req.userId,
+                "-password -_id -startPosition -__v",
+            ).exec();
+            res.status(200).json(data);
+        } catch (e) {
+            res.status(500).json({error: e.toString()});
         }
-        return res.render("profile");
-    });
+    } else {
+        res.status(500).json({error: "Something happens"});
+    }
+};
+exports.saveUser = async (req, res) => {
+    if (req.userId) {
+        try {
+            const userModif = req.body.user;
+            await User.findByIdAndUpdate(
+                req.userId,
+                {
+                    ...userModif,
+                },
+                {new: true},
+            );
+            res.status(202).end();
+        } catch (e) {
+            res.status(500).json({error: e.toString()});
+        }
+    }
 };
