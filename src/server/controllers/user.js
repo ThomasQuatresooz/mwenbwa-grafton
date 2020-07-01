@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 exports.signup = (req, res) => {
     bcrypt
         .hash(req.body.password, 10)
-        .then(hash => {
+        .then((hash) => {
             const user = new User({
                 email: req.body.email,
                 password: hash,
@@ -16,10 +16,10 @@ exports.signup = (req, res) => {
                 color: req.body.color,
             });
             user.save()
-                .then(async userCreated => {
+                .then(async (userCreated) => {
                     const trees = await getStarterPack();
                     const promises = [];
-                    trees.forEach(tree => {
+                    trees.forEach((tree) => {
                         tree.owner = userCreated._id;
                         promises.push(tree.save());
                     });
@@ -28,14 +28,14 @@ exports.signup = (req, res) => {
                     await userCreated.save();
                     res.status(201).json({message: "Utilisateur créé !"});
                 })
-                .catch(error => res.status(400).json(error.toString()));
+                .catch((error) => res.status(400).json(error.toString()));
         })
-        .catch(error => res.status(500).json({error}));
+        .catch((error) => res.status(500).json({error}));
 };
 
 exports.login = (req, res) => {
     User.findOne({email: req.body.email})
-        .then(user => {
+        .then((user) => {
             if (!user) {
                 return res
                     .status(401)
@@ -43,7 +43,7 @@ exports.login = (req, res) => {
             }
             bcrypt
                 .compare(req.body.password, user.password)
-                .then(valid => {
+                .then((valid) => {
                     if (!valid) {
                         return res
                             .status(401)
@@ -61,7 +61,27 @@ exports.login = (req, res) => {
                         ),
                     });
                 })
-                .catch(error => res.status(500).json({error}));
+                .catch((error) => res.status(500).json({error}));
         })
-        .catch(error => res.status(500).json({error}));
+        .catch((error) => res.status(500).json({error}));
+};
+
+exports.checkUsername = (req, res) => {
+    User.findOne({username: req.body.username}).then((user) => {
+        if (user) {
+            res.status(401).json({error: "Ce pseudo est déjà utilisé."});
+        } else {
+            res.status(201);
+        }
+    });
+};
+
+exports.checkEmail = (req, res) => {
+    User.findOne({email: req.body.username}).then((user) => {
+        if (user) {
+            return res.status(401).json({error: "Cet email est déjà utilisé."});
+        } else {
+            res.status(201);
+        }
+    });
 };
