@@ -12,8 +12,9 @@ const MBMarker = props => {
     const [tree, setTree] = useState(props.tree);
     const [buyprice, setBuyprice] = useState(null);
     const [lockprice, setLockprice] = useState(null);
-
-    //((col & 0x7E7E7E) >> 1) | (col & 0x808080)
+    if (tree.owner) {
+        console.log(tree.owner.color);
+    }
 
     const svgPath = `<?xml version="1.0" encoding="iso-8859-1"?>
     <!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
@@ -27,7 +28,8 @@ const MBMarker = props => {
         c-0.354,3.654-0.561,7.351-0.561,11.098c0,62.838,50.94,113.778,113.778,113.778c6.849,0,34.125-0.611,40.635-1.779l2.754-28.16
         c16.099,8.725,34.537,13.685,54.134,13.685c62.838,0,113.778-50.94,113.778-113.778
         C434.795,232.839,425.207,207.869,409.259,188.286z"/>
-    <path style="fill:${
+    <path style="fill:
+    ${
         tree.owner
             ? `#${(
                   ((parseInt(tree.owner.color.substr(1), 16) & 0x7e7e7e) >> 1) |
@@ -50,7 +52,7 @@ const MBMarker = props => {
     </svg>`;
     const treeIcon = L.icon({
         iconUrl: `data:image/svg+xml;base64,${btoa(svgPath)}`,
-        iconAnchor: [10, 0],
+        iconAnchor: [0, 0],
         popupAnchor: [0, 0],
         iconSize: [30, 30],
     });
@@ -60,11 +62,10 @@ const MBMarker = props => {
     useEffect(() => {
         //Listen for a event name on treeId
         UserCont.EventEmitter.on(tree._id, () => {
-            console.log(`RECEIVED EVENT TO UPDATE TREE N:${tree._id}`);
             //On event -> fetch new data
             fetch(`${document.URL}trees/${tree._id}`)
                 .then(result => {
-                    //parse date -> set state -> re-render
+                    //parse data -> set state -> re-render
                     result.json().then(res => {
                         console.log(res);
 
@@ -117,14 +118,10 @@ const MBMarker = props => {
     const getPrices = () => {
         if (UserCont.user) {
             if (tree.owner && tree.owner._id === UserCont.user.userId) {
-                if (lockprice !== 0) {
-                    fetchPrice(false);
-                }
+                fetchPrice(false);
             }
             if (!tree.isLocked && tree.owner?._id !== UserCont.user.userId) {
-                if (buyprice !== 0) {
-                    fetchPrice(true);
-                }
+                fetchPrice(true);
             }
         }
     };
