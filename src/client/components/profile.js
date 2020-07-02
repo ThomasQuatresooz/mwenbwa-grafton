@@ -7,6 +7,10 @@ import UserContext from "./mwenbwa-context";
 export default function ProfilePage(props) {
     const UserCont = useContext(UserContext);
     const [viewInfo, setViewInfo] = useState([]);
+    // const username = useState("");
+    // const email = useState("");
+    // const password1 = useState("");
+    // const password2 = useState("");
     useEffect(() => {
         fetch(`api/user/${UserCont.user.userId}`, {
             headers: {
@@ -46,6 +50,33 @@ export default function ProfilePage(props) {
         document.querySelector("#cancelProfile").removeAttribute("style");
         document.querySelector("#changeImage").removeAttribute("style");
     }
+    function SaveChanges() {
+        const data = useState();
+        const url = `api/user/${UserCont.user.userId}`;
+        const options = {
+            method: "POST",
+            headers: {
+                // accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `bearer ${UserCont.user?.token}`,
+            },
+            body: JSON.stringify(data),
+            withCredentials: true,
+        };
+        fetch(url, options)
+            .then(response => {
+                if (response.ok) {
+                    console.log(response.data);
+                } else {
+                    console.log(
+                        `Request rejected with status ${response.status}`,
+                    );
+                }
+            })
+            .catch(error => {
+                console.log(`Problem with fetch : ${error}`);
+            });
+    }
 
     return (
         <div className={props.showProfile ? "modal is-active" : "modal"}>
@@ -65,11 +96,21 @@ export default function ProfilePage(props) {
                 <section className={"modal-card-body has-text-centered"}>
                     <div className={"columns is-centered"}>
                         <div className={"column is-5"}>
-                            <img
-                                className={"is-square"}
-                                id={"profileImage"}
-                                src={""}
-                            />
+                            <span>
+                                <i className={"fas fa-user-alt fa-3x"} />
+                            </span>
+                            <br />
+                            {/* {viewInfo.img === "" ? (
+                                <span>
+                                    <i className={"fas fa-user-alt fa-3x"} />
+                                </span>
+                            ) : (
+                                <img
+                                    className={"fas fa-user-alt is-large"}
+                                    id={"profileImage"}
+                                    src={viewInfo.img}
+                                />
+                            )} */}
                             <div
                                 className={"file is-info is-centered"}
                                 id={"changeImage"}
@@ -104,7 +145,8 @@ export default function ProfilePage(props) {
                                         className={"input is-success"}
                                         type={"text"}
                                         placeholder={"Text input"}
-                                        value={"bulma"}
+                                        name={"username"}
+                                        value={viewInfo.username}
                                     />
                                     <span className={"icon is-small is-left"}>
                                         <i className={"fas fa-user"} />
@@ -127,7 +169,8 @@ export default function ProfilePage(props) {
                                         className={"input is-danger"}
                                         type={"email"}
                                         placeholder={"Email input"}
-                                        value={"hello@"}
+                                        name={"email"}
+                                        value={viewInfo.email}
                                     />
                                     <span className={"icon is-small is-left"}>
                                         <i className={"fas fa-envelope"} />
@@ -150,6 +193,7 @@ export default function ProfilePage(props) {
                                     <input
                                         className={"input"}
                                         type={"password"}
+                                        name={"password1"}
                                         placeholder={"Password"}
                                     />
                                     <span className={"icon is-small is-left"}>
@@ -165,27 +209,11 @@ export default function ProfilePage(props) {
                                     <input
                                         className={"input"}
                                         type={"password"}
+                                        name={"password2"}
                                         placeholder={"Password"}
                                     />
                                     <span className={"icon is-small is-left"}>
                                         <i className={"fas fa-lock"} />
-                                    </span>
-                                </p>
-                            </div>
-                            <div className={"field"}>
-                                <label className={"label"}>
-                                    {"Pick a color"}
-                                </label>
-                                <p
-                                    className={
-                                        "control has-icons-left has-icons-right"
-                                    }>
-                                    <input
-                                        className={"input jscolor"}
-                                        placeholder={"Color picker"}
-                                    />
-                                    <span className={"icon is-small is-left"}>
-                                        <i className={"fas fa-palette"} />
                                     </span>
                                 </p>
                             </div>
@@ -195,7 +223,15 @@ export default function ProfilePage(props) {
                                 {viewInfo.username}
                             </h5>
                             <p>{viewInfo.email}</p>
-                            <p>{`My color : ${viewInfo.color}`}</p>
+                            <p>
+                                {"My color : "}
+                                <span
+                                    style={{
+                                        border: `2px, solid, ${viewInfo.color}`,
+                                    }}>
+                                    {viewInfo.color}
+                                </span>
+                            </p>
                         </div>
                     </div>
                     <div className={"columns is-centered"}>
@@ -229,7 +265,8 @@ export default function ProfilePage(props) {
                         <button
                             className={"button is-success is-outlined"}
                             id={"saveProfile"}
-                            style={{display: "none"}}>
+                            style={{display: "none"}}
+                            onClick={SaveChanges}>
                             <span className={"icon is-small"}>
                                 <i className={"fas fa-check"} />
                             </span>

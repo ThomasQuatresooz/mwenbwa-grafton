@@ -37,7 +37,7 @@ const Game = () => {
     }, [user]);
 
     return (
-        <div className={"content"}>
+        <div>
             <UserProvider value={{EventEmitter, user, setUser}}>
                 <Menu />
                 <MapLeaflet
