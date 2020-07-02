@@ -31,7 +31,7 @@ const MBMarker = props => {
     <path style="fill:
     ${
         tree.owner
-            ? `# ${
+            ? `#${
                   tree.owner.color
                       ? (
                             ((parseInt(tree.owner.color.substr(1), 16) &
