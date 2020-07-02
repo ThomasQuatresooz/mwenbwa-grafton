@@ -31,10 +31,17 @@ const MBMarker = props => {
     <path style="fill:
     ${
         tree.owner
-            ? `#${(
-                  ((parseInt(tree.owner.color.substr(1), 16) & 0x7e7e7e) >> 1) |
-                  (parseInt(tree.owner.color.substr(1), 16) & 0x808080)
-              ).toString(16)}`
+            ? `# ${
+                  tree.owner.color
+                      ? (
+                            ((parseInt(tree.owner.color.substr(1), 16) &
+                                0x7e7e7e) >>
+                                1) |
+                            (parseInt(tree.owner.color.substr(1), 16) &
+                                0x808080)
+                        ).toString(16)
+                      : "#96BE4B"
+              }`
             : "#96BE4B"
     };" d="M264.128,347.329c-13.04,3.364-27.479,3.251-42.911-4.038c-20.9-9.871-36.045-29.934-38.096-52.956
         c-0.806-9.043,0.268-17.732,2.845-25.748c1.013-3.152-0.291-6.5-2.851-8.6c-19.979-16.387-32.765-41.211-32.765-69.067
