@@ -50,13 +50,11 @@ class RegisterPage extends React.Component {
     //         body: JSON.stringify(username),
     //         withCredentials: true,
     //     };
-
-    //     // console.log pour être sûr qu'on a les données bien formatées en JSON
     //     console.log(JSON.stringify(username));
 
     //     fetch(url, options)
     //         .then((response) => {
-    //             if (response == "Ce pseudo est déjà utilisé.") {
+    //             if (response === "Ce pseudo est déjà utilisé.") {
     //                 console.log(response.data);
     //                 userWarning.innerHTML =
     //                     "This username is incorrect. Please try another.";
@@ -82,42 +80,41 @@ class RegisterPage extends React.Component {
         const passwordConfirmationInput = document.querySelector(
             "#passwordConfirmation",
         );
+        const passwordConfirmationLength = document.querySelector(
+            "#passwordConfirmation",
+        ).value;
         const verify1 = document.querySelector("#passwordLength");
         const verify2 = document.querySelector("#passwordMatch");
-        // const iconPass1 = document.querySelector("#iconPass1");
-        // const iconPass2 = document.querySelector("#iconPass2");
-        //const iconPass2 = document.querySelector("#iconPass2");
 
         // valeur mise à 4 pour les tests
-
         if (passwordLength.length < 4) {
-            // this.state.iconPass1 = "fas fa-exclamation-triangle";
-            this.setState({iconPass1: "not ok"});
-            // this.state.iconPass1 = "not ok";
+            this.setState({iconPass1: false});
             verify1.innerHTML = "Your password needs at leat 4 characters.";
             passwordInput.classList.remove("is-success");
             passwordInput.classList.add("is-danger");
             // iconPass1.classList.remove("fas fa-check");
             // iconPass1.classList.add("fas fa-exclamation-triangle");
-            console.log(this.state.iconPass1);
         } else {
             // this.state.iconPass1 = "fas fa-check";
-            this.setState({iconPass1: "ok"});
+            this.setState({iconPass1: true});
             verify1.innerHTML = "";
             passwordInput.classList.remove("is-danger");
             passwordInput.classList.add("is-success");
-            console.log(this.state.iconPass1);
         }
 
-        if (password !== passwordConfirmation && passwordConfirmation !== 0) {
-            this.setState({iconPass2: "fas fa-exclamation-triangle"});
+        if (
+            password !== passwordConfirmation ||
+            this.state.iconPass1 === false ||
+            passwordConfirmationLength.length < 4
+        ) {
+            this.setState({iconPass2: false});
             verify2.innerHTML = "The two passwords do not match !";
             verify2.classList.remove("is-success");
             verify2.classList.add("is-danger");
             passwordConfirmationInput.classList.remove("is-success");
             passwordConfirmationInput.classList.add("is-danger");
         } else {
-            this.setState({iconPass2: "fas fa-check"});
+            this.setState({iconPass2: true});
             verify2.innerHTML = "Passwords match !";
             verify2.classList.add("is-success");
             verify2.classList.remove("is-danger");
@@ -126,7 +123,7 @@ class RegisterPage extends React.Component {
         }
     }
 
-    handleChangeComplete = (color) => {
+    handleChangeComplete = color => {
         this.setState({color: color.hex});
     };
 
@@ -177,7 +174,7 @@ class RegisterPage extends React.Component {
         console.log(JSON.stringify(data));
 
         fetch(url, options)
-            .then((response) => {
+            .then(response => {
                 if (response.ok) {
                     console.log(response.data);
                 } else {
@@ -186,7 +183,7 @@ class RegisterPage extends React.Component {
                     );
                 }
             })
-            .catch((error) => {
+            .catch(error => {
                 console.log(`Problem with fetch : ${error}`);
             });
 
@@ -368,7 +365,7 @@ class RegisterPage extends React.Component {
                                                         className={
                                                             this.state
                                                                 .iconPass1 ===
-                                                            "ok"
+                                                            true
                                                                 ? "fas fa-check"
                                                                 : "fas fa-exclamation-triangle"
                                                         }
@@ -428,7 +425,11 @@ class RegisterPage extends React.Component {
                                                     <i
                                                         id={"iconPass2"}
                                                         className={
-                                                            this.state.iconPass2
+                                                            this.state
+                                                                .iconPass2 ===
+                                                            true
+                                                                ? "fas fa-check"
+                                                                : "fas fa-exclamation-triangle"
                                                         }
                                                     />
                                                 </span>
@@ -441,7 +442,7 @@ class RegisterPage extends React.Component {
                                         </div>
                                     </div>
                                 </div>
-                                {/* <div className={"field is-horizontal"}>
+                                <div className={"field is-horizontal"}>
                                     <div className={"field-label is-normal"}>
                                         <label className={"label"}>
                                             {"Pick a color"}
@@ -449,7 +450,7 @@ class RegisterPage extends React.Component {
                                     </div>
                                     <div className={"field-body"}>
                                         <div className={"field"}>
-                                            {/* <div
+                                            <div
                                                 className={
                                                     "control has-icons-left has-icons-right"
                                                 }>
@@ -460,9 +461,9 @@ class RegisterPage extends React.Component {
                                                         this
                                                             .handleChangeComplete
                                                     }
-                                                /> */}
+                                                />
 
-                                {/* <span
+                                                <span
                                                     className={
                                                         "icon is-small is-left"
                                                     }>
@@ -471,183 +472,8 @@ class RegisterPage extends React.Component {
                                                             "fas fa-palette"
                                                         }
                                                     />
-                                                </span> */}
-
-                                {/* </div>
-                                        </div>
-                                    </div>
-                                </div>  */}
-                                <div className={"field is-horizontal"}>
-                                    <div className={"field-label is-normal"}>
-                                        <label className={"label"}>
-                                            {"Confirm password"}
-                                        </label>
-                                    </div>
-                                    <div className={"field-body"}>
-                                        <div className={"field"}>
-                                            <p
-                                                className={
-                                                    "control has-icons-left has-icons-right"
-                                                }>
-                                                <input
-                                                    id={"passwordConfirmation"}
-                                                    className={"input"}
-                                                    name={
-                                                        "passwordConfirmation"
-                                                    }
-                                                    type={"password"}
-                                                    placeholder={
-                                                        "Confirm your password"
-                                                    }
-                                                    onChange={this.handleChange}
-                                                    onKeyUp={
-                                                        this.handlePasswordCheck
-                                                    }
-                                                    required
-                                                />
-                                                <span
-                                                    className={
-                                                        "icon is-small is-left"
-                                                    }>
-                                                    <i
-                                                        className={
-                                                            "fas fa-lock"
-                                                        }
-                                                    />
                                                 </span>
-                                                <span
-                                                    className={
-                                                        "icon is-small is-right"
-                                                    }>
-                                                    <i
-                                                        id={"iconPass2"}
-                                                        className={
-                                                            this.state.iconPass2
-                                                        }
-                                                    />
-                                                </span>
-                                            </p>
-                                            <p
-                                                id={"passwordMatch"}
-                                                className={"help"}>
-                                                {""}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={"field is-horizontal"}>
-                                    <div className={"field-label is-normal"}>
-                                        <label className={"label"}>
-                                            {"Confirm password"}
-                                        </label>
-                                    </div>
-                                    <div className={"field-body"}>
-                                        <div className={"field"}>
-                                            <p
-                                                className={
-                                                    "control has-icons-left has-icons-right"
-                                                }>
-                                                <input
-                                                    id={"passwordConfirmation"}
-                                                    className={"input"}
-                                                    name={
-                                                        "passwordConfirmation"
-                                                    }
-                                                    type={"password"}
-                                                    placeholder={
-                                                        "Confirm your password"
-                                                    }
-                                                    onChange={this.handleChange}
-                                                    onKeyUp={
-                                                        this.handlePasswordCheck
-                                                    }
-                                                    required
-                                                />
-                                                <span
-                                                    className={
-                                                        "icon is-small is-left"
-                                                    }>
-                                                    <i
-                                                        className={
-                                                            "fas fa-lock"
-                                                        }
-                                                    />
-                                                </span>
-                                                <span
-                                                    className={
-                                                        "icon is-small is-right"
-                                                    }>
-                                                    <i
-                                                        id={"iconPass2"}
-                                                        className={
-                                                            this.state.iconPass2
-                                                        }
-                                                    />
-                                                </span>
-                                            </p>
-                                            <p
-                                                id={"passwordMatch"}
-                                                className={"help"}>
-                                                {""}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div className={"field is-horizontal"}>
-                                    <div className={"field-label is-normal"}>
-                                        <label className={"label"}>
-                                            {"Confirm password"}
-                                        </label>
-                                    </div>
-                                    <div className={"field-body"}>
-                                        <div className={"field"}>
-                                            <p
-                                                className={
-                                                    "control has-icons-left has-icons-right"
-                                                }>
-                                                <input
-                                                    id={"passwordConfirmation"}
-                                                    className={"input"}
-                                                    name={
-                                                        "passwordConfirmation"
-                                                    }
-                                                    type={"password"}
-                                                    placeholder={
-                                                        "Confirm your password"
-                                                    }
-                                                    onChange={this.handleChange}
-                                                    onKeyUp={
-                                                        this.handlePasswordCheck
-                                                    }
-                                                    required
-                                                />
-                                                <span
-                                                    className={
-                                                        "icon is-small is-left"
-                                                    }>
-                                                    <i
-                                                        className={
-                                                            "fas fa-lock"
-                                                        }
-                                                    />
-                                                </span>
-                                                <span
-                                                    className={
-                                                        "icon is-small is-right"
-                                                    }>
-                                                    <i
-                                                        id={"iconPass2"}
-                                                        className={
-                                                            this.state.iconPass2
-                                                        }
-                                                    />
-                                                </span>
-                                            </p>
-                                            <p
-                                                id={"passwordMatch"}
-                                                className={"help"}>
-                                                {""}
-                                            </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
