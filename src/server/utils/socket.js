@@ -18,7 +18,7 @@ module.exports.listen = app => {
             userUpdated.operationType === "update" &&
             userUpdated.updateDescription.updatedFields.totalLeaves
         ) {
-            leavesChannel.emit(userUpdated.documentKey, {
+            leavesChannel.emit(userUpdated.documentKey._id, {
                 totalLeaves:
                     userUpdated.updateDescription.updatedFields.totalLeaves,
             });

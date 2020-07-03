@@ -8,7 +8,7 @@ const jwt = require("jsonwebtoken");
 const getStarterLeaves = async (trees = []) => {
     const nbrPlayer = await User.countDocuments();
     if (nbrPlayer === 1) {
-        return trees.reduce((acc, {value}) => acc + value);
+        return trees.reduce((acc, {value}) => acc + value, 0);
     }
 
     const players = await User.find({});
@@ -35,6 +35,7 @@ exports.signup = (req, res) => {
             user.save()
                 .then(async userCreated => {
                     possibleUser = userCreated;
+
                     const trees = await getStarterPack();
                     const promises = [];
                     trees.forEach(tree => {
@@ -45,12 +46,12 @@ exports.signup = (req, res) => {
                     userCreated.startPosition = trees[0].position.coordinates;
                     userCreated.totalLeaves = await getStarterLeaves(trees);
                     await userCreated.save();
+
                     res.status(201).json({message: "Utilisateur créé !"});
                 })
                 .catch(error => {
-                    if (possibleUser) {
-                        User.deleteOne(possibleUser._id);
-                    }
+                    console.log(error);
+
                     res.status(400).json(error.toString());
                 });
         })

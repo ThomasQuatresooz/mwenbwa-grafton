@@ -37,9 +37,10 @@ const Game = () => {
 
             const leaves = io.connect(`${document.baseURI}leaves`);
             leaves.on(user.userId, data => {
-                console.log("UPDATE");
-
-                setUser(oldUser => (oldUser.totalLeaves = data.totalLeaves));
+                setUser(oldUser => ({
+                    ...oldUser,
+                    totalLeaves: data.totalLeaves,
+                }));
             });
             setSocket({trees, leaves});
         }

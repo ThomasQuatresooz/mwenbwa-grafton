@@ -5,7 +5,13 @@ import {nameByRace} from "fantasy-name-generator";
 
 exports.getAllCapitalLeaves = async ownerId => {
     const trees = await tree.find({owner: ownerId});
-    return trees.reduce((acc, {value}) => acc + value, 0);
+    const value = trees.reduce((acc, treeC) => {
+        console.log(acc);
+
+        return acc + treeC.value;
+    }, 0);
+
+    return value;
 };
 
 const getTreesAround100m = async coordinates => {

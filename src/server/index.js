@@ -115,19 +115,19 @@ async function earnleaves() {
                 {$group: {_id: "$owner", value: {$sum: "$value"}}},
             ])
             .exec();
-        console.log(treeOwned);
 
         treeOwned.forEach(async element => {
             const user = await User.findById(element._id).exec();
             user.totalLeaves = user.totalLeaves + element.value;
             user.save();
         });
+        setTimeout(earnleaves, 900000);
     } catch (e) {
         console.log(e.toString());
     }
 }
 
-setTimeout(earnleaves, 5000); //900000
+setTimeout(earnleaves, 900000); //900000
 
 //Timer 1hour part
 async function loseLeaves() {
@@ -137,5 +137,6 @@ async function loseLeaves() {
         element.save();
         console.log(element.totalLeaves);
     });
+    setTimeout(loseLeaves, 3600000);
 }
 setTimeout(loseLeaves, 3600000);
