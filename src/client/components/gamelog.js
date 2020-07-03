@@ -44,7 +44,7 @@ export default function GamelogPage(props) {
                 <footer
                     className={"modal-card-foot"}
                     style={{justifyContent: "center"}}>
-                    {setPageNum === 0 ? (
+                    {/* {setPageNum === 0 ? (
                         <></>
                     ) : (
                         <nav
@@ -65,7 +65,7 @@ export default function GamelogPage(props) {
                                 </li>
                             </ul>
                         </nav>
-                    )}
+                    )} */}
                 </footer>
             </div>
         </div>
