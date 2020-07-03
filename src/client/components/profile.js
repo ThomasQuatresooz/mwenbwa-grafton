@@ -7,10 +7,11 @@ import UserContext from "./mwenbwa-context";
 export default function ProfilePage(props) {
     const UserCont = useContext(UserContext);
     const [viewInfo, setViewInfo] = useState([]);
-    // const username = useState("");
-    // const email = useState("");
-    // const password1 = useState("");
-    // const password2 = useState("");
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
+    const [password1, setPassword1] = useState("");
+    const [password2, setPassword2] = useState("");
+
     useEffect(() => {
         fetch(`api/user/${UserCont.user.userId}`, {
             headers: {
@@ -22,6 +23,13 @@ export default function ProfilePage(props) {
                 setViewInfo(elem);
             });
     }, []);
+
+    function handlePasswordCheck() {
+        console.log(password1);
+        console.log(username);
+        console.log(password2);
+    }
+
     function CloseProfile() {
         document.querySelector("#editProfile").removeAttribute("style");
         document.querySelector("#normalMode").removeAttribute("style");
@@ -147,6 +155,9 @@ export default function ProfilePage(props) {
                                         placeholder={"Text input"}
                                         name={"username"}
                                         value={viewInfo.username}
+                                        onChange={e =>
+                                            setUsername(e.target.value)
+                                        }
                                     />
                                     <span className={"icon is-small is-left"}>
                                         <i className={"fas fa-user"} />
@@ -165,13 +176,18 @@ export default function ProfilePage(props) {
                                     className={
                                         "control has-icons-left has-icons-right"
                                     }>
-                                    <input
+                                    <textarea
                                         className={"input is-danger"}
                                         type={"email"}
-                                        placeholder={"Email input"}
+                                        placeholder={viewInfo.email}
                                         name={"email"}
-                                        value={viewInfo.email}
-                                    />
+                                        value={""}
+                                        onChange={e =>
+                                            setEmail(e.target.value) &&
+                                            console.log(email)
+                                        }>
+                                        {viewInfo.email}
+                                    </textarea>
                                     <span className={"icon is-small is-left"}>
                                         <i className={"fas fa-envelope"} />
                                     </span>
@@ -191,10 +207,15 @@ export default function ProfilePage(props) {
                                 <label className={"label"}>{"Password"}</label>
                                 <p className={"control has-icons-left"}>
                                     <input
+                                        id={"password1"}
                                         className={"input"}
                                         type={"password"}
                                         name={"password1"}
                                         placeholder={"Password"}
+                                        onChange={e =>
+                                            setPassword1(e.target.value)
+                                        }
+                                        onKeyUp={handlePasswordCheck}
                                     />
                                     <span className={"icon is-small is-left"}>
                                         <i className={"fas fa-lock"} />
@@ -207,10 +228,15 @@ export default function ProfilePage(props) {
                                 </label>
                                 <p className={"control has-icons-left"}>
                                     <input
+                                        id={"password2"}
                                         className={"input"}
                                         type={"password"}
                                         name={"password2"}
                                         placeholder={"Password"}
+                                        onChange={e =>
+                                            setPassword2(e.target.value)
+                                        }
+                                        onKeyUp={handlePasswordCheck}
                                     />
                                     <span className={"icon is-small is-left"}>
                                         <i className={"fas fa-lock"} />

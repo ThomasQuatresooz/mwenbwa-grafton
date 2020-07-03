@@ -6,6 +6,7 @@ import React from "react";
 import "../../lib/jscolor-2.1.0/jscolor";
 import {ChromePicker} from "react-color";
 //import {icon} from "leaflet";
+import {Route} from "react-router-dom";
 
 class RegisterPage extends React.Component {
     constructor() {
@@ -23,6 +24,8 @@ class RegisterPage extends React.Component {
             color: "",
             iconPass1: "",
             iconPass2: "",
+            iconUsername: "",
+            redirect: false,
         };
     }
 
@@ -33,43 +36,158 @@ class RegisterPage extends React.Component {
         console.log(e.target.value);
     }
 
-    // handleUsername() {
-    //     const username = document.querySelector("#username").value;
-    //     console.log(username);
-    //     const userInput = document.querySelector("#username");
-    //     const userWarning = document.querySelector("#usernameUsed");
-    //     // e.preventDefault();
+    handleUsername() {
+        const userInput = document.querySelector("#username");
+        const username = userInput.value;
 
-    //     const url = "api/auth/checkusername";
-    //     const options = {
-    //         method: "GET",
-    //         headers: {
-    //             // accept: "application/json",
-    //             "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify(username),
-    //         withCredentials: true,
-    //     };
-    //     console.log(JSON.stringify(username));
+        console.log(username);
+        const userWarning = document.querySelector("#usernameUsed");
+        // e.preventDefault();
+
+        const url = `api/auth/${username}`;
+        const options = {
+            method: "GET",
+            headers: {
+                // accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            // body: JSON.stringify(username),
+            withCredentials: true,
+        };
+
+        // response.message === "Ce pseudo est déjà utilisé."
+
+        // response.message === "This username is available."
+        //     if (username.length < 2) {
+        //         userInput.classList.remove("is-success");
+        //         userInput.classList.add("is-danger");
+        //         userWarning.innerHTML =
+        //             "This username is too short. Please try another.";
+        //     } else {
+        //         fetch(url, options)
+        //             .then((response) => {
+        //                 if (response.status === 401) {
+        //                     console.log(response.data);
+        //                     console.log(response.message);
+        //                     // that.setState({iconUsername: false});
+        //                     // console.log(this.state.iconUsername);
+        //                     userWarning.innerHTML =
+        //                         "This username is incorrect. Please try another.";
+        //                     userInput.classList.remove("is-success");
+        //                     userInput.classList.add("is-danger");
+        //                 } else if (response.status === 201) {
+        //                     // userWarning.innerHTML = "This username is available.";
+        //                     // this.setState({iconUsername: true});
+        //                     userWarning.innerHTML = "";
+        //                     userInput.classList.remove("is-danger");
+        //                     userInput.classList.add("is-success");
+        //                 } else {
+        //                     console.log("Problem with the username check");
+        //                 }
+        //             })
+        //             .catch((error) => {
+        //                 console.log(`Problem with fetch : ${error}`);
+        //             });
+        //     }
+        // }
+
+        if (username.length < 2) {
+            userInput.classList.remove("is-success");
+            userInput.classList.add("is-danger");
+            userWarning.innerHTML =
+                "This username is too short. Please try another.";
+        } else {
+            fetch(url, options)
+                .then(response => {
+                    if (response.status === 200) {
+                        console.log(response.data);
+                        // userWarning.innerHTML = "This username is available.";
+                        // this.setState({iconUsername: true});
+                        userWarning.innerHTML = "";
+                        userInput.classList.remove("is-danger");
+                        userInput.classList.add("is-success");
+                    } else {
+                        // that.setState({iconUsername: false});
+                        // console.log(this.state.iconUsername);
+                        console.log(response.data);
+                        userWarning.innerHTML =
+                            "This username is incorrect. Please try another.";
+                        userInput.classList.remove("is-success");
+                        userInput.classList.add("is-danger");
+                    }
+                })
+                .catch(error => {
+                    console.log(`Problem with fetch : ${error}`);
+                });
+        }
+    }
+
+    handleEmail() {
+        const emailInput = document.querySelector("#email");
+        const email = emailInput.value;
+        console.log(email);
+
+        const emailWarning = document.querySelector("#emailUsed");
+        // e.preventDefault();
+
+        const url = `api/auth/${email}`;
+        const options = {
+            method: "GET",
+            headers: {
+                // accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            // body: JSON.stringify(username),
+            withCredentials: true,
+        };
+
+        fetch(url, options)
+            .then(response => {
+                if (response.status === 200) {
+                    // emailWarning.innerHTML = "This email is available.";
+                    // this.setState({iconUsername: true});
+                    emailWarning.innerHTML = "";
+                    emailInput.classList.remove("is-danger");
+                    emailInput.classList.add("is-success");
+                } else {
+                    // that.setState({iconUsername: false});
+                    // console.log(this.state.iconUsername);
+                    emailWarning.innerHTML =
+                        "This email is not available. Please try another.";
+                    emailInput.classList.remove("is-success");
+                    emailInput.classList.add("is-danger");
+                }
+            })
+            .catch(error => {
+                console.log(`Problem with fetch : ${error}`);
+            });
+    }
 
     //     fetch(url, options)
-    //         .then((response) => {
-    //             if (response === "Ce pseudo est déjà utilisé.") {
-    //                 console.log(response.data);
-    //                 userWarning.innerHTML =
-    //                     "This username is incorrect. Please try another.";
-    //                 userInput.classList.remove("is-success");
-    //                 userInput.classList.add("is-danger");
-    //             } else {
-    //                 console.log(response.data);
-    //                 userWarning.innerHTML = "";
-    //                 userInput.classList.remove("is-danger");
-    //                 userInput.classList.add("is-success");
-    //             }
-    //         })
-    //         .catch((error) => {
-    //             console.log(`Problem with fetch : ${error}`);
-    //         });
+    //     .then((response) => {
+    //         if (response.status === 401) {
+    //             console.log(response.data);
+    //             console.log(response);
+    //             // that.setState({iconUsername: false});
+    //             // console.log(this.state.iconUsername);
+    //             emailWarning.innerHTML =
+    //                 "This email is not available. Please try another.";
+    //             emailInput.classList.remove("is-success");
+    //             emailInput.classList.add("is-danger");
+    //         } else if (response.status === 200) {
+    //             console.log(response.data);
+    //             // emailWarning.innerHTML = "This email is available.";
+    //             // this.setState({iconUsername: true});
+    //             emailWarning.innerHTML = "";
+    //             emailInput.classList.remove("is-danger");
+    //             emailInput.classList.add("is-success");
+    //         } else {
+    //             console.log("Problem with the email check");
+    //         }
+    //     })
+    //     .catch((error) => {
+    //         console.log(`Problem with fetch : ${error}`);
+    //     });
     // }
 
     handlePasswordCheck() {
@@ -133,33 +251,6 @@ class RegisterPage extends React.Component {
         console.log(this.state);
 
         const data = this.state;
-
-        // const user = {
-        //     username: this.state.username,
-        //     email: this.state.email,
-        //     password: this.state.password,
-        // };
-
-        // axios
-        //     .post(
-        //         "api/auth/signup",
-        //         data,
-        //         // {
-        //         //     username: this.state.username,
-        //         //     email: this.state.email,
-        //         //     password: this.state.password,
-        //         // },
-        //         // {
-        //         //     withCredentials: true,
-        //         // },
-        //     )
-        //     .then((response) => console.log(response.data))
-        //     .catch((error) => console.log("Login error", error));
-
-        // const myHeaders = new Header();
-        // myHeaders.append("Content-Type", "application/json;charset=UTF-8");
-        // myHeaders.append("accept", "application/json");
-
         const url = "api/auth/signup";
         const options = {
             method: "POST",
@@ -177,6 +268,7 @@ class RegisterPage extends React.Component {
             .then(response => {
                 if (response.ok) {
                     console.log(response.data);
+                    this.setState({redirect: true});
                 } else {
                     console.log(
                         `Request rejected with status ${response.status}`,
@@ -191,6 +283,10 @@ class RegisterPage extends React.Component {
     }
 
     render() {
+        const {redirect} = this.state;
+        if (redirect) {
+            return <Route path={"/"} />;
+        }
         return (
             <div
                 className={
@@ -261,7 +357,7 @@ class RegisterPage extends React.Component {
                                             </div>
                                             <p
                                                 id={"usernameUsed"}
-                                                className={"help is-success"}>
+                                                className={"help is-danger"}>
                                                 {""}
                                             </p>
                                         </div>
@@ -280,6 +376,7 @@ class RegisterPage extends React.Component {
                                                     "control has-icons-left has-icons-right"
                                                 }>
                                                 <input
+                                                    id={"email"}
                                                     className={
                                                         "input is-danger"
                                                     }
@@ -315,7 +412,7 @@ class RegisterPage extends React.Component {
                                             </div>
                                             <p
                                                 id={"emailUsed"}
-                                                className={"help is-danger"}>
+                                                className={"help"}>
                                                 {""}
                                             </p>
                                         </div>

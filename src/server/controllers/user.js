@@ -68,22 +68,27 @@ exports.login = (req, res) => {
 };
 
 exports.checkUsername = (req, res) => {
-    User.findOne({username: req.body.username}).then(user => {
-        if (user) {
-            res.status(401).json({error: "Ce pseudo est déjà utilisé."});
-        } else {
-            res.status(201);
-        }
-    });
+    User.findOne({username: req.params.username})
+        .then(user => {
+            if (user) {
+                res.status(401).json({message: "Username not available."});
+            } else {
+                res.status(200).json({message: "This username is available."});
+            }
+        })
+        .catch(error => res.status(500).json({error}));
 };
 
 exports.checkEmail = (req, res) => {
-    User.findOne({email: req.body.username}).then(user => {
-        if (user) {
-            return res.status(401).json({error: "Cet email est déjà utilisé."});
-        }
-        res.status(201);
-    });
+    User.findOne({email: req.params.email})
+        .then(user => {
+            if (user) {
+                res.status(401).json({message: "Email not available."});
+            } else {
+                res.status(200).json({message: "This email is available."});
+            }
+        })
+        .catch(error => res.status(500).json({error}));
 };
 
 exports.getUserData = async (req, res) => {

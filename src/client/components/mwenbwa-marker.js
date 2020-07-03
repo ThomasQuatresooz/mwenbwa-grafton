@@ -181,11 +181,11 @@ const MBMarker = props => {
                 ]}>
                 <Popup autoPan={false} onOpen={getPrices}>
                     <div className={"card"}>
-                        <div className={"card-image"}>
+                        {/* <div className={"card-image"}>
                             <figure className={"image is-2by1"}>
                                 <img src={"https://i.imgur.com/3zhuFWl.png"} />
                             </figure>
-                        </div>
+                        </div> */}
                         <div className={"card-content"}>
                             <div className={"media"}>
                                 <div className={"media-content"}>
