@@ -12,8 +12,19 @@ require("../styles/mystyles.css");
 import "react-toastify/dist/ReactToastify.css";
 
 const Game = () => {
+    const validateUserData = () => {
+        const data = loadUserData();
+        if (!data) {
+            return null;
+        }
+
+        if (new Date(data.expiresAt) - new Date() <= 0) {
+            return null;
+        }
+        return data;
+    };
     const [EventEmitter] = useState(new EE());
-    const [user, setUser] = useState(loadUserData());
+    const [user, setUser] = useState(validateUserData());
     const [socket, setSocket] = useState(null);
 
     useEffect(() => {

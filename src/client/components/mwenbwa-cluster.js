@@ -49,7 +49,9 @@ const MBCluster = () => {
     return (
         <React.Fragment>
             <MarkerClusterGroup
-                maxClusterRadius={120}
+                chunkedLoading={true}
+                zoomToBoundsOnClick={true}
+                maxClusterRadius={60}
                 disableClusteringAtZoom={17}
                 removeOutsideVisibleBounds={true}>
                 {/* eslint-disable-next-line no-extra-parens */}
