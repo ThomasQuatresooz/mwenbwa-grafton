@@ -5,6 +5,7 @@ const router = Router();
 
 router.post("/", treeController.allTreesByViewport);
 router.post("/reset", treeController.resetTrees);
+router.post("/update", treeController.updateWiki);
 router.get("/:treeId/", treeController.getTreeData);
 router.post("/:treeId/buy", auth, treeController.buyTree);
 router.post("/:treeId/buyprice", auth, treeController.buyPrice);
