@@ -200,7 +200,14 @@ const MBMarker = props => {
                             </div>
                             <div className={"content"}>
                                 <p>
-                                    <a href={"#"}>{"Tree's specie"}</a>
+                                    <a
+                                        rel={"noreferrer"}
+                                        target={"_blank"}
+                                        href={
+                                            tree.wikiLink ? tree.wikiLink : ""
+                                        }>
+                                        {"Tree's specie"}
+                                    </a>
                                 </p>
                                 <p>{`Tree's height :${tree.hauteur_totale}`}</p>
                                 <p>{`Tree's diameter : ${tree.circonf}`}</p>
