@@ -3,6 +3,7 @@
 import React, {useContext, useState, useEffect} from "react";
 import "../../lib/jscolor-2.1.0/jscolor";
 import UserContext from "./mwenbwa-context";
+import {ChromePicker} from "react-color";
 
 export default function ProfilePage(props) {
     const UserCont = useContext(UserContext);
@@ -11,8 +12,11 @@ export default function ProfilePage(props) {
     const [email, setEmail] = useState(viewInfo.email);
     const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");
+    const [color, setColor] = useState("");
     const [iconPass1, setIconPass1] = useState("");
     const [iconPass2, setIconPass2] = useState("");
+    const [iconUsername, setIconUsername] = useState("");
+    const [iconEmail, setIconEmail] = useState("");
 
     useEffect(() => {
         fetch(`api/user/${UserCont.user.userId}`, {
@@ -20,11 +24,103 @@ export default function ProfilePage(props) {
                 Authorization: `bearer ${UserCont.user?.token}`,
             },
         })
-            .then(res => res.json())
-            .then(elem => {
+            .then((res) => res.json())
+            .then((elem) => {
                 setViewInfo(elem);
             });
     }, []);
+
+    function handleUsername() {
+        const userInput = document.querySelector("#username");
+        const userWarning = document.querySelector("#userWarning");
+
+        const url = `api/auth/${username}`;
+        const options = {
+            method: "GET",
+            headers: {
+                // accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            // body: JSON.stringify(username),
+            withCredentials: true,
+        };
+
+        if (username.length < 2) {
+            userInput.classList.remove("is-success");
+            userInput.classList.add("is-danger");
+            userWarning.innerHTML =
+                "This username is too short. Please try another.";
+        } else {
+            fetch(url, options)
+                .then((response) => {
+                    if (response.status === 200) {
+                        console.log(response.data);
+                        // userWarning.innerHTML = "This username is available.";
+                        // this.setState({iconUsername: true});
+                        setIconUsername(true);
+                        userWarning.innerHTML = "";
+                        userInput.classList.remove("is-danger");
+                        userInput.classList.add("is-success");
+                    } else {
+                        // that.setState({iconUsername: false});
+                        // console.log(this.state.iconUsername);
+                        console.log(response.data);
+                        setIconUsername(false);
+                        userWarning.innerHTML =
+                            "This username is incorrect. Please try another.";
+                        userInput.classList.remove("is-success");
+                        userInput.classList.add("is-danger");
+                    }
+                })
+                .catch((error) => {
+                    console.log(`Problem with fetch : ${error}`);
+                });
+        }
+    }
+
+    function handleEmail() {
+        const emailInput = document.querySelector("#email");
+        const emailWarning = document.querySelector("#emailWarning");
+
+        const url = `api/auth/${email}`;
+        const options = {
+            method: "GET",
+            headers: {
+                // accept: "application/json",
+                "Content-Type": "application/json",
+            },
+            // body: JSON.stringify(username),
+            withCredentials: true,
+        };
+        fetch(url, options)
+            .then((response) => {
+                if (response.status === 200) {
+                    console.log(response.data);
+                    // userWarning.innerHTML = "This username is available.";
+                    // this.setState({iconUsername: true});
+                    setIconEmail(true);
+                    emailWarning.innerHTML = "";
+                    emailInput.classList.remove("is-danger");
+                    emailInput.classList.add("is-success");
+                } else {
+                    // that.setState({iconUsername: false});
+                    // console.log(this.state.iconUsername);
+                    console.log(response.data);
+                    setIconEmail(false);
+                    emailWarning.innerHTML =
+                        "This email is incorrect. Please try another.";
+                    emailInput.classList.remove("is-success");
+                    emailInput.classList.add("is-danger");
+                }
+            })
+            .catch((error) => {
+                console.log(`Problem with fetch : ${error}`);
+            });
+    }
+
+    function handleChangeComplete(color) {
+        setColor(color.hex);
+    }
 
     function handlePasswordCheck() {
         // console.log(password1);
@@ -111,7 +207,7 @@ export default function ProfilePage(props) {
             withCredentials: true,
         };
         fetch(url, options)
-            .then(response => {
+            .then((response) => {
                 if (response.ok) {
                     console.log(response.data);
                 } else {
@@ -120,7 +216,7 @@ export default function ProfilePage(props) {
                     );
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 console.log(`Problem with fetch : ${error}`);
             });
     }
@@ -189,24 +285,34 @@ export default function ProfilePage(props) {
                                         "control has-icons-left has-icons-right"
                                     }>
                                     <input
+                                        id={"username"}
                                         className={"input is-success"}
                                         type={"text"}
-                                        placeholder={"Text input"}
+                                        placeholder={viewInfo.username}
                                         name={"username"}
-                                        value={viewInfo.username}
-                                        onChange={e =>
+                                        value={username}
+                                        onChange={(e) =>
                                             setUsername(e.target.value)
                                         }
+                                        onBlur={handleUsername}
                                     />
                                     <span className={"icon is-small is-left"}>
                                         <i className={"fas fa-user"} />
                                     </span>
                                     <span className={"icon is-small is-right"}>
-                                        <i className={"fas fa-check"} />
+                                        <i
+                                            className={
+                                                iconUsername === true
+                                                    ? "fas fa-check"
+                                                    : "fas fa-exclamation-triangle"
+                                            }
+                                        />
                                     </span>
                                 </div>
-                                <p className={"help is-success"}>
-                                    {"This username is available"}
+                                <p
+                                    id={"userWarning"}
+                                    className={"help is-danger"}>
+                                    {""}
                                 </p>
                             </div>
                             <div className={"field"}>
@@ -216,12 +322,16 @@ export default function ProfilePage(props) {
                                         "control has-icons-left has-icons-right"
                                     }>
                                     <input
+                                        id={"email"}
                                         className={"input is-danger"}
                                         type={"email"}
                                         placeholder={viewInfo.email}
                                         name={"email"}
                                         value={email}
-                                        onChange={e => setEmail(e.target.value)}
+                                        onChange={(e) =>
+                                            setEmail(e.target.value)
+                                        }
+                                        onBlur={handleEmail}
                                     />
 
                                     <span className={"icon is-small is-left"}>
@@ -230,13 +340,17 @@ export default function ProfilePage(props) {
                                     <span className={"icon is-small is-right"}>
                                         <i
                                             className={
-                                                "fas fa-exclamation-triangle"
+                                                iconEmail === true
+                                                    ? "fas fa-check"
+                                                    : "fas fa-exclamation-triangle"
                                             }
                                         />
                                     </span>
                                 </div>
-                                <p className={"help is-danger"}>
-                                    {"This email is invalid"}
+                                <p
+                                    id={"emailWarning"}
+                                    className={"help is-danger"}>
+                                    {""}
                                 </p>
                             </div>
                             <div className={"field"}>
@@ -253,7 +367,7 @@ export default function ProfilePage(props) {
                                         type={"password"}
                                         name={"password1"}
                                         placeholder={"Password"}
-                                        onChange={e =>
+                                        onChange={(e) =>
                                             setPassword1(e.target.value)
                                         }
                                         onKeyUp={handlePasswordCheck}
@@ -292,7 +406,7 @@ export default function ProfilePage(props) {
                                         type={"password"}
                                         name={"password2"}
                                         placeholder={"Password"}
-                                        onChange={e =>
+                                        onChange={(e) =>
                                             setPassword2(e.target.value)
                                         }
                                         onKeyUp={handlePasswordCheck}
@@ -314,6 +428,24 @@ export default function ProfilePage(props) {
                                 <p id={"passwordMatch"} className={"help"}>
                                     {""}
                                 </p>
+                            </div>
+                            <div className={"field"}>
+                                <label className={"label"}>
+                                    {"Pick a color"}
+                                </label>
+                                <div
+                                    className={
+                                        "control has-icons-left has-icons-right"
+                                    }>
+                                    <ChromePicker
+                                        disableAlpha={true}
+                                        color={color}
+                                        onChangeComplete={handleChangeComplete}
+                                    />
+                                    <span className={"icon is-small is-left"}>
+                                        <i className={"fas fa-palette"} />
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <div id={"normalMode"} className={"column is-5"}>
