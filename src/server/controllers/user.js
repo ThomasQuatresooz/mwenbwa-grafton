@@ -1,11 +1,27 @@
-/* eslint-disable no-unused-vars, consistent-return */
+/* eslint-disable no-unused-vars, consistent-return, require-atomic-updates */
 
 import User from "../models/user-schema";
-import {getStarterPack} from "./tree-controller";
+import {getStarterPack, getAllCapitalLeaves} from "./tree-controller";
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const getStarterLeaves = async (trees = []) => {
+    const nbrPlayer = await User.countDocuments();
+    if (nbrPlayer === 1) {
+        return trees.reduce((acc, {value}) => acc + value);
+    }
+
+    const players = await User.find({});
+    let AllLeaves = 0;
+    await players.forEach(async player => {
+        AllLeaves += player.totalLeaves;
+        AllLeaves += await getAllCapitalLeaves(player._id);
+    });
+    return Math.ceil(AllLeaves / nbrPlayer);
+};
+
 exports.signup = (req, res) => {
+    let possibleUser = null;
     bcrypt
         .hash(req.body.password, 10)
         .then(hash => {
@@ -18,6 +34,7 @@ exports.signup = (req, res) => {
             });
             user.save()
                 .then(async userCreated => {
+                    possibleUser = userCreated;
                     const trees = await getStarterPack();
                     const promises = [];
                     trees.forEach(tree => {
@@ -26,15 +43,23 @@ exports.signup = (req, res) => {
                     });
                     await Promise.all(promises);
                     userCreated.startPosition = trees[0].position.coordinates;
+                    userCreated.totalLeaves = await getStarterLeaves(trees);
                     await userCreated.save();
                     res.status(201).json({message: "Utilisateur créé !"});
                 })
-                .catch(error => res.status(400).json(error.toString()));
+                .catch(error => {
+                    if (possibleUser) {
+                        User.deleteOne(possibleUser._id);
+                    }
+                    res.status(400).json(error.toString());
+                });
         })
         .catch(error => res.status(500).json({error}));
 };
 
 exports.login = (req, res) => {
+    getStarterLeaves();
+
     User.findOne({email: req.body.email})
         .then(user => {
             if (!user) {
@@ -51,6 +76,9 @@ exports.login = (req, res) => {
                             .json({error: "Mot de passe incorrect !"});
                     }
 
+                    const date = new Date();
+                    date.setDate(date.getDate() + 1);
+
                     res.status(200).json({
                         userId: user._id,
                         totalLeaves: user.totalLeaves,
@@ -60,6 +88,7 @@ exports.login = (req, res) => {
                             "8hQ79YXx4ySOF2toKkRrScxrqY6zeORlkBWzxRYPjcyBVVlTeuVI9x2OyTrVx45",
                             {expiresIn: "24h"},
                         ),
+                        expiresAt: date,
                     });
                 })
                 .catch(error => res.status(500).json({error}));
