@@ -2,6 +2,8 @@
 /* eslint-disable react/button-has-type */
 import React from "react";
 import UserContext from "../components/mwenbwa-context";
+import {saveUserData} from "../utils/storage-manager";
+import {toast} from "react-toastify";
 // import axios from "axios";
 
 class LoginPage extends React.Component {
@@ -40,25 +42,20 @@ class LoginPage extends React.Component {
             body: JSON.stringify(data),
             // withCredentials: true,
         };
-
-        console.log(JSON.stringify(data));
-
         fetch(url, options)
             .then(response => {
                 if (response.ok) {
                     response.json().then(json => {
+                        toast.success(`you're connected`);
+                        saveUserData(json);
                         this.context.setUser(json);
-                        console.log(json);
-                        console.log("Connexion réussie. Bienvenue !");
                     });
                 } else {
-                    console.log(
-                        `Request rejected with status ${response.status}`,
-                    );
+                    toast.error(`Wrong email or password !`);
                 }
             })
             .catch(error => {
-                console.log(`Problem with fetch : ${error}`);
+                toast.error(`${error.toString()}`);
             });
 
         // axios

@@ -4,6 +4,8 @@ import React, {useState, useEffect, useContext} from "react";
 import {useLeaflet} from "react-leaflet";
 import UserContext from "./mwenbwa-context";
 
+import {toast} from "react-toastify";
+
 import MarkerClusterGroup from "react-leaflet-markercluster";
 import "../../../node_modules/react-leaflet-markercluster/dist/styles.min.css";
 
@@ -28,22 +30,17 @@ const MBCluster = () => {
                 });
             })
             .catch(err => {
-                console.error(err);
+                toast.warning(`Problem with the connection !${err.toString()}`);
             });
     };
 
     useEffect(() => {
         fetchTree(leafContext.map.getBounds());
-        leafContext.map.addEventListener("movestart", () => {
-            console.log("MOVE START");
-        });
-
         leafContext.map.addEventListener("moveend", () => {
             fetchTree(leafContext.map.getBounds());
         });
 
         return () => {
-            leafContext.map.removeEventListener("movestart");
             leafContext.map.removeEventListener("moveend");
             UserCont.EventEmitter.removeListener("user.connected");
         };

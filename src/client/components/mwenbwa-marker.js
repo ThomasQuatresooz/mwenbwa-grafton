@@ -7,14 +7,12 @@ import React, {useContext, useEffect, useState} from "react";
 import L from "leaflet";
 import {Marker, Popup} from "react-leaflet";
 import UserContext from "./mwenbwa-context";
+import {toast} from "react-toastify";
 
 const MBMarker = props => {
     const [tree, setTree] = useState(props.tree);
     const [buyprice, setBuyprice] = useState(null);
     const [lockprice, setLockprice] = useState(null);
-    if (tree.owner) {
-        console.log(tree.owner.color);
-    }
 
     const svgPath = `<?xml version="1.0" encoding="iso-8859-1"?>
     <!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
@@ -74,13 +72,13 @@ const MBMarker = props => {
                 .then(result => {
                     //parse data -> set state -> re-render
                     result.json().then(res => {
-                        console.log(res);
-
                         setTree(res);
                     });
                 })
                 .catch(err => {
-                    console.log(err);
+                    toast.warning(
+                        `Problem with the connection !${err.toString()}`,
+                    );
                 });
         });
 
@@ -117,7 +115,9 @@ const MBMarker = props => {
                     }
                 })
                 .catch(err => {
-                    console.log(err);
+                    toast.warning(
+                        `Problem with the connection !${err.toString()}`,
+                    );
                 });
         }
     };
@@ -148,7 +148,7 @@ const MBMarker = props => {
                 }
             })
             .catch(err => {
-                console.log(err);
+                toast.warning(`Problem with the connection !${err.toString()}`);
             });
     };
 
@@ -171,7 +171,7 @@ const MBMarker = props => {
                 }
             })
             .catch(err => {
-                console.log(err);
+                toast.warning(`Problem with the connection !${err.toString()}`);
             });
     };
 
@@ -185,11 +185,6 @@ const MBMarker = props => {
                 ]}>
                 <Popup autoPan={false} onOpen={getPrices}>
                     <div className={"card"}>
-                        <div className={"card-image"}>
-                            <figure className={"image is-2by1"}>
-                                <img src={"https://i.imgur.com/3zhuFWl.png"} />
-                            </figure>
-                        </div>
                         <div className={"card-content"}>
                             <div className={"media"}>
                                 <div className={"media-content"}>
