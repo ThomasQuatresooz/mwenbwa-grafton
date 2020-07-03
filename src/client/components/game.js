@@ -1,3 +1,4 @@
+/* eslint-disable no-extra-parens */
 import React, {useState, useEffect} from "react";
 import MapLeaflet from "./map";
 import Menu from "./menu";
@@ -33,7 +34,14 @@ const Game = () => {
             trees.on("tree.updated", data => {
                 EventEmitter.emit(data.updatedTree._id);
             });
-            setSocket({trees});
+
+            const leaves = io.connect(`${document.baseURI}leaves`);
+            leaves.on(user.userId, data => {
+                console.log("UPDATE");
+
+                setUser(oldUser => (oldUser.totalLeaves = data.totalLeaves));
+            });
+            setSocket({trees, leaves});
         }
 
         return () => {
