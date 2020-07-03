@@ -4,7 +4,7 @@
 /* eslint-disable react/jsx-handler-names*/
 import React from "react";
 import "../../lib/jscolor-2.1.0/jscolor";
-import {ChromePicker} from "react-color";
+//import {ChromePicker} from "react-color";
 //import {icon} from "leaflet";
 
 class RegisterPage extends React.Component {
@@ -136,6 +136,32 @@ class RegisterPage extends React.Component {
 
         const data = this.state;
 
+        // const user = {
+        //     username: this.state.username,
+        //     email: this.state.email,
+        //     password: this.state.password,
+        // };
+
+        // axios
+        //     .post(
+        //         "api/auth/signup",
+        //         data,
+        //         // {
+        //         //     username: this.state.username,
+        //         //     email: this.state.email,
+        //         //     password: this.state.password,
+        //         // },
+        //         // {
+        //         //     withCredentials: true,
+        //         // },
+        //     )
+        //     .then((response) => console.log(response.data))
+        //     .catch((error) => console.log("Login error", error));
+
+        // const myHeaders = new Header();
+        // myHeaders.append("Content-Type", "application/json;charset=UTF-8");
+        // myHeaders.append("accept", "application/json");
+
         const url = "api/auth/signup";
         const options = {
             method: "POST",
@@ -147,7 +173,6 @@ class RegisterPage extends React.Component {
             withCredentials: true,
         };
 
-        // console.log pour être sûr qu'on a les données bien formatées en JSON
         console.log(JSON.stringify(data));
 
         fetch(url, options)
@@ -415,15 +440,15 @@ class RegisterPage extends React.Component {
                                         </div>
                                     </div>
                                 </div>
-                                <div className={"field is-horizontal"}>
+                                {/* <div className={"field is-horizontal"}>
                                     <div className={"field-label is-normal"}>
                                         <label className={"label"}>
-                                            {"Color"}
+                                            {"Pick a color"}
                                         </label>
                                     </div>
                                     <div className={"field-body"}>
                                         <div className={"field"}>
-                                            <div
+                                            {/* <div
                                                 className={
                                                     "control has-icons-left has-icons-right"
                                                 }>
@@ -434,9 +459,9 @@ class RegisterPage extends React.Component {
                                                         this
                                                             .handleChangeComplete
                                                     }
-                                                />
+                                                /> */}
 
-                                                {/* <span
+                                {/* <span
                                                     className={
                                                         "icon is-small is-left"
                                                     }>
@@ -446,7 +471,182 @@ class RegisterPage extends React.Component {
                                                         }
                                                     />
                                                 </span> */}
-                                            </div>
+
+                                {/* </div>
+                                        </div>
+                                    </div>
+                                </div>  */}
+                                <div className={"field is-horizontal"}>
+                                    <div className={"field-label is-normal"}>
+                                        <label className={"label"}>
+                                            {"Confirm password"}
+                                        </label>
+                                    </div>
+                                    <div className={"field-body"}>
+                                        <div className={"field"}>
+                                            <p
+                                                className={
+                                                    "control has-icons-left has-icons-right"
+                                                }>
+                                                <input
+                                                    id={"passwordConfirmation"}
+                                                    className={"input"}
+                                                    name={
+                                                        "passwordConfirmation"
+                                                    }
+                                                    type={"password"}
+                                                    placeholder={
+                                                        "Confirm your password"
+                                                    }
+                                                    onChange={this.handleChange}
+                                                    onKeyUp={
+                                                        this.handlePasswordCheck
+                                                    }
+                                                    required
+                                                />
+                                                <span
+                                                    className={
+                                                        "icon is-small is-left"
+                                                    }>
+                                                    <i
+                                                        className={
+                                                            "fas fa-lock"
+                                                        }
+                                                    />
+                                                </span>
+                                                <span
+                                                    className={
+                                                        "icon is-small is-right"
+                                                    }>
+                                                    <i
+                                                        id={"iconPass2"}
+                                                        className={
+                                                            this.state.iconPass2
+                                                        }
+                                                    />
+                                                </span>
+                                            </p>
+                                            <p
+                                                id={"passwordMatch"}
+                                                className={"help"}>
+                                                {""}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className={"field is-horizontal"}>
+                                    <div className={"field-label is-normal"}>
+                                        <label className={"label"}>
+                                            {"Confirm password"}
+                                        </label>
+                                    </div>
+                                    <div className={"field-body"}>
+                                        <div className={"field"}>
+                                            <p
+                                                className={
+                                                    "control has-icons-left has-icons-right"
+                                                }>
+                                                <input
+                                                    id={"passwordConfirmation"}
+                                                    className={"input"}
+                                                    name={
+                                                        "passwordConfirmation"
+                                                    }
+                                                    type={"password"}
+                                                    placeholder={
+                                                        "Confirm your password"
+                                                    }
+                                                    onChange={this.handleChange}
+                                                    onKeyUp={
+                                                        this.handlePasswordCheck
+                                                    }
+                                                    required
+                                                />
+                                                <span
+                                                    className={
+                                                        "icon is-small is-left"
+                                                    }>
+                                                    <i
+                                                        className={
+                                                            "fas fa-lock"
+                                                        }
+                                                    />
+                                                </span>
+                                                <span
+                                                    className={
+                                                        "icon is-small is-right"
+                                                    }>
+                                                    <i
+                                                        id={"iconPass2"}
+                                                        className={
+                                                            this.state.iconPass2
+                                                        }
+                                                    />
+                                                </span>
+                                            </p>
+                                            <p
+                                                id={"passwordMatch"}
+                                                className={"help"}>
+                                                {""}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className={"field is-horizontal"}>
+                                    <div className={"field-label is-normal"}>
+                                        <label className={"label"}>
+                                            {"Confirm password"}
+                                        </label>
+                                    </div>
+                                    <div className={"field-body"}>
+                                        <div className={"field"}>
+                                            <p
+                                                className={
+                                                    "control has-icons-left has-icons-right"
+                                                }>
+                                                <input
+                                                    id={"passwordConfirmation"}
+                                                    className={"input"}
+                                                    name={
+                                                        "passwordConfirmation"
+                                                    }
+                                                    type={"password"}
+                                                    placeholder={
+                                                        "Confirm your password"
+                                                    }
+                                                    onChange={this.handleChange}
+                                                    onKeyUp={
+                                                        this.handlePasswordCheck
+                                                    }
+                                                    required
+                                                />
+                                                <span
+                                                    className={
+                                                        "icon is-small is-left"
+                                                    }>
+                                                    <i
+                                                        className={
+                                                            "fas fa-lock"
+                                                        }
+                                                    />
+                                                </span>
+                                                <span
+                                                    className={
+                                                        "icon is-small is-right"
+                                                    }>
+                                                    <i
+                                                        id={"iconPass2"}
+                                                        className={
+                                                            this.state.iconPass2
+                                                        }
+                                                    />
+                                                </span>
+                                            </p>
+                                            <p
+                                                id={"passwordMatch"}
+                                                className={"help"}>
+                                                {""}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
