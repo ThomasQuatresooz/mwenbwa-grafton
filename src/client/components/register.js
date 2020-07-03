@@ -4,7 +4,7 @@
 /* eslint-disable react/jsx-handler-names*/
 import React from "react";
 import "../../lib/jscolor-2.1.0/jscolor";
-//import {ChromePicker} from "react-color";
+import {ChromePicker} from "react-color";
 //import {icon} from "leaflet";
 import {Route} from "react-router-dom";
 
@@ -98,7 +98,7 @@ class RegisterPage extends React.Component {
                 "This username is too short. Please try another.";
         } else {
             fetch(url, options)
-                .then(response => {
+                .then((response) => {
                     if (response.status === 200) {
                         console.log(response.data);
                         // userWarning.innerHTML = "This username is available.";
@@ -116,7 +116,7 @@ class RegisterPage extends React.Component {
                         userInput.classList.add("is-danger");
                     }
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.log(`Problem with fetch : ${error}`);
                 });
         }
@@ -142,7 +142,7 @@ class RegisterPage extends React.Component {
         };
 
         fetch(url, options)
-            .then(response => {
+            .then((response) => {
                 if (response.status === 200) {
                     // emailWarning.innerHTML = "This email is available.";
                     // this.setState({iconUsername: true});
@@ -158,7 +158,7 @@ class RegisterPage extends React.Component {
                     emailInput.classList.add("is-danger");
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 console.log(`Problem with fetch : ${error}`);
             });
     }
@@ -241,7 +241,7 @@ class RegisterPage extends React.Component {
         }
     }
 
-    handleChangeComplete = color => {
+    handleChangeComplete = (color) => {
         this.setState({color: color.hex});
     };
 
@@ -265,7 +265,7 @@ class RegisterPage extends React.Component {
         console.log(JSON.stringify(data));
 
         fetch(url, options)
-            .then(response => {
+            .then((response) => {
                 if (response.ok) {
                     console.log(response.data);
                     this.setState({redirect: true});
@@ -275,7 +275,7 @@ class RegisterPage extends React.Component {
                     );
                 }
             })
-            .catch(error => {
+            .catch((error) => {
                 console.log(`Problem with fetch : ${error}`);
             });
 
