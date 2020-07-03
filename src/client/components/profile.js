@@ -8,11 +8,11 @@ import {ChromePicker} from "react-color";
 export default function ProfilePage(props) {
     const UserCont = useContext(UserContext);
     const [viewInfo, setViewInfo] = useState([]);
-    const [username, setUsername] = useState("");
+    const [username, setUsername] = useState(viewInfo.username);
     const [email, setEmail] = useState(viewInfo.email);
     const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");
-    const [color, setColor] = useState("");
+    const [color, setColor] = useState(viewInfo.color);
     const [iconPass1, setIconPass1] = useState("");
     const [iconPass2, setIconPass2] = useState("");
     const [iconUsername, setIconUsername] = useState("");
@@ -31,6 +31,7 @@ export default function ProfilePage(props) {
     }, []);
 
     function handleUsername() {
+        console.log(username);
         const userInput = document.querySelector("#username");
         const userWarning = document.querySelector("#userWarning");
 
@@ -53,7 +54,10 @@ export default function ProfilePage(props) {
         } else {
             fetch(url, options)
                 .then((response) => {
-                    if (response.status === 200) {
+                    if (
+                        response.status === 200 ||
+                        viewInfo.username === username
+                    ) {
                         console.log(response.data);
                         // userWarning.innerHTML = "This username is available.";
                         // this.setState({iconUsername: true});
@@ -94,7 +98,7 @@ export default function ProfilePage(props) {
         };
         fetch(url, options)
             .then((response) => {
-                if (response.status === 200) {
+                if (response.status === 200 || viewInfo.email === email) {
                     console.log(response.data);
                     // userWarning.innerHTML = "This username is available.";
                     // this.setState({iconUsername: true});
@@ -195,6 +199,7 @@ export default function ProfilePage(props) {
     }
     function SaveChanges() {
         const data = useState();
+        console.log(data);
         const url = `api/user/${UserCont.user.userId}`;
         const options = {
             method: "POST",

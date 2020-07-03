@@ -155,7 +155,6 @@ class Menu extends React.Component {
                                     </span>
                                     {"Leaderboard"}
                                 </a>
-                                <hr className={"navbar-divider"} />
                                 <a
                                     className={"navbar-item"}
                                     onClick={this.handleOpenGamelog}>
@@ -164,7 +163,6 @@ class Menu extends React.Component {
                                     </span>
                                     {"Gamelogs"}
                                 </a>
-                                <hr className={"navbar-divider"} />
                                 <a
                                     className={"navbar-item"}
                                     onClick={this.handleOpenProfile}>
@@ -173,7 +171,14 @@ class Menu extends React.Component {
                                     </span>
                                     {"My Profile"}
                                 </a>
-                                <hr className={"navbar-divider"} />
+                                {/* <a
+                                    className={"navbar-item"}
+                                    onClick={this.handleDisconnect}>
+                                    <span className={"icon is-large"}>
+                                        <i class="far fa-times-circle"></i>
+                                    </span>
+                                    {"Disconnect"}
+                                </a> */}
                             </div>
                         </div>
                     </nav>
