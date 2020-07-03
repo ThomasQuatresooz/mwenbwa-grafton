@@ -4,7 +4,7 @@
 /* eslint-disable react/jsx-handler-names*/
 import React from "react";
 import "../../lib/jscolor-2.1.0/jscolor";
-import {ChromePicker} from "react-color";
+//import {ChromePicker} from "react-color";
 //import {icon} from "leaflet";
 import {Route} from "react-router-dom";
 

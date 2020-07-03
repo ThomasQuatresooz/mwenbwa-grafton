@@ -2,15 +2,18 @@ import React, {useState, useEffect} from "react";
 import MapLeaflet from "./map";
 import Menu from "./menu";
 
+import {ToastContainer} from "react-toastify";
 import {UserProvider} from "./mwenbwa-context";
+import {loadUserData} from "../utils/storage-manager";
 import EE from "eventemitter3";
 import io from "socket.io-client";
 
 require("../styles/mystyles.css");
+import "react-toastify/dist/ReactToastify.css";
 
 const Game = () => {
     const [EventEmitter] = useState(new EE());
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(loadUserData());
     const [socket, setSocket] = useState(null);
 
     useEffect(() => {
@@ -19,19 +22,12 @@ const Game = () => {
             trees.on("tree.updated", data => {
                 EventEmitter.emit(data.updatedTree._id);
             });
-
-            const logs = io.connect(`${document.baseURI}logs`);
-            logs.on("log.created", data => {
-                console.log(data);
-            });
-
-            setSocket({trees, logs});
+            setSocket({trees});
         }
 
         return () => {
             if (socket) {
                 socket.trees.disconnect();
-                socket.logs.disconnect();
             }
         };
     }, [user]);
@@ -46,6 +42,17 @@ const Game = () => {
                             ? [user.startPosition[1], user.startPosition[0]]
                             : null
                     }
+                />
+                <ToastContainer
+                    position={"bottom-center"}
+                    autoClose={5000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
                 />
             </UserProvider>
         </div>

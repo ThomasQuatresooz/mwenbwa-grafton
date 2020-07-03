@@ -7,13 +7,12 @@ import React, {useContext, useEffect, useState} from "react";
 import L from "leaflet";
 import {Marker, Popup} from "react-leaflet";
 import UserContext from "./mwenbwa-context";
+import {toast} from "react-toastify";
 
-const MBMarker = props => {
+const MBMarker = (props) => {
     const [tree, setTree] = useState(props.tree);
     const [buyprice, setBuyprice] = useState(null);
     const [lockprice, setLockprice] = useState(null);
-
-    //((col & 0x7E7E7E) >> 1) | (col & 0x808080)
 
     const svgPath = `<?xml version="1.0" encoding="iso-8859-1"?>
     <!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
@@ -27,12 +26,20 @@ const MBMarker = props => {
         c-0.354,3.654-0.561,7.351-0.561,11.098c0,62.838,50.94,113.778,113.778,113.778c6.849,0,34.125-0.611,40.635-1.779l2.754-28.16
         c16.099,8.725,34.537,13.685,54.134,13.685c62.838,0,113.778-50.94,113.778-113.778
         C434.795,232.839,425.207,207.869,409.259,188.286z"/>
-    <path style="fill:${
+    <path style="fill:
+    ${
         tree.owner
-            ? `#${(
-                  ((parseInt(tree.owner.color.substr(1), 16) & 0x7e7e7e) >> 1) |
-                  (parseInt(tree.owner.color.substr(1), 16) & 0x808080)
-              ).toString(16)}`
+            ? `#${
+                  tree.owner.color
+                      ? (
+                            ((parseInt(tree.owner.color.substr(1), 16) &
+                                0x7e7e7e) >>
+                                1) |
+                            (parseInt(tree.owner.color.substr(1), 16) &
+                                0x808080)
+                        ).toString(16)
+                      : "#96BE4B"
+              }`
             : "#96BE4B"
     };" d="M264.128,347.329c-13.04,3.364-27.479,3.251-42.911-4.038c-20.9-9.871-36.045-29.934-38.096-52.956
         c-0.806-9.043,0.268-17.732,2.845-25.748c1.013-3.152-0.291-6.5-2.851-8.6c-19.979-16.387-32.765-41.211-32.765-69.067
@@ -50,7 +57,7 @@ const MBMarker = props => {
     </svg>`;
     const treeIcon = L.icon({
         iconUrl: `data:image/svg+xml;base64,${btoa(svgPath)}`,
-        iconAnchor: [10, 0],
+        iconAnchor: [0, 0],
         popupAnchor: [0, 0],
         iconSize: [30, 30],
     });
@@ -60,19 +67,18 @@ const MBMarker = props => {
     useEffect(() => {
         //Listen for a event name on treeId
         UserCont.EventEmitter.on(tree._id, () => {
-            console.log(`RECEIVED EVENT TO UPDATE TREE N:${tree._id}`);
             //On event -> fetch new data
             fetch(`${document.URL}trees/${tree._id}`)
-                .then(result => {
-                    //parse date -> set state -> re-render
-                    result.json().then(res => {
-                        console.log(res);
-
+                .then((result) => {
+                    //parse data -> set state -> re-render
+                    result.json().then((res) => {
                         setTree(res);
                     });
                 })
-                .catch(err => {
-                    console.log(err);
+                .catch((err) => {
+                    toast.warning(
+                        `Problem with the connection !${err.toString()}`,
+                    );
                 });
         });
 
@@ -81,7 +87,7 @@ const MBMarker = props => {
         };
     }, []);
 
-    const fetchPrice = forBuying => {
+    const fetchPrice = (forBuying) => {
         if (UserCont.user !== null) {
             fetch(
                 `${document.baseURI}trees/${tree._id}/${
@@ -94,9 +100,9 @@ const MBMarker = props => {
                     },
                 },
             )
-                .then(result => {
+                .then((result) => {
                     if (result.ok) {
-                        result.json().then(res => {
+                        result.json().then((res) => {
                             //eslint-disable-next-line
                             forBuying
                                 ? setBuyprice(res.price)
@@ -108,8 +114,10 @@ const MBMarker = props => {
                         }
                     }
                 })
-                .catch(err => {
-                    console.log(err);
+                .catch((err) => {
+                    toast.warning(
+                        `Problem with the connection !${err.toString()}`,
+                    );
                 });
         }
     };
@@ -117,14 +125,10 @@ const MBMarker = props => {
     const getPrices = () => {
         if (UserCont.user) {
             if (tree.owner && tree.owner._id === UserCont.user.userId) {
-                if (lockprice !== 0) {
-                    fetchPrice(false);
-                }
+                fetchPrice(false);
             }
             if (!tree.isLocked && tree.owner?._id !== UserCont.user.userId) {
-                if (buyprice !== 0) {
-                    fetchPrice(true);
-                }
+                fetchPrice(true);
             }
         }
     };
@@ -136,15 +140,15 @@ const MBMarker = props => {
                 Authorization: `bearer ${UserCont.user.token}`,
             },
         })
-            .then(result => {
+            .then((result) => {
                 if (result.ok) {
-                    result.json().then(json => {
+                    result.json().then((json) => {
                         UserCont.user.totalLeaves = json;
                     });
                 }
             })
-            .catch(err => {
-                console.log(err);
+            .catch((err) => {
+                toast.warning(`Problem with the connection !${err.toString()}`);
             });
     };
 
@@ -155,9 +159,9 @@ const MBMarker = props => {
                 Authorization: `bearer ${UserCont.user.token}`,
             },
         })
-            .then(result => {
+            .then((result) => {
                 if (result.ok) {
-                    result.json().then(json => {
+                    result.json().then((json) => {
                         tree.owner = UserCont.user.userId;
                         UserCont.setUser({
                             ...UserCont.user,
@@ -166,8 +170,8 @@ const MBMarker = props => {
                     });
                 }
             })
-            .catch(err => {
-                console.log(err);
+            .catch((err) => {
+                toast.warning(`Problem with the connection !${err.toString()}`);
             });
     };
 
@@ -201,7 +205,14 @@ const MBMarker = props => {
                             </div>
                             <div className={"content"}>
                                 <p>
-                                    <a href={"#"}>{"Tree's specie"}</a>
+                                    <a
+                                        rel={"noreferrer"}
+                                        target={"_blank"}
+                                        href={
+                                            tree.wikiLink ? tree.wikiLink : ""
+                                        }>
+                                        {"Tree's specie"}
+                                    </a>
                                 </p>
                                 <p>{`Tree's height :${tree.hauteur_totale}`}</p>
                                 <p>{`Tree's diameter : ${tree.circonf}`}</p>

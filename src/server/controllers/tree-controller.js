@@ -478,3 +478,17 @@ exports.buyTree = async (req, res) => {
 };
 
 //#endregion
+
+exports.updateWiki = async (req, res) => {
+    try {
+        const status = await tree.updateMany(
+            {nom_complet: "Pinus nigra"},
+            {
+                wikiLink: "https://en.wikipedia.org/wiki/Pinus_nigra",
+            },
+        );
+        res.status(200).json(status);
+    } catch (e) {
+        res.status(500).json(e.toString());
+    }
+};
