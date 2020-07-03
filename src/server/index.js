@@ -108,20 +108,26 @@ module.exports = app;
 
 //Timer 15min part
 async function earnleaves() {
-    const treeOwned = await tree
-        .aggregate([
-            {$match: {owner: {$ne: null}}},
-            {$group: {_id: "$owner", value: {$sum: "$value"}}},
-        ])
-        .exec();
-    treeOwned.forEach(async element => {
-        const user = await User.findById(element._id).exec();
-        user.totalLeaves = user.totalLeaves + element.value;
-        user.save();
-    });
+    try {
+        const treeOwned = await tree
+            .aggregate([
+                {$match: {owner: {$ne: null}}},
+                {$group: {_id: "$owner", value: {$sum: "$value"}}},
+            ])
+            .exec();
+        console.log(treeOwned);
+
+        treeOwned.forEach(async element => {
+            const user = await User.findById(element._id).exec();
+            user.totalLeaves = user.totalLeaves + element.value;
+            user.save();
+        });
+    } catch (e) {
+        console.log(e.toString());
+    }
 }
 
-setTimeout(earnleaves, 900000);
+setTimeout(earnleaves, 5000); //900000
 
 //Timer 1hour part
 async function loseLeaves() {
