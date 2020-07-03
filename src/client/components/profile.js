@@ -8,9 +8,11 @@ export default function ProfilePage(props) {
     const UserCont = useContext(UserContext);
     const [viewInfo, setViewInfo] = useState([]);
     const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
+    const [email, setEmail] = useState(viewInfo.email);
     const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");
+    const [iconPass1, setIconPass1] = useState("");
+    const [iconPass2, setIconPass2] = useState("");
 
     useEffect(() => {
         fetch(`api/user/${UserCont.user.userId}`, {
@@ -25,9 +27,46 @@ export default function ProfilePage(props) {
     }, []);
 
     function handlePasswordCheck() {
-        console.log(password1);
+        // console.log(password1);
         console.log(username);
-        console.log(password2);
+        // console.log(password2);
+
+        const password1Input = document.querySelector("#password1");
+        const password2Input = document.querySelector("#password2");
+        const verify1 = document.querySelector("#passwordLength");
+        const verify2 = document.querySelector("#passwordMatch");
+
+        if (password1.length < 4) {
+            setIconPass1(false);
+            verify1.innerHTML = "Your password needs at least 4 characters.";
+            password1Input.classList.remove("is-success");
+            password1Input.classList.add("is-danger");
+        } else {
+            setIconPass1(true);
+            verify1.innerHTML = "";
+            password1Input.classList.remove("is-danger");
+            password1Input.classList.add("is-success");
+        }
+
+        if (
+            password1 !== password2 ||
+            iconPass1 === false ||
+            password2.length < 4
+        ) {
+            setIconPass2(false);
+            verify2.innerHTML = "The two passwords do not match.";
+            verify2.classList.remove("is-success");
+            verify2.classList.add("is-danger");
+            password2Input.classList.remove("is-success");
+            password2Input.classList.add("is-danger");
+        } else {
+            setIconPass2(true);
+            verify2.innerHTML = "Passwords match !";
+            verify2.classList.remove("is-danger");
+            verify2.classList.add("is-success");
+            password2Input.classList.remove("is-danger");
+            password2Input.classList.add("is-success");
+        }
     }
 
     function CloseProfile() {
@@ -176,18 +215,15 @@ export default function ProfilePage(props) {
                                     className={
                                         "control has-icons-left has-icons-right"
                                     }>
-                                    <textarea
+                                    <input
                                         className={"input is-danger"}
                                         type={"email"}
                                         placeholder={viewInfo.email}
                                         name={"email"}
-                                        value={""}
-                                        onChange={e =>
-                                            setEmail(e.target.value) &&
-                                            console.log(email)
-                                        }>
-                                        {viewInfo.email}
-                                    </textarea>
+                                        value={email}
+                                        onChange={e => setEmail(e.target.value)}
+                                    />
+
                                     <span className={"icon is-small is-left"}>
                                         <i className={"fas fa-envelope"} />
                                     </span>
@@ -204,8 +240,13 @@ export default function ProfilePage(props) {
                                 </p>
                             </div>
                             <div className={"field"}>
-                                <label className={"label"}>{"Password"}</label>
-                                <p className={"control has-icons-left"}>
+                                <label className={"label"}>
+                                    {"New password"}
+                                </label>
+                                <p
+                                    className={
+                                        "control has-icons-left has-icons-right"
+                                    }>
                                     <input
                                         id={"password1"}
                                         className={"input"}
@@ -220,13 +261,31 @@ export default function ProfilePage(props) {
                                     <span className={"icon is-small is-left"}>
                                         <i className={"fas fa-lock"} />
                                     </span>
+                                    <span className={"icon is-small is-right"}>
+                                        <i
+                                            id={"iconPass1"}
+                                            className={
+                                                iconPass1 === true
+                                                    ? "fas fa-check"
+                                                    : "fas fa-exclamation-triangle"
+                                            }
+                                        />
+                                    </span>
+                                </p>
+                                <p
+                                    id={"passwordLength"}
+                                    className={"help is-danger"}>
+                                    {""}
                                 </p>
                             </div>
                             <div className={"field"}>
                                 <label className={"label"}>
-                                    {"Confirm password"}
+                                    {"Confirm new password"}
                                 </label>
-                                <p className={"control has-icons-left"}>
+                                <p
+                                    className={
+                                        "control has-icons-left has-icons-right"
+                                    }>
                                     <input
                                         id={"password2"}
                                         className={"input"}
@@ -241,6 +300,19 @@ export default function ProfilePage(props) {
                                     <span className={"icon is-small is-left"}>
                                         <i className={"fas fa-lock"} />
                                     </span>
+                                    <span className={"icon is-small is-right"}>
+                                        <i
+                                            id={"iconPass2"}
+                                            className={
+                                                iconPass2 === true
+                                                    ? "fas fa-check"
+                                                    : "fas fa-exclamation-triangle"
+                                            }
+                                        />
+                                    </span>
+                                </p>
+                                <p id={"passwordMatch"} className={"help"}>
+                                    {""}
                                 </p>
                             </div>
                         </div>
