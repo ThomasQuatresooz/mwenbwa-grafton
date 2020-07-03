@@ -10,6 +10,12 @@ import * as React from "react";
 import ReactDOM from "react-dom";
 import Game from "./components/game";
 require("./styles/mystyles.css");
+import {BrowserRouter} from "react-router-dom";
 
 const app = document.querySelector("#app");
-ReactDOM.render(<Game />, app);
+ReactDOM.render(
+    <BrowserRouter>
+        <Game />
+    </BrowserRouter>,
+    app,
+);

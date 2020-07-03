@@ -42,15 +42,29 @@ class LoginPage extends React.Component {
             body: JSON.stringify(data),
             // withCredentials: true,
         };
+
+        const emailInput = document.querySelector("#emailInput");
+        const passwordInput = document.querySelector("#passwordInput");
+        const wrong = document.querySelector("#wrong");
+        
         fetch(url, options)
             .then(response => {
                 if (response.ok) {
+                    console.log(response.error);
                     response.json().then(json => {
                         toast.success(`you're connected`);
                         saveUserData(json);
                         this.context.setUser(json);
                     });
                 } else {
+                    console.log(
+                        `Request rejected with status ${response.status}`,
+                    );
+                    emailInput.classList.add("is-danger");
+                    passwordInput.classList.add("is-danger");
+                    const msg =
+                        "Your email or password is wrong. Please try again.";
+                    wrong.innerHTML = msg;
                     toast.error(`Wrong email or password !`);
                 }
             })
@@ -110,6 +124,7 @@ class LoginPage extends React.Component {
                                                     "control has-icons-left has-icons-right"
                                                 }>
                                                 <input
+                                                    id={"emailInput"}
                                                     className={"input"}
                                                     type={"email"}
                                                     name={"email"}
@@ -149,6 +164,7 @@ class LoginPage extends React.Component {
                                                     "control has-icons-left"
                                                 }>
                                                 <input
+                                                    id={"passwordInput"}
                                                     className={"input"}
                                                     type={"password"}
                                                     name={"password"}
@@ -166,6 +182,11 @@ class LoginPage extends React.Component {
                                                         }
                                                     />
                                                 </span>
+                                            </p>
+                                            <p
+                                                id={"wrong"}
+                                                className={"help is-danger"}>
+                                                {""}
                                             </p>
                                         </div>
                                     </div>

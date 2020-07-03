@@ -9,7 +9,7 @@ import {Marker, Popup} from "react-leaflet";
 import UserContext from "./mwenbwa-context";
 import {toast} from "react-toastify";
 
-const MBMarker = props => {
+const MBMarker = (props) => {
     const [tree, setTree] = useState(props.tree);
     const [buyprice, setBuyprice] = useState(null);
     const [lockprice, setLockprice] = useState(null);
@@ -69,13 +69,13 @@ const MBMarker = props => {
         UserCont.EventEmitter.on(tree._id, () => {
             //On event -> fetch new data
             fetch(`${document.URL}trees/${tree._id}`)
-                .then(result => {
+                .then((result) => {
                     //parse data -> set state -> re-render
-                    result.json().then(res => {
+                    result.json().then((res) => {
                         setTree(res);
                     });
                 })
-                .catch(err => {
+                .catch((err) => {
                     toast.warning(
                         `Problem with the connection !${err.toString()}`,
                     );
@@ -87,7 +87,7 @@ const MBMarker = props => {
         };
     }, []);
 
-    const fetchPrice = forBuying => {
+    const fetchPrice = (forBuying) => {
         if (UserCont.user !== null) {
             fetch(
                 `${document.baseURI}trees/${tree._id}/${
@@ -100,9 +100,9 @@ const MBMarker = props => {
                     },
                 },
             )
-                .then(result => {
+                .then((result) => {
                     if (result.ok) {
-                        result.json().then(res => {
+                        result.json().then((res) => {
                             //eslint-disable-next-line
                             forBuying
                                 ? setBuyprice(res.price)
@@ -114,7 +114,7 @@ const MBMarker = props => {
                         }
                     }
                 })
-                .catch(err => {
+                .catch((err) => {
                     toast.warning(
                         `Problem with the connection !${err.toString()}`,
                     );
@@ -140,14 +140,14 @@ const MBMarker = props => {
                 Authorization: `bearer ${UserCont.user.token}`,
             },
         })
-            .then(result => {
+            .then((result) => {
                 if (result.ok) {
-                    result.json().then(json => {
+                    result.json().then((json) => {
                         UserCont.user.totalLeaves = json;
                     });
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 toast.warning(`Problem with the connection !${err.toString()}`);
             });
     };
@@ -159,9 +159,9 @@ const MBMarker = props => {
                 Authorization: `bearer ${UserCont.user.token}`,
             },
         })
-            .then(result => {
+            .then((result) => {
                 if (result.ok) {
-                    result.json().then(json => {
+                    result.json().then((json) => {
                         tree.owner = UserCont.user.userId;
                         UserCont.setUser({
                             ...UserCont.user,
@@ -170,7 +170,7 @@ const MBMarker = props => {
                     });
                 }
             })
-            .catch(err => {
+            .catch((err) => {
                 toast.warning(`Problem with the connection !${err.toString()}`);
             });
     };
@@ -185,6 +185,11 @@ const MBMarker = props => {
                 ]}>
                 <Popup autoPan={false} onOpen={getPrices}>
                     <div className={"card"}>
+                        {/* <div className={"card-image"}>
+                            <figure className={"image is-2by1"}>
+                                <img src={"https://i.imgur.com/3zhuFWl.png"} />
+                            </figure>
+                        </div> */}
                         <div className={"card-content"}>
                             <div className={"media"}>
                                 <div className={"media-content"}>

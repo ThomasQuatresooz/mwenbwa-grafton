@@ -9,7 +9,7 @@ router.post("/auth/signup", userCtrl.signup);
 router.post("/auth/login", userCtrl.login);
 router.post("/user/:userId", auth, userCtrl.saveUser);
 router.get("/user/:userId", auth, userCtrl.getUserData);
-router.get("/checkusername", userCtrl.checkUsername);
-router.get("/checkemail", userCtrl.checkEmail);
+router.get("/auth/:username", userCtrl.checkUsername);
+router.get("/auth/:email", userCtrl.checkEmail);
 
 module.exports = router;
