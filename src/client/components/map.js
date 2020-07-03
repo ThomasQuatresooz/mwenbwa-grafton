@@ -7,7 +7,11 @@ import "../../../node_modules/leaflet/dist/leaflet.css";
 
 export default function MapLeaflet({center}) {
     return (
-        <Map center={center ? center : [50.64, 5.57]} zoom={17} maxZoom={19}>
+        <Map
+            center={center ? center : [50.64, 5.57]}
+            zoom={17}
+            maxZoom={19}
+            minZoom={16}>
             <ScaleControl position={"bottomleft"} imperial={false} />
 
             <TileLayer

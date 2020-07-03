@@ -3,6 +3,11 @@ import User from "../models/user-schema";
 import {Log} from "../models/log-schema";
 import {nameByRace} from "fantasy-name-generator";
 
+exports.getAllCapitalLeaves = async ownerId => {
+    const trees = await tree.find({owner: ownerId});
+    return trees.reduce((acc, {value}) => acc + value, 0);
+};
+
 const getTreesAround100m = async coordinates => {
     const forest = await tree.find({
         position: {
