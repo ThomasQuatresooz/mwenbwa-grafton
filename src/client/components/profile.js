@@ -8,11 +8,11 @@ import {ChromePicker} from "react-color";
 export default function ProfilePage(props) {
     const UserCont = useContext(UserContext);
     const [viewInfo, setViewInfo] = useState([]);
-    const [username, setUsername] = useState(viewInfo.username);
-    const [email, setEmail] = useState(viewInfo.email);
+    const [username, setUsername] = useState("");
+    const [email, setEmail] = useState("");
     const [password1, setPassword1] = useState("");
     const [password2, setPassword2] = useState("");
-    const [color, setColor] = useState(viewInfo.color);
+    const [color, setColor] = useState("");
     const [iconPass1, setIconPass1] = useState("");
     const [iconPass2, setIconPass2] = useState("");
     const [iconUsername, setIconUsername] = useState("");
@@ -293,7 +293,7 @@ export default function ProfilePage(props) {
                                         id={"username"}
                                         className={"input is-success"}
                                         type={"text"}
-                                        placeholder={viewInfo.username}
+                                        placeholder={"New username"}
                                         name={"username"}
                                         value={username}
                                         onChange={(e) =>
@@ -330,7 +330,7 @@ export default function ProfilePage(props) {
                                         id={"email"}
                                         className={"input is-danger"}
                                         type={"email"}
-                                        placeholder={viewInfo.email}
+                                        placeholder={"New email"}
                                         name={"email"}
                                         value={email}
                                         onChange={(e) =>
